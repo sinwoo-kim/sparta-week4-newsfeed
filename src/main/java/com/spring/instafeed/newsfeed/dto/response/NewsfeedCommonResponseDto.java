@@ -1,8 +1,8 @@
-package com.spring.instafeed.newsfeed.dto.request;
+package com.spring.instafeed.newsfeed.dto.response;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class newsfeedCreateRequestDto {
+public class NewsfeedCommonResponseDto {
 
     MultipartFile imagePath;
     String content;
