@@ -20,4 +20,6 @@ public class BaseEntity {
     @LastModifiedDate
     private LocalDateTime updateAt;
 
+    @LastModifiedDate
+    private LocalDateTime deletedAt;
 }

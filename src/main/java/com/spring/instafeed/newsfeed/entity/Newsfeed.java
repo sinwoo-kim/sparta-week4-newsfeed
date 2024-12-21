@@ -1,33 +1,46 @@
 package com.spring.instafeed.newsfeed.entity;
 
+import com.spring.instafeed.BaseEntity;
 import com.spring.instafeed.User;
+import com.spring.instafeed.newsfeed.dto.request.NewsfeedCreateRequestDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Entity
-@Table
-@AllArgsConstructor
-@NoArgsConstructor
+@Table(name = "newsfeed")
 @Getter
-public class Newsfeed {
+public class Newsfeed extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long newsfeedId;
+    @Column(nullable = false, unique = true) // null 허용 안함
     private String nickname;
     private String imagePath;
     private String content;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
     private Boolean is_deleted;
-    private LocalDateTime deletedAt;
-
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    User user;
+    User foundUser;
+
+    @Builder
+    private Newsfeed(String imagePath, String nickname, String content, User foundUser) {
+        this.imagePath = imagePath;
+        this.nickname = nickname;
+        this.content = content;
+        this.foundUser = foundUser;
+
+    }
+
+    public static Newsfeed of(NewsfeedCreateRequestDto createRequestDto, User foundUser) {
+        return Newsfeed.builder()
+                .imagePath(createRequestDto.getImagePath())
+                .nickname(createRequestDto.getNickname())
+                .content(createRequestDto.getContent())
+                .foundUser(foundUser)
+                .build();
+    }
+
 }
