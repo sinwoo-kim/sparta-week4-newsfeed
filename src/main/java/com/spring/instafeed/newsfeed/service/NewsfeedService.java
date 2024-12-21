@@ -46,4 +46,5 @@ public class NewsfeedService {
     private NewsfeedCommonResponseDto convertToDto(Newsfeed newsfeed) {
         return NewsfeedCommonResponseDto.convertDto(newsfeed);
     }
+
 }

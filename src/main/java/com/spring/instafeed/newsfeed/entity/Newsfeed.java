@@ -6,10 +6,12 @@ import com.spring.instafeed.newsfeed.dto.request.NewsfeedCreateRequestDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "newsfeed")
 @Getter
+@NoArgsConstructor
 public class Newsfeed extends BaseEntity {
 
     @Id

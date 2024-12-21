@@ -1,12 +1,8 @@
 package com.spring.instafeed.newsfeed.dto.response;
 
 import com.spring.instafeed.newsfeed.entity.Newsfeed;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.cglib.core.Local;
-import org.springframework.web.multipart.MultipartFile;
 
 
 @Getter
