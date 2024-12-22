@@ -1,6 +1,7 @@
 package com.spring.instafeed.service;
 
 import com.spring.instafeed.User;
+import com.spring.instafeed.dto.user.response.UpdateUserResponseDto;
 import com.spring.instafeed.dto.user.response.UserResponseDto;
 import com.spring.instafeed.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -57,12 +58,14 @@ public class UserServiceImpl implements UserService {
      */
     @Transactional
     @Override
-    public UserResponseDto updatePasswordById(Long id, String password) {
+    public UpdateUserResponseDto updatePasswordById(Long id, String password) {
         User foundUser = userRepository.findByIdOrElseThrow(id);
 
         foundUser.update(password);
 
-        return UserResponseDto.toDto(foundUser);
+        String success = "비밀번호 수정에 성공했습니다.";
+
+        return new UpdateUserResponseDto(success);
     }
 
     /**

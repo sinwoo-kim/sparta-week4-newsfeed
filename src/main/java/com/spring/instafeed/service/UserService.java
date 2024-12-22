@@ -1,5 +1,6 @@
 package com.spring.instafeed.service;
 
+import com.spring.instafeed.dto.user.response.UpdateUserResponseDto;
 import com.spring.instafeed.dto.user.response.UserResponseDto;
 
 public interface UserService {
@@ -29,9 +30,9 @@ public interface UserService {
      *
      * @param id       : 비밀번호를 수정하려는 사용자의 식별자
      * @param password : 수정하려는 비밀번호
-     * @return UserResponseDto
+     * @return UpdateUserResponseDto
      */
-    UserResponseDto updatePasswordById(Long id, String password);
+    UpdateUserResponseDto updatePasswordById(Long id, String password);
 
     /**
      * 기능

@@ -3,6 +3,7 @@ package com.spring.instafeed.controller;
 
 import com.spring.instafeed.dto.user.request.SignUpUserRequestDto;
 import com.spring.instafeed.dto.user.request.UpdateUserRequestDto;
+import com.spring.instafeed.dto.user.response.UpdateUserResponseDto;
 import com.spring.instafeed.dto.user.response.UserResponseDto;
 import com.spring.instafeed.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -53,11 +54,11 @@ public class UserController {
      * @return UserResponseDto, HttpStatus.OK // 수정 필요
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<UserResponseDto> updatePasswordById(
+    public ResponseEntity<UpdateUserResponseDto> updatePasswordById(
             @PathVariable Long id,
             @RequestBody UpdateUserRequestDto requestDto
     ) {
-        UserResponseDto responseDto = userService.updatePasswordById(id, requestDto.getPassword());
+        UpdateUserResponseDto responseDto = userService.updatePasswordById(id, requestDto.getPassword());
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
