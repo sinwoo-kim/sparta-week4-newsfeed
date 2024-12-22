@@ -21,7 +21,6 @@ public class Newsfeed extends BaseEntity {
     private String nickname;
     private String imagePath;
     private String content;
-    private Boolean is_deleted;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
