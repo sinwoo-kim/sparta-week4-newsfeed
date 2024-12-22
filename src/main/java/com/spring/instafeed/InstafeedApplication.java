@@ -11,5 +11,4 @@ public class InstafeedApplication {
     public static void main(String[] args) {
         SpringApplication.run(InstafeedApplication.class, args);
     }
-
 }
