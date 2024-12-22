@@ -46,4 +46,22 @@ public class UserServiceImpl implements UserService {
         User foundUser = userRepository.findByIdOrElseThrow(id);
         return UserResponseDto.toDto(foundUser);
     }
+
+    /**
+     * 기능
+     * 비밀번호 수정
+     *
+     * @param id       : 비밀번호를 수정하려는 사용자의 식별자
+     * @param password : 수정하려는 비밀번호
+     * @return UserResponseDto
+     */
+    @Transactional
+    @Override
+    public UserResponseDto updatePasswordById(Long id, String password) {
+        User foundUser = userRepository.findByIdOrElseThrow(id);
+
+        foundUser.update(password);
+
+        return UserResponseDto.toDto(foundUser);
+    }
 }

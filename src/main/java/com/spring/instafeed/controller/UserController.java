@@ -2,6 +2,7 @@ package com.spring.instafeed.controller;
 
 
 import com.spring.instafeed.dto.user.request.SignUpUserRequestDto;
+import com.spring.instafeed.dto.user.request.UpdateUserRequestDto;
 import com.spring.instafeed.dto.user.response.UserResponseDto;
 import com.spring.instafeed.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<UserResponseDto> signUp(@RequestBody SignUpUserRequestDto requestDto) {
         UserResponseDto responseDto = userService.signUp(requestDto.getName(), requestDto.getEmail(), requestDto.getPassword());
+
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
@@ -38,6 +40,24 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> findById(@PathVariable Long id) {
         UserResponseDto responseDto = userService.findById(id);
+
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    /**
+     * 기능
+     * 비밀번호 수정
+     *
+     * @param id         : 비밀번호를 수정하려는 사용자의 식별자
+     * @param requestDto : UpdateUserRequestDto
+     * @return UserResponseDto, HttpStatus.OK // 수정 필요
+     */
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserResponseDto> updatePasswordById(
+            @PathVariable Long id,
+            @RequestBody UpdateUserRequestDto requestDto
+    ) {
+        UserResponseDto responseDto = userService.updatePasswordById(id, requestDto.getPassword());
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }

@@ -7,7 +7,7 @@ public interface UserService {
      * 기능
      * 회원가입
      *
-     * @param name : 사용자 이름
+     * @param name     : 사용자 이름
      * @param email    : 사용자 이메일
      * @param password : 사용자 비밀번호
      * @return UserResponseDto
@@ -22,4 +22,14 @@ public interface UserService {
      * @return UserResponseDto
      */
     UserResponseDto findById(Long id);
+
+    /**
+     * 기능
+     * 비밀번호 수정
+     *
+     * @param id       : 비밀번호를 수정하려는 사용자의 식별자
+     * @param password : 수정하려는 비밀번호
+     * @return UserResponseDto
+     */
+    UserResponseDto updatePasswordById(Long id, String password);
 }
