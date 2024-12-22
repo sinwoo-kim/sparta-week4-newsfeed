@@ -8,7 +8,7 @@ import org.hibernate.annotations.Comment;
 @Getter
 @Entity
 @Table(name = "users")
-public class User extends BaseEntity {
+public class User2 extends BaseEntity {
 
     @Comment("사용자 식별자")
     @Id
@@ -29,7 +29,7 @@ public class User extends BaseEntity {
     private String password;
 
     // 기본 생성자
-    public User() {
+    public User2() {
     }
 
     /**
@@ -39,7 +39,7 @@ public class User extends BaseEntity {
      * @param email    : 사용자 이메일
      * @param password : 사용자 비밀번호
      */
-    public User(String name, String email, String password) {
+    public User2(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;

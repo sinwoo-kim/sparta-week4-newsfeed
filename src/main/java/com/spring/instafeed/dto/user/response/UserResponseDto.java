@@ -1,6 +1,6 @@
 package com.spring.instafeed.dto.user.response;
 
-import com.spring.instafeed.User;
+import com.spring.instafeed.User2;
 import lombok.Getter;
 
 @Getter
@@ -28,10 +28,10 @@ public class UserResponseDto {
      * 기능
      * 엔티티를 response DTO로 변환하는 메서드
      *
-     * @param user : 엔티티
+     * @param user2 : 엔티티
      * @return UserResponseDto
      */
-    public static UserResponseDto toDto(User user) {
-        return new UserResponseDto(user.getId(), user.getName(), user.getEmail());
+    public static UserResponseDto toDto(User2 user2) {
+        return new UserResponseDto(user2.getId(), user2.getName(), user2.getEmail());
     }
 }

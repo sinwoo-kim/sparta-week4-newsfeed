@@ -1,6 +1,6 @@
 package com.spring.instafeed.service;
 
-import com.spring.instafeed.User;
+import com.spring.instafeed.User2;
 import com.spring.instafeed.dto.user.response.UpdateUserResponseDto;
 import com.spring.instafeed.dto.user.response.UserResponseDto;
 import com.spring.instafeed.repository.UserRepository;
@@ -27,11 +27,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserResponseDto signUp(String name, String email, String password) {
-        User user = new User(name, email, password);
+        User2 user2 = new User2(name, email, password);
 
-        User savedUser = userRepository.save(user);
+        User2 savedUser2 = userRepository.save(user2);
 
-        return UserResponseDto.toDto(savedUser);
+        return UserResponseDto.toDto(savedUser2);
     }
 
     /**
@@ -44,8 +44,8 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     @Override
     public UserResponseDto findById(Long id) {
-        User foundUser = userRepository.findByIdOrElseThrow(id);
-        return UserResponseDto.toDto(foundUser);
+        User2 foundUser2 = userRepository.findByIdOrElseThrow(id);
+        return UserResponseDto.toDto(foundUser2);
     }
 
     /**
@@ -59,9 +59,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UpdateUserResponseDto updatePasswordById(Long id, String password) {
-        User foundUser = userRepository.findByIdOrElseThrow(id);
+        User2 foundUser2 = userRepository.findByIdOrElseThrow(id);
 
-        foundUser.update(password);
+        foundUser2.update(password);
 
         String success = "비밀번호 수정에 성공했습니다.";
 

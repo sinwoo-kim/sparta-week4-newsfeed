@@ -1,6 +1,6 @@
 package com.spring.instafeed.repository;
 
-import com.spring.instafeed.User;
+import com.spring.instafeed.User2;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User2, Long> {
 
     /**
      * 기능
@@ -19,8 +19,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param id : 조회하려는 사용자의 식별자
      * @return Optional<User>
      */
-    @Query("SELECT u FROM User u WHERE u.id = :id AND u.isDeleted IS NULL")
-    Optional<User> findByIdExceptDeleted(Long id);
+    @Query("SELECT u FROM User2 u WHERE u.id = :id AND u.isDeleted IS NULL")
+    Optional<User2> findByIdExceptDeleted(Long id);
 
     /**
      * 기능
@@ -29,7 +29,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param id : 조회하려는 사용자의 식별자
      * @return User
      */
-    default User findByIdOrElseThrow(Long id) {
+    default User2 findByIdOrElseThrow(Long id) {
         return findByIdExceptDeleted(id).orElseThrow(
                 () -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "입력된 id가 존재하지 않습니다. 다시 입력해 주세요."));
@@ -41,6 +41,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     @Transactional
     @Modifying
-    @Query("UPDATE User m SET m.isDeleted = TRUE, m.deletedAt = CURRENT_TIMESTAMP WHERE m.id = :id")
+    @Query("UPDATE User2 m SET m.isDeleted = TRUE, m.deletedAt = CURRENT_TIMESTAMP WHERE m.id = :id")
     int softDeleteById(Long id);
 }
