@@ -49,6 +49,7 @@ public class NewsfeedController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    // 게시물 내용 수정
-    // 게시물 단건 삭제
+    // 게시물 내용 수정(본인만 처리 가능)
+
+    // 게시물 단건 삭제(본인만 처리 가능)
 }
