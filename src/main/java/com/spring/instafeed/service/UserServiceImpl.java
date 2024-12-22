@@ -64,4 +64,21 @@ public class UserServiceImpl implements UserService {
 
         return UserResponseDto.toDto(foundUser);
     }
+
+    /**
+     * 기능
+     * 사용자 단건 삭제
+     *
+     * @param id : 삭제하려는 사용자의 식별자
+     */
+    @Transactional
+    @Override
+    public void delete(Long id) {
+
+        /*
+        todo
+         무한 삭제가 가능하게 해야할까, 한번만 삭제할 수 있게 해야 할까??
+         */
+        userRepository.softDeleteById(id);
+    }
 }

@@ -32,4 +32,11 @@ public interface UserService {
      * @return UserResponseDto
      */
     UserResponseDto updatePasswordById(Long id, String password);
+
+    /**
+     * 기능
+     *
+     * @param id : 삭제하려는 사용자의 식별자
+     */
+    void delete(Long id);
 }

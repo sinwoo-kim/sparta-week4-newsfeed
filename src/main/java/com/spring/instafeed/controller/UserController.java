@@ -61,4 +61,18 @@ public class UserController {
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
+
+    /**
+     * 기능
+     * 사용자 소프트 딜리트
+     *
+     * @param id : 삭제하려는 사용자의 id
+     * @return HttpStatus.OK
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        userService.delete(id);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

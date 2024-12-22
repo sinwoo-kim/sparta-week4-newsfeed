@@ -2,8 +2,10 @@ package com.spring.instafeed.repository;
 
 import com.spring.instafeed.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
@@ -32,4 +34,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
                 () -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "입력된 id가 존재하지 않습니다. 다시 입력해 주세요."));
     }
+
+    /*
+    todo
+     역등성을 고려해서 계속 삭제할 수 있게 할까, 아니면 한 번만 삭제할 수 있게 할까?
+     */
+    @Transactional
+    @Modifying
+    @Query("UPDATE User m SET m.isDeleted = TRUE, m.deletedAt = CURRENT_TIMESTAMP WHERE m.id = :id")
+    int softDeleteById(Long id);
 }
