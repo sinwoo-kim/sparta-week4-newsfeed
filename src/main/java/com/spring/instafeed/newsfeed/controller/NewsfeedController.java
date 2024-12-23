@@ -1,6 +1,7 @@
 package com.spring.instafeed.newsfeed.controller;
 
 import com.spring.instafeed.newsfeed.dto.request.NewsfeedCreateRequestDto;
+import com.spring.instafeed.newsfeed.dto.request.NewsfeedModifyRequestDto;
 import com.spring.instafeed.newsfeed.dto.response.NewsfeedCommonResponseDto;
 import com.spring.instafeed.newsfeed.dto.response.NewsfeedListResponseDto;
 import com.spring.instafeed.newsfeed.service.NewsfeedService;
@@ -44,12 +45,43 @@ public class NewsfeedController {
 
     // 게시물 단건 조회
     @GetMapping("/{id}")
-    public ResponseEntity<NewsfeedCommonResponseDto> findNewsfeedAPI(@PathVariable("id") Long id) {
-        NewsfeedCommonResponseDto response = newsfeedService.findNewsfeed(id);
+    public ResponseEntity<NewsfeedCommonResponseDto> findNewsfeedAPI(@PathVariable("id") Long newsfeedId) {
+        NewsfeedCommonResponseDto response = newsfeedService.findNewsfeed(newsfeedId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // 게시물 내용 수정(본인만 처리 가능)
+    @PatchMapping("/{id}")
+    public ResponseEntity<NewsfeedCommonResponseDto> modifyNeewsfeedAPI(@PathVariable("id") Long newsfeedId,
+                                                                        @RequestBody NewsfeedModifyRequestDto modifyRequestDto,
+                                                                        HttpSession session) {
+//      Long userId = (Long) session.getAttribute("userId");
+        // -------------------------------------
+        // TODO :: 하드코딩 ( 수정해야 됨!!!)
+        Long userId = 1L; // 하드코딩
+        // -------------------------------------
+        NewsfeedCommonResponseDto response = newsfeedService.modifyNewsfeed(newsfeedId, modifyRequestDto, userId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
 
-    // 게시물 단건 삭제(본인만 처리 가능)
+    }
+
+    /**
+     * 게시물 단건 삭제 API(본인만 처리 가능)
+     * 사용자로부터 Newfeed Id를 받아 해당 id의 게시물을 삭제합니다.
+     * 본인만 처리 가능하도록 세션을 활용해서 사용자 id를 가져와 서비스 계층에 전달, 삭제 요청을 처리합니다.
+     * @param NewsfeedId
+     * @param session
+     * @return String
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteNewsfeedAPI(@PathVariable("id") Long NewsfeedId,
+                                                    HttpSession session) {
+//        Long userId = (Long) session.getAttribute("userId");
+        // -------------------------------------
+        // TODO :: 하드코딩 ( 수정해야 됨!!!)
+        Long userId = 1L; // 하드코딩
+        // -------------------------------------
+        newsfeedService.deleteNewsfeed(NewsfeedId, userId);
+        return ResponseEntity.ok("Newsfeed deletion successful");
+    }
 }

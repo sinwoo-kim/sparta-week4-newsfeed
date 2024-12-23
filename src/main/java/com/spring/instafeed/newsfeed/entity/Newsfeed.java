@@ -1,5 +1,6 @@
 package com.spring.instafeed.newsfeed.entity;
 
+import com.spring.instafeed.newsfeed.dto.request.NewsfeedModifyRequestDto;
 import com.spring.instafeed.user.entity.User;
 import com.spring.instafeed.base.BaseEntity;
 import com.spring.instafeed.newsfeed.dto.request.NewsfeedCreateRequestDto;
@@ -42,5 +43,10 @@ public class Newsfeed extends BaseEntity {
                 .content(createRequestDto.getContent())
                 .foundUser(foundUser)
                 .build();
+    }
+
+    public Newsfeed updateNewsfeed(NewsfeedModifyRequestDto modifyRequestDto) {
+        this.content = modifyRequestDto.getContent();
+        return this;
     }
 }
