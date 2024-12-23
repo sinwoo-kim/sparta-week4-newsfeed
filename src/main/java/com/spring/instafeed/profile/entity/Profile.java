@@ -8,9 +8,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
+@Table(name = "profile")
 @AllArgsConstructor
 public class Profile extends BaseEntity {
 
@@ -18,7 +21,8 @@ public class Profile extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)  // 한 명의 사용자에 대해 여러 프로필을 가질 수 있도록 변경
+    @JoinColumn(name = "user_id")
     private User user;
 
     private String nickname;
@@ -36,20 +40,21 @@ public class Profile extends BaseEntity {
     }
 
     /**
-     * 불변 객체를 위한 생성자
+     * Profile 클래스의 생성자입니다.
      *
-     * 이 생성자는 `Profile` 객체를 불변 객체로 생성하기 위해 사용됩니다.
-     * 주로 새로운 `Profile` 객체를 생성할 때 사용되며, 생성 시점에 모든 필드를 초기화합니다.
-     *
-     * @param user     프로필에 연관된 사용자 정보 (User 객체)
-     * @param nickname 사용자의 닉네임
-     * @param content  프로필에 대한 설명 또는 내용
-     * @param imagePath 프로필 이미지 경로
+     * @param user      이 프로필에 연결된 사용자 객체입니다.
+     *                  사용자 정보에 따라 프로필의 소유자가 결정됩니다.
+     * @param nickname  프로필에서 사용될 사용자 닉네임입니다.
+     *                  다른 사용자에게 표시되는 이름으로, 고유해야 할 수 있습니다.
+     * @param content   프로필에 대한 추가 정보 또는 설명입니다.
+     *                  사용자가 자신의 프로필에 대해 작성한 내용을 나타냅니다.
+     * @param imagePath 프로필 이미지의 경로입니다.
+     *                  이 경로는 사용자의 프로필 사진을 저장하는 위치를 나타냅니다.
      */
     public Profile(User user, String nickname, String content, String imagePath) {
-        this.user = user;          // 사용자 정보
-        this.nickname = nickname;  // 사용자 닉네임
-        this.content = content;    // 프로필 내용
-        this.imagePath = imagePath; // 프로필 이미지 경로
+        this.user = user;
+        this.nickname = nickname;
+        this.content = content;
+        this.imagePath = imagePath;
     }
 }

@@ -1,6 +1,7 @@
 package com.spring.instafeed.newsfeed.entity;
 
 import com.spring.instafeed.newsfeed.dto.request.NewsfeedModifyRequestDto;
+import com.spring.instafeed.profile.entity.Profile;
 import com.spring.instafeed.user.entity.User;
 import com.spring.instafeed.base.BaseEntity;
 import com.spring.instafeed.newsfeed.dto.request.NewsfeedCreateRequestDto;
@@ -24,16 +25,15 @@ public class Newsfeed extends BaseEntity {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    User foundUser;
+    @JoinColumn(name = "profile_id")
+    Profile profile;
 
     @Builder
-    private Newsfeed(String imagePath, String nickname, String content, User foundUser) {
+    private Newsfeed(String imagePath, String nickname, String content, Profile profile) {
         this.imagePath = imagePath;
         this.nickname = nickname;
         this.content = content;
-        this.foundUser = foundUser;
-
+        this.profile = profile;
     }
 
     /**
@@ -47,15 +47,15 @@ public class Newsfeed extends BaseEntity {
      *                         - nickname: 작성자 닉네임
      *                         - content: 게시물 내용
      *
-     * @param foundUser 게시물 작성자(User 객체)
+     * @param profile 게시물 작성자(User 객체)
      * @return Newsfeed 생성된 엔티티 객체
      */
-    public static Newsfeed of(NewsfeedCreateRequestDto createRequestDto, User foundUser) {
+    public static Newsfeed of(NewsfeedCreateRequestDto createRequestDto, Profile profile) {
         return Newsfeed.builder()
                 .imagePath(createRequestDto.getImagePath())
                 .nickname(createRequestDto.getNickname())
                 .content(createRequestDto.getContent())
-                .foundUser(foundUser)
+                .profile(profile)
                 .build();
     }
 

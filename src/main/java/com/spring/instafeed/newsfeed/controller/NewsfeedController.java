@@ -27,8 +27,11 @@ public class NewsfeedController {
      *
      * 세션에서 사용자 정보를 가져와 본인 계정으로 게시물을 생성할 수 있습니다.
      *
+     * <p>TODO:</p>
+     * * - 현재 사용자 ID가 하드코딩되어 있어 동적으로 세션 정보를 활용하도록 개선 필요.
+     *
      * @param createRequestDto 게시물 생성 요청 정보를 담고 있는 DTO
-     * @param session
+     * @param session 로그인 사용자의 세션 정보 (사용자 ID 확인에 사용)
      * @return NewsfeedCommonResponseDto 게시물 정보를 반환하는 공통 DTO
      */
     @PostMapping
@@ -37,7 +40,6 @@ public class NewsfeedController {
 
 //        Long userId = session.getAttribute("userId");
         // -------------------------------------
-        // TODO :: 하드코딩 ( 수정해야 됨!!!)
         Long userId = 1L; // 하드코딩
         // -------------------------------------
         NewsfeedCommonResponseDto response = newsfeedService.createNewsfeed(createRequestDto, userId);
@@ -48,6 +50,8 @@ public class NewsfeedController {
 
     /**
      * 게시물 목록 조회 API
+     *
+     * 게시물 전체 목록을 조회합니다.
      *
      * @return NewsfeedListResponseDto
      */
@@ -61,7 +65,7 @@ public class NewsfeedController {
      *
      * 사용자로부터 조회 할 newsfeed Id를 받아 서비스 계층으로 전달, 조회 요청을 처리합니다.
      *
-     * @param newsfeedId
+     * @param newsfeedId 조회할 게시물의 ID (경로 변수로 전달)
      * @return NewsfeedCommonResponseDto 게시물 정보를 반환하는 공통 DTO
      */
     @GetMapping("/{id}")
@@ -76,9 +80,12 @@ public class NewsfeedController {
      * 사용자로부터 Newfeed Id를 받아 해당 id의 게시물을 수정합니다.
      * 본인만 처리 가능하도록 세션을 활용해서 사용자 id를 가져와 서비스 계층에 전달, 수정 요청을 처리합니다.
      *
-     * @param newsfeedId
-     * @param modifyRequestDto
-     * @param session
+     * <p>TODO:</p>
+     * * - 현재 사용자 ID가 하드코딩되어 있어 동적으로 세션 정보를 활용하도록 개선 필요.
+     *
+     * @param newsfeedId 수정할 게시물의 ID (경로 변수로 전달)
+     * @param modifyRequestDto 게시물 수정 요청 정보를 담고 있는 DTO
+     * @param session 로그인 사용자의 세션 정보 (사용자 ID 확인에 사용)
      * @return NewsfeedCommonResponseDto 게시물 정보를 반환하는 공통 DTO
      */
     @PatchMapping("/{id}")
@@ -87,7 +94,6 @@ public class NewsfeedController {
                                                                         HttpSession session) {
 //      Long userId = (Long) session.getAttribute("userId");
         // -------------------------------------
-        // TODO :: 하드코딩 ( 수정해야 됨!!!)
         Long userId = 1L; // 하드코딩
         // -------------------------------------
         NewsfeedCommonResponseDto response = newsfeedService.modifyNewsfeed(newsfeedId, modifyRequestDto, userId);
@@ -101,16 +107,18 @@ public class NewsfeedController {
      * 사용자로부터 Newsfeed Id를 받아 해당 id의 게시물을 삭제합니다.
      * 본인만 처리 가능하도록 세션을 활용해서 사용자 id를 가져와 서비스 계층에 전달, 삭제 요청을 처리합니다.
      *
-     * @param NewsfeedId
-     * @param session
-     * @return String
+     * <p>TODO:</p>
+     *  * - 현재 사용자 ID가 하드코딩되어 있어 동적으로 세션 정보를 활용하도록 개선 필요.
+     *
+     * @param NewsfeedId 삭제할 게시물의 ID (경로 변수로 전달)
+     * @param session 로그인 사용자의 세션 정보 (사용자 ID 확인에 사용)
+     * @return ResponseEntity<String> 삭제 성공 메시지 반환
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteNewsfeedAPI(@PathVariable("id") Long NewsfeedId,
                                                     HttpSession session) {
 //        Long userId = (Long) session.getAttribute("userId");
         // -------------------------------------
-        // TODO :: 하드코딩 ( 수정해야 됨!!!)
         Long userId = 1L; // 하드코딩
         // -------------------------------------
         newsfeedService.deleteNewsfeed(NewsfeedId, userId);
