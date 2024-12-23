@@ -1,19 +1,40 @@
 package com.spring.instafeed.newsfeed.dto.response;
 
 import com.spring.instafeed.newsfeed.entity.Newsfeed;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 public class NewsfeedListResponseDto {
 
     //TODO: 페이징을 위해 속성 구성 어떻게 해야되지?
-    private String imagePath;
+    private List<NewsfeedDto> newsfeedList;
 
-    public NewsfeedListResponseDto(Newsfeed newsfeed) {
-        this.imagePath = newsfeed.getImagePath();
+    private NewsfeedListResponseDto(List<NewsfeedDto> NewsfeedList) {
+        this.newsfeedList = newsfeedList;
+    }
+
+    // private로 선언하여 직접 객체 생성을 막고, 대신 createFrom() 팩토리 메서드를 통해 객체 생성.
+    public static NewsfeedListResponseDto createFrom(List<NewsfeedDto> courseDtoList) {
+        return new NewsfeedListResponseDto(courseDtoList);
+    }
+
+    /**
+     * NewsfeedDto 내부 클래스
+     */
+    @Getter
+    public static class NewsfeedDto {
+        private String imagePath;
+        private String content;
+
+        private NewsfeedDto(Newsfeed newsfeed ){
+            this.imagePath = newsfeed.getImagePath();
+            this.content = newsfeed.getContent();
+        }
+        // Newsfeed 엔터티를 입력받아 DTO 객체 생성 및 반환.
+        public static NewsfeedDto createFrom(Newsfeed newsfeed) {
+            return new NewsfeedDto(newsfeed);
+        }
     }
 }

@@ -17,4 +17,6 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
     // @Query를 사용하여 삭제되지 않은 모든 프로필을 조회하는 커스텀 쿼리 메소드
     @Query("SELECT p FROM Profile p WHERE p.isDeleted = false")
     List<Profile> findAllActiveProfiles();
+
+    Optional<Profile> findActiveProfileById(Long id);
 }

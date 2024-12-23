@@ -9,18 +9,18 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "newsfeed")
 @Getter
+@Setter
 @NoArgsConstructor
 public class Newsfeed extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long newsfeedId;
-    @Column(nullable = false, unique = true) // null 허용 안함
-    private String nickname;
     private String imagePath;
     private String content;
 
@@ -29,9 +29,8 @@ public class Newsfeed extends BaseEntity {
     Profile profile;
 
     @Builder
-    private Newsfeed(String imagePath, String nickname, String content, Profile profile) {
+    private Newsfeed(String imagePath, String content, Profile profile) {
         this.imagePath = imagePath;
-        this.nickname = nickname;
         this.content = content;
         this.profile = profile;
     }
@@ -53,7 +52,6 @@ public class Newsfeed extends BaseEntity {
     public static Newsfeed of(NewsfeedCreateRequestDto createRequestDto, Profile profile) {
         return Newsfeed.builder()
                 .imagePath(createRequestDto.getImagePath())
-                .nickname(createRequestDto.getNickname())
                 .content(createRequestDto.getContent())
                 .profile(profile)
                 .build();

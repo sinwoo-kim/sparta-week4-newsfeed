@@ -6,5 +6,6 @@ import lombok.Getter;
 public class NewsfeedModifyRequestDto {
 
     private String content;
+    private Long profileId;
 
 }

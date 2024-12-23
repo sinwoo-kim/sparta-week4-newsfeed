@@ -8,9 +8,8 @@ import com.spring.instafeed.newsfeed.entity.Newsfeed;
 import com.spring.instafeed.newsfeed.repository.NewsfeedRepository;
 import com.spring.instafeed.profile.entity.Profile;
 import com.spring.instafeed.profile.repository.ProfileRepository;
-import com.spring.instafeed.user.entity.User;
 import com.spring.instafeed.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import jakarta.transaction.Transactional; //
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -33,42 +32,42 @@ public class NewsfeedService {
      * 게시물 생성 메서드
      * <p>
      * 요청된 데이터를 기반으로 새로운 게시물을 생성하고 저장합니다.
-     *
+     * newNewsfeed 객체에 저장된 foundProfile 객체을 활용하여 닉네임을 가져옵니다.
      * <p>TODO</p>
      * - 코드 검토 필요
      *
      * @param createRequestDto 게시물 생성 요청 정보를 담은 DTO
-     * @param userId           세션 정보에서 제공된 사용자 ID
      * @return NewsfeedCommonResponseDto 게시물 정보를 담은 공통 DTO
      */
-    @Transactional
-    public NewsfeedCommonResponseDto createNewsfeed(NewsfeedCreateRequestDto createRequestDto, Long userId) {
-        // userId 존재 유무 조회
-        User foundUser = findUserByID(userId);
-        // 프로필 테이블에서 해당 사용자에 대한 프로필 ID를 조회.
-        Profile foundProfile = findProfileById(foundUser.getId());
-        // 객체 생성
+    @Transactional // read-only로 적용하면 빠질 일 없음, setter는 쓰기 전용
+    public NewsfeedCommonResponseDto createNewsfeed(NewsfeedCreateRequestDto createRequestDto) {
+        Long profileId = createRequestDto.getProfileId();
+        Profile foundProfile = profileRepository.findById(profileId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile id를 찾을 수 없어요"));
         Newsfeed newNewsfeed = Newsfeed.of(createRequestDto, foundProfile);
-        log.info("newNewsfeed = {}", newNewsfeed.getNickname());
-        // DB 저장
         Newsfeed savedNewsfeed = newsfeedRepository.save(newNewsfeed);
-        log.info("savedNewsfeed.getImagePath() = {}", savedNewsfeed.getNickname());
-
-        return convertToDto(savedNewsfeed);
+        return NewsfeedCommonResponseDto.convertToDto(savedNewsfeed);
     }
 
 
     /**
      * 게시물 목록 조회 메서드
      * <p>
-     * List를 활용해 게시물 목록을 조회합니다.
+     * 데이터베이스에서 모든 게시물을 조회하고, DTO로 변환하여 반환합니다.
      *
      * @return NewsfeedListResponseDto 게시물 목록을 담은 DTO
      */
-    public List<NewsfeedListResponseDto> findNewsfeedList() {
+    public NewsfeedListResponseDto findNewsfeedList() {
+
         List<Newsfeed> foundList = newsfeedRepository.findAll();
-        log.info("foundList = {}", foundList);
-        return foundList.stream().map(NewsfeedListResponseDto::new).collect(Collectors.toList());
+
+        // 게시물 목록 DTO로 변환
+        List<NewsfeedListResponseDto.NewsfeedDto> NewsfeedDtoList = foundList.stream()
+                .map(NewsfeedListResponseDto.NewsfeedDto::createFrom)// DTO 변환
+                .toList(); // 리스트로 수집
+
+        log.info("NewsfeedDtoList = {}", NewsfeedDtoList);
+        // 최종 DTO 반환
+        return NewsfeedListResponseDto.createFrom(NewsfeedDtoList);
     }
 
     /**
@@ -81,12 +80,12 @@ public class NewsfeedService {
      */
     public NewsfeedCommonResponseDto findNewsfeed(Long newsfeedId) {
         Newsfeed foundNewsfeed = findNewsfeedById(newsfeedId);
-        return convertToDto(foundNewsfeed);
+        return NewsfeedCommonResponseDto.convertToDto(foundNewsfeed);
     }
 
     /**
      * 게시물 단건 수정 메서드
-     *
+     * <p>
      * 사용자 ID와 게시물 ID를 기반으로 작성자 검증 후, 요청된 수정 내용을 반영합니다.
      * 수정된 게시물 정보는 데이터베이스에 저장되며, 공통 DTO로 반환됩니다.
      *
@@ -96,25 +95,26 @@ public class NewsfeedService {
      *
      * @param newsfeedId
      * @param modifyRequestDto
-     * @param userId
      * @return NewsfeedCommonResponseDto 게시물 정보를 담은 공통 DTO
      */
-    public NewsfeedCommonResponseDto modifyNewsfeed(Long newsfeedId, NewsfeedModifyRequestDto modifyRequestDto, Long userId) {
-
-        User foundUser = findUserByID(userId);
-        Profile foundProfile = findProfileById(foundUser.getId());
+    @Transactional
+    public NewsfeedCommonResponseDto modifyNewsfeed(Long newsfeedId, NewsfeedModifyRequestDto modifyRequestDto) {
+        // 게시물 조회
         Newsfeed foundNewsfeed = findNewsfeedById(newsfeedId);
 
-        Newsfeed newNewsfeed = foundNewsfeed.updateNewsfeed(modifyRequestDto);
+        // 수정 요청 데이터 반영
+        foundNewsfeed.updateNewsfeed(modifyRequestDto);
 
-        Newsfeed savedNewesfeed = newsfeedRepository.save(newNewsfeed);
+        // 데이터베이스에 저장
+        Newsfeed updatedNewsfeed = newsfeedRepository.save(foundNewsfeed);
 
-        return convertToDto(savedNewesfeed);
+        // 수정된 데이터를 DTO로 변환하여 반환
+        return NewsfeedCommonResponseDto.convertToDto(updatedNewsfeed);
     }
 
     /**
      * 게시물 단건 삭제 메서드
-     *
+     * <p>
      * 게시물 작성자 본인만 삭제할 수 있도록 ID 검증을 수행하며,
      * 검증 완료 후 데이터베이스에서 해당 게시물을 삭제합니다.
      *
@@ -123,10 +123,8 @@ public class NewsfeedService {
      * - isDeleted , DeleteAt 어떻게 적용해야되는지?
      *
      * @param newsfeedId
-     * @param userId
      */
-    public void deleteNewsfeed(Long newsfeedId, Long userId) {
-        User foundUser = findUserByID(userId);
+    public void deleteNewsfeed(Long newsfeedId) {
         Newsfeed foundNewsfeed = findNewsfeedById(newsfeedId);
 
         newsfeedRepository.deleteById(foundNewsfeed.getNewsfeedId());
@@ -136,44 +134,15 @@ public class NewsfeedService {
     /* ----------------------------------------공통 메서드---------------------------------------------------*/
 
     /**
-     * User Id 조회 (if false -> 예외 처리)
-     *
-     * @param UserId
-     * @return User
-     */
-    private User findUserByID(Long UserId) {
-        return userRepository.findById(UserId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user id를 찾을 수 없어요"));
-    }
-
-    /**
-     * Profile Id 조회 (if false -> 예외 처리)
-     *
-     */
-    private Profile findProfileById(Long foundUser) {
-        return profileRepository.findById(foundUser).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile id를 찾을 수 없어요"));
-    }
-
-
-    /**
      * newsfeed Id 조회 (if false -> 예외 처리)
      *
      * @param newsfeedId
      * @return Newsfeed
      */
-//
+// 안뺴는게 더 좋을 수 있음. 잘 읽히는게 중요
     private Newsfeed findNewsfeedById(Long newsfeedId) {
         return newsfeedRepository.findById(newsfeedId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "newsfeed id를 찾을 수 없어요"));
 
-    }
-
-    /**
-     * newsfeed -> Dto 변환
-     *
-     * @param newsfeed
-     * @return NewsfeedCommonResponseDto
-     */
-    private NewsfeedCommonResponseDto convertToDto(Newsfeed newsfeed) {
-        return NewsfeedCommonResponseDto.convertDto(newsfeed);
     }
 }
 

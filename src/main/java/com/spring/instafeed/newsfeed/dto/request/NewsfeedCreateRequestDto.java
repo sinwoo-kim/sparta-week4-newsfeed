@@ -6,7 +6,7 @@ import lombok.Getter;
 public class NewsfeedCreateRequestDto {
 
     private String imagePath;
-    private String nickname;
     private String content;
+    private Long profileId;
 
 }
