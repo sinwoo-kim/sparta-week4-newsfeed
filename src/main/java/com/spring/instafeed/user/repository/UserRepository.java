@@ -35,10 +35,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
                         HttpStatus.NOT_FOUND, "입력된 id가 존재하지 않습니다. 다시 입력해 주세요."));
     }
 
-    /*
-    todo
-     역등성을 고려해서 계속 삭제할 수 있게 할까, 아니면 한 번만 삭제할 수 있게 할까?
-     */
     @Transactional
     @Modifying
     @Query("UPDATE User m SET m.isDeleted = TRUE, m.deletedAt = CURRENT_TIMESTAMP WHERE m.id = :id")

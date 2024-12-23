@@ -69,7 +69,6 @@ public class ProfileService {
         // 저장된 프로필 정보를 DTO로 변환하여 응답
         return CreateProfileResponseDto.of(savedProfile);
     }
-
     /**
      * 모든 프로필 목록 조회
      *
@@ -83,8 +82,7 @@ public class ProfileService {
         List<Profile> profiles = profileRepository.findAllActiveProfiles(); // 삭제되지 않은 프로필만 조회
         return profiles.stream()                             // 프로필 객체를 DTO로 변환
                 .map(QueryProfileResponseDto::of)
-                .collect(Collectors.toList());
-    }
+  }
 
     /**
      * 프로필 단건 조회
@@ -134,7 +132,6 @@ public class ProfileService {
         // 수정된 프로필을 DTO로 변환하여 반환
         return UpdateProfileResponseDto.of(savedProfile);
     }
-
 
     /**
      * 프로필을 논리적으로 삭제합니다.
