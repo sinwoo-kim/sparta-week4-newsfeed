@@ -9,6 +9,10 @@ import com.spring.instafeed.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class FollowerServiceImpl implements FollowerService {
@@ -26,5 +30,18 @@ public class FollowerServiceImpl implements FollowerService {
         Follower savedFollower = followerRepository.save(follower);
 
         return FollowerResponseDto.toDto(savedFollower);
+    }
+
+    @Override
+    public List<FollowerResponseDto> findAll() {
+
+        List<FollowerResponseDto> allFollowers = new ArrayList<>();
+
+        allFollowers = followerRepository.findAllExceptDeleted()
+                .stream()
+                .map(FollowerResponseDto::toDto)
+                .toList();
+
+        return allFollowers;
     }
 }
