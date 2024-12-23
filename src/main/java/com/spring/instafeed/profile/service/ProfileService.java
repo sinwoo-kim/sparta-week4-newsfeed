@@ -4,6 +4,7 @@ import com.spring.instafeed.profile.dto.request.CreateProfileRequestDto;
 import com.spring.instafeed.profile.dto.request.UpdateProfileRequestDto;
 import com.spring.instafeed.profile.dto.response.CreateProfileResponseDto;
 import com.spring.instafeed.profile.dto.response.DeleteProfileResponseDto;
+import com.spring.instafeed.profile.dto.response.QueryProfileResponseDto;
 import com.spring.instafeed.profile.dto.response.UpdateProfileResponseDto;
 import com.spring.instafeed.profile.entity.Profile;
 import com.spring.instafeed.profile.repository.ProfileRepository;
@@ -75,13 +76,13 @@ public class ProfileService {
      * 데이터베이스에서 모든 프로필 정보를 조회하고, 이를 DTO로 변환하여 반환합니다.
      * 이미 삭제된 프로필은 조회되지 않습니다.
      *
-     * @return List<UpdateProfileResponseDto> 모든 프로필 정보 리스트
+     * @return List<QueryProfileResponseDto> 모든 프로필 정보 리스트
      */
     @Transactional(readOnly = true)
-    public List<UpdateProfileResponseDto> getAllProfiles() {
+    public List<QueryProfileResponseDto> getAllProfiles() {
         List<Profile> profiles = profileRepository.findAllActiveProfiles(); // 삭제되지 않은 프로필만 조회
         return profiles.stream()                             // 프로필 객체를 DTO로 변환
-                .map(UpdateProfileResponseDto::of)
+                .map(QueryProfileResponseDto::of)
                 .collect(Collectors.toList());
     }
 
@@ -96,12 +97,12 @@ public class ProfileService {
      * @throws ResponseStatusException 프로필이 존재하지 않으면 예외 발생
      */
     @Transactional(readOnly = true)
-    public UpdateProfileResponseDto getProfileById(Long id) {
+    public QueryProfileResponseDto getProfileById(Long id) {
         Profile profile = profileRepository.findByIdAndIsDeletedFalse(id)  // ID로 프로필 조회, 삭제된 프로필은 제외
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile not found"));
 
         // 조회된 프로필 객체를 DTO로 변환하여 반환
-        return UpdateProfileResponseDto.of(profile);
+        return QueryProfileResponseDto.of(profile);
     }
 
     /**

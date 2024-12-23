@@ -4,6 +4,7 @@ import com.spring.instafeed.profile.dto.request.CreateProfileRequestDto;
 import com.spring.instafeed.profile.dto.request.UpdateProfileRequestDto;
 import com.spring.instafeed.profile.dto.response.CreateProfileResponseDto;
 import com.spring.instafeed.profile.dto.response.DeleteProfileResponseDto;
+import com.spring.instafeed.profile.dto.response.QueryProfileResponseDto;
 import com.spring.instafeed.profile.dto.response.UpdateProfileResponseDto;
 import com.spring.instafeed.profile.service.ProfileService;
 import lombok.RequiredArgsConstructor;
@@ -44,12 +45,12 @@ public class ProfileController {
      * 프로필 목록 조회
      *
      * GET 요청을 통해 모든 프로필 목록을 조회하는 엔드포인트.
-     * 저장된 모든 프로필 정보를 `UpdateProfileResponseDto` 형식으로 반환한다.
+     * 저장된 모든 프로필 정보를 `QueryProfileResponseDto` 형식으로 반환한다.
      *
      * @return 모든 프로필 정보를 담은 리스트
      */
     @GetMapping
-    public List<UpdateProfileResponseDto> getAllProfiles() {
+    public List<QueryProfileResponseDto> getAllProfiles() {
         return profileService.getAllProfiles();
     }
 
@@ -63,7 +64,7 @@ public class ProfileController {
      * @return 조회된 프로필 정보를 담은 Response DTO
      */
     @GetMapping("/{id}")
-    public UpdateProfileResponseDto getProfileById(@PathVariable Long id) {
+    public QueryProfileResponseDto getProfileById(@PathVariable Long id) {
         return profileService.getProfileById(id);
     }
 

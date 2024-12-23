@@ -18,8 +18,6 @@ public class UpdateProfileResponseDto {
     private final String imagePath;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
-    private final Boolean isDeleted;
-    private final LocalDateTime deletedAt;
 
     /**
      * Profile 객체를 UpdateProfileResponseDto로 변환하는 static 메서드
@@ -39,9 +37,7 @@ public class UpdateProfileResponseDto {
                 profile.getContent(),                           // 프로필 내용
                 profile.getImagePath(),                         // 프로필 이미지 경로
                 profile.getCreatedAt(),                         // 프로필 생성 일자
-                profile.getUpdatedAt(),                         // 프로필 수정 일자
-                profile.getIsDeleted(),                        // 프로필 삭제 여부
-                profile.getDeletedAt()                          // 프로필 삭제 일자
+                profile.getUpdatedAt()                          // 프로필 수정 일자
         );
     }
 }
