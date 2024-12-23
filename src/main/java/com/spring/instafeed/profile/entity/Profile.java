@@ -13,6 +13,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@Table(name = "profile")
 @AllArgsConstructor
 public class Profile extends BaseEntity {
 
