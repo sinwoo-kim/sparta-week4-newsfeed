@@ -26,6 +26,7 @@ public class Newsfeed extends BaseEntity {
     @JoinColumn(name = "user_id")
     User foundUser;
 
+    // 통일성 주자
     @Builder
     private Newsfeed(String imagePath, String nickname, String content, User foundUser) {
         this.imagePath = imagePath;

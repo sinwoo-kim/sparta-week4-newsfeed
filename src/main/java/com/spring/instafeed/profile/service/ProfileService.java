@@ -45,6 +45,7 @@ public class ProfileService {
         if (userId == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User ID must not be null");
         }
+        // 필요한 부분인지 검증 필요
 
         // 주어진 userId로 User 엔티티를 조회
         User user = userRepository.findById(userId)
@@ -81,7 +82,7 @@ public class ProfileService {
     public List<QueryProfileResponseDto> getAllProfiles() {
         List<Profile> profiles = profileRepository.findAllActiveProfiles(); // 삭제되지 않은 프로필만 조회
         return profiles.stream()                             // 프로필 객체를 DTO로 변환
-                .map(QueryProfileResponseDto::of)
+                .map(QueryProfileResponseDto::of).toList();
   }
 
     /**
@@ -122,9 +123,12 @@ public class ProfileService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile not found"));
 
         // 프로필의 내용을 수정
-        existingProfile.setNickname(updatedProfileRequestDto.getNickname());
-        existingProfile.setContent(updatedProfileRequestDto.getContent());
-        existingProfile.setImagePath(updatedProfileRequestDto.getImagePath());
+        // 무분별한 세터
+        // update 메서드로 해결할 수 있지 않을까???
+        // 현업 가서 세터 만나면 정말 학을 뗀다...!!! 객체가 어디서 변경되는지 찾는 게 정말 정말 정말 일이다!!!!
+//        existingProfile.setNickname(updatedProfileRequestDto.getNickname());
+//        existingProfile.setContent(updatedProfileRequestDto.getContent());
+//        existingProfile.setImagePath(updatedProfileRequestDto.getImagePath());
 
         // 수정된 프로필 객체를 데이터베이스에 저장
         Profile savedProfile = profileRepository.save(existingProfile);
@@ -152,9 +156,9 @@ public class ProfileService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Profile is already deleted");
         }
 
-        // 논리적 삭제 처리
-        profile.setIsDeleted(true);  // 삭제 플래그를 true로 설정
-        profile.setDeletedAt(LocalDateTime.now());  // 삭제 일자 기록
+        // 논리적 삭제 처리 여기도 세터가?
+//        profile.setIsDeleted(true);  // 삭제 플래그를 true로 설정
+//        profile.setDeletedAt(LocalDateTime.now());  // 삭제 일자 기록
 
         // 삭제된 프로필 저장
         Profile deletedProfile = profileRepository.save(profile);

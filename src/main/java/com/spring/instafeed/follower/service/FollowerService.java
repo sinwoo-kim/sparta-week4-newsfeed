@@ -8,9 +8,16 @@ import java.util.List;
 
 public interface FollowerService {
 
-    FollowerResponseDto sendFollowRequest(Long senderId, Long receiverId);
+    FollowerResponseDto sendFollowRequest(
+            Long senderId,
+            Long receiverId
+    );
 
     List<FollowerResponseDto> findAll();
 
-    UpdateFollowerResponseDto updateFollowingStatus(Long id, Long requestSenderId, Status status);
+    UpdateFollowerResponseDto updateFollowingStatus(
+            Long id,
+            Long requestSenderId,
+            Status status
+    );
 }

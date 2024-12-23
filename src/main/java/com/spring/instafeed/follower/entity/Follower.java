@@ -22,13 +22,18 @@ public class Follower extends BaseFollowerEntity {
     @JoinColumn(name = "receiver_profile_id")
     private Profile receiver;
 
-    @Column(columnDefinition = "VARCHAR(32)")
+    @Column(length = 32)
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    public Follower() {}
+    protected Follower() {
+    }
 
-    public Follower(Profile sender, Profile receiver, Status status) {
+    public Follower(
+            Profile sender,
+            Profile receiver,
+            Status status
+    ) {
         this.sender = sender;
         this.receiver = receiver;
         this.status = status;

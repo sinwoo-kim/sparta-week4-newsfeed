@@ -13,7 +13,11 @@ public interface UserService {
      * @param password : 사용자 비밀번호
      * @return UserResponseDto
      */
-    UserResponseDto signUp(String name, String email, String password);
+    UserResponseDto signUp(
+            String name,
+            String email,
+            String password
+    );
 
     /**
      * 기능
@@ -32,7 +36,10 @@ public interface UserService {
      * @param password : 수정하려는 비밀번호
      * @return UpdateUserResponseDto
      */
-    UpdateUserResponseDto updatePasswordById(Long id, String password);
+    UpdateUserResponseDto updatePassword(
+            Long id,
+            String password
+    );
 
     /**
      * 기능

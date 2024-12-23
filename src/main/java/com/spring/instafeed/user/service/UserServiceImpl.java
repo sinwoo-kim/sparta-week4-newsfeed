@@ -5,11 +5,14 @@ import com.spring.instafeed.user.dto.response.UpdateUserResponseDto;
 import com.spring.instafeed.user.dto.response.UserResponseDto;
 import com.spring.instafeed.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
     // 속성
@@ -26,7 +29,11 @@ public class UserServiceImpl implements UserService {
      */
     @Transactional
     @Override
-    public UserResponseDto signUp(String name, String email, String password) {
+    public UserResponseDto signUp(
+            String name,
+            String email,
+            String password
+    ) {
         User user = new User(name, email, password);
 
         User savedUser = userRepository.save(user);
@@ -41,10 +48,14 @@ public class UserServiceImpl implements UserService {
      * @param id : 조회하려는 사용자의 식별자
      * @return UserResponseDto
      */
-    @Transactional(readOnly = true)
     @Override
     public UserResponseDto findById(Long id) {
-        User foundUser = userRepository.findByIdOrElseThrow(id);
+        User foundUser = userRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "입력된 id가 존재하지 않습니다. 다시 입력해주세요."
+                        )
+                );
         return UserResponseDto.toDto(foundUser);
     }
 
@@ -58,14 +69,19 @@ public class UserServiceImpl implements UserService {
      */
     @Transactional
     @Override
-    public UpdateUserResponseDto updatePasswordById(Long id, String password) {
-        User foundUser = userRepository.findByIdOrElseThrow(id);
-
+    public UpdateUserResponseDto updatePassword(
+            Long id,
+            String password
+    ) {
+        User foundUser = userRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "입력된 id가 존재하지 않습니다. 다시 입력해주세요."
+                        )
+                );
         foundUser.update(password);
 
-        String success = "비밀번호 수정에 성공했습니다.";
-
-        return new UpdateUserResponseDto(success);
+        return new UpdateUserResponseDto("비밀번호 수정에 성공했습니다.");
     }
 
     /**
@@ -78,10 +94,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Long id) {
 
-        /*
-        todo
-         무한 삭제가 가능하게 해야할까, 한번만 삭제할 수 있게 해야 할까??
-         */
-        userRepository.softDeleteById(id);
+        User foundUser = userRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(
+                        () -> new RuntimeException("사용자가 조회되지 않습니다."
+                        )
+                );
+
+        foundUser.markAsDeleted();
     }
 }

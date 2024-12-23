@@ -3,13 +3,11 @@ package com.spring.instafeed.user.dto.response;
 import com.spring.instafeed.user.entity.User;
 import lombok.Getter;
 
-@Getter
-public class UserResponseDto {
-
-    // 속성
-    private final Long id;
-    private final String name;
-    private final String email;
+public record UserResponseDto(
+        Long id,
+        String name,
+        String email
+) {
 
     /**
      * 생성자
@@ -18,10 +16,7 @@ public class UserResponseDto {
      * @param name  : 사용자 이름
      * @param email : 사용자 이메일
      */
-    public UserResponseDto(Long id, String name, String email) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
+    public UserResponseDto {
     }
 
     /**

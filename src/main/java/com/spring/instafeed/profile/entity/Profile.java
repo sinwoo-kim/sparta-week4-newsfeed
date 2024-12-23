@@ -39,6 +39,7 @@ public class Profile extends BaseEntity {
     protected Profile() {
     }
 
+    // 생성자 ㅋㅋㅋㅋㅋ 패턴 통일하자..!!!!!!!!!
     /**
      * Profile 클래스의 생성자입니다.
      *

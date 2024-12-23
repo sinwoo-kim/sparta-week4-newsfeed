@@ -5,7 +5,6 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
@@ -32,21 +31,17 @@ public abstract class BaseEntity {
     private LocalDateTime updatedAt;
 
     // isDeleted 값을 설정할 수 있는 메서드 추가
-    @Setter
     @Comment("삭제 여부")
     @Column(name = "is_deleted", columnDefinition = "TINYINT(0)")
-    private Boolean isDeleted=false;
+    private Boolean isDeleted = false;
 
     // 삭제일을 설정할 수 있는 메서드 추가
-    @Setter
     @Comment("삭제일")
     @Column(name = "deleted_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime deletedAt;
 
-    public BaseEntity(LocalDateTime createdAt, LocalDateTime updatedAt, Boolean isDeleted, LocalDateTime deletedAt) {
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.isDeleted = isDeleted;
-        this.deletedAt = deletedAt;
+    public void markAsDeleted() {
+        this.isDeleted = true; // 삭제 플래그를 true로 설정
+        this.deletedAt = LocalDateTime.now(); // 현재 시간으로 삭제일 설정
     }
 }
