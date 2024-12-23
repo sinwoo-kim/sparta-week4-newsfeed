@@ -37,7 +37,7 @@ public class ProfileController {
             @RequestBody CreateProfileRequestDto createProfileRequestDto) {  // 요청 본문에서 프로필 정보 받음
 
         // userId를 요청 본문에서 받아서 서비스 메서드에 전달
-        return profileService.createProfile(createProfileRequestDto.getUserId(), createProfileRequestDto);  // userId와 DTO 전달
+        return profileService.createProfile(createProfileRequestDto.userId(), createProfileRequestDto);  // userId() 메서드 호출
     }
 
 
