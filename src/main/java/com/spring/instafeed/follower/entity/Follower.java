@@ -1,17 +1,28 @@
 package com.spring.instafeed.follower.entity;
 
-import com.spring.instafeed.base.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.spring.instafeed.base.BaseFollowerEntity;
+import com.spring.instafeed.base.Status;
+import com.spring.instafeed.user.entity.User;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
 @Getter
-public class Follower extends BaseEntity {
+public class Follower extends BaseFollowerEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(columnDefinition = "VARCHAR(32)")
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    @ManyToOne
+    @JoinColumn(name = "sender_id")
+    private User sender;
+
+    @ManyToOne
+    @JoinColumn(name = "receiver_id")
+    private User receiver;
 }

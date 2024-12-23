@@ -5,6 +5,7 @@ import com.spring.instafeed.profile.entity.Profile;
 import com.spring.instafeed.profile.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 
@@ -45,6 +46,7 @@ public class ProfileService {
     }
 
     // 프로필 목록 조회
+    @Transactional(readOnly = true)
     public List<ProfileResponseDto> getAllProfiles() {
         List<Profile> profiles = profileRepository.findAll();
         return profiles.stream()

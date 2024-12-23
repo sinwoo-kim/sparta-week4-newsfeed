@@ -1,11 +1,8 @@
 package com.spring.instafeed.profile.entity;
 
 import com.spring.instafeed.base.BaseEntity;
-//import com.spring.instafeed.entity.User;
+import com.spring.instafeed.user.entity.User;
 import jakarta.persistence.*;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-//import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -18,8 +15,8 @@ public class Profile extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private final Long id;
 
-    //@ManyToOne
-    //private User user;
+    @ManyToOne
+    private User user;
 
     private final String nickname;
     private final String content;
