@@ -1,6 +1,6 @@
-package com.spring.instafeed.repository;
+package com.spring.instafeed.profile.repository;
 
-import com.spring.instafeed.entity.Profile;
+import com.spring.instafeed.profile.entity.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProfileRepository extends JpaRepository<Profile, Long> {

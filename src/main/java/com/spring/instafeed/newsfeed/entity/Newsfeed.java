@@ -1,7 +1,7 @@
 package com.spring.instafeed.newsfeed.entity;
 
-import com.spring.instafeed.BaseEntity;
-import com.spring.instafeed.User;
+import com.spring.instafeed.user.entity.User;
+import com.spring.instafeed.base.BaseEntity;
 import com.spring.instafeed.newsfeed.dto.request.NewsfeedCreateRequestDto;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -21,7 +21,6 @@ public class Newsfeed extends BaseEntity {
     private String nickname;
     private String imagePath;
     private String content;
-    private Boolean is_deleted;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -44,5 +43,4 @@ public class Newsfeed extends BaseEntity {
                 .foundUser(foundUser)
                 .build();
     }
-
 }
