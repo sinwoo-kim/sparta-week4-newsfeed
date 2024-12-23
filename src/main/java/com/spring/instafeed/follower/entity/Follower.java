@@ -3,7 +3,6 @@ package com.spring.instafeed.follower.entity;
 import com.spring.instafeed.base.BaseFollowerEntity;
 import com.spring.instafeed.base.Status;
 import com.spring.instafeed.profile.entity.Profile;
-import com.spring.instafeed.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 
