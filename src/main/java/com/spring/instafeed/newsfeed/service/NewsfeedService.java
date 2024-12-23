@@ -84,9 +84,7 @@ public class NewsfeedService {
     public NewsfeedCommonResponseDto modifyNewsfeed(Long newsfeedId, NewsfeedModifyRequestDto modifyRequestDto, Long userId) {
 
         User foundUser = findUserByID(userId);
-        log.info("foundUser = {}" + foundUser);
         Newsfeed foundNewsfeed = findNewsfeedById(newsfeedId);
-        log.info("foundNewsfeed = {}" + foundNewsfeed);
 
         // TODO :: 코드 검토 필요
         // ---------------------------------------------------------------------------
