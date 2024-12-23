@@ -14,10 +14,6 @@ public class Follower extends BaseFollowerEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "VARCHAR(32)")
-    @Enumerated(EnumType.STRING)
-    private Status status;
-
     @ManyToOne
     @JoinColumn(name = "sender_id")
     private User sender;
@@ -25,4 +21,16 @@ public class Follower extends BaseFollowerEntity {
     @ManyToOne
     @JoinColumn(name = "receiver_id")
     private User receiver;
+
+    @Column(columnDefinition = "VARCHAR(32)")
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    public Follower() {}
+
+    public Follower(User sender, User receiver, Status status) {
+        this.sender = sender;
+        this.receiver = receiver;
+        this.status = status;
+    }
 }

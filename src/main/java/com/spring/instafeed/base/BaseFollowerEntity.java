@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -19,8 +20,6 @@ import java.time.LocalDateTime;
 public abstract class BaseFollowerEntity {
 
     @Comment("수락일")
-    @CreatedDate
-    @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "accepted_at", updatable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime acceptedAt;
 
