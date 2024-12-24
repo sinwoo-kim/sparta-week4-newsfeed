@@ -25,8 +25,6 @@ public class Newsfeed extends BaseEntity {
     @JoinColumn(name = "profile_id")
     Profile profile;
 
-
-
     // 통일성 주자
     @Builder
     private Newsfeed(String imagePath, String content, Profile profile) {
@@ -39,22 +37,17 @@ public class Newsfeed extends BaseEntity {
      * 게시물(Newsfeed) 엔터티 생성 메서드
      *
      * 이 메서드는 요청 DTO와 사용자 정보를 기반으로 새로운 Newsfeed 객체를 생성합니다.
-     * 빌더 패턴을 사용하여 객체를 구성하며, 필수 필드 값들은 DTO 및 사용자 정보를 통해 설정됩니다.
      *
      * @param createRequestDto 게시물 생성 요청 정보를 담은 DTO
      *                         - imagePath: 이미지 경로
-     *                         - nickname: 작성자 닉네임
      *                         - content: 게시물 내용
+     *                         - profile: 조회한 프로필
      *
      * @param profile 게시물 작성자(User 객체)
      * @return Newsfeed 생성된 엔티티 객체
      */
     public static Newsfeed of(NewsfeedCreateRequestDto createRequestDto, Profile profile) {
-        return Newsfeed.builder()
-                .imagePath(createRequestDto.imagePath())
-                .content(createRequestDto.content())
-                .profile(profile)
-                .build();
+        return new Newsfeed(createRequestDto.imagePath(), createRequestDto.content(), profile);
     }
 
     /**
@@ -69,7 +62,7 @@ public class Newsfeed extends BaseEntity {
      * @return Newsfeed 수정된 엔티티 객체 (this 반환)
      */
     public Newsfeed updateNewsfeed(NewsfeedModifyRequestDto modifyRequestDto) {
-        // TODO :: null 체크 해야 되는가?
+        // TODO :: null 체크 해야 여기서 해야 하나?
         this.content = modifyRequestDto.content();
         return this;
     }
