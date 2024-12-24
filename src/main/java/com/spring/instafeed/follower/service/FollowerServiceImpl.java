@@ -35,28 +35,28 @@ public class FollowerServiceImpl implements FollowerService {
 //        );
 //
 //        Follower savedFollower = followerRepository.save(follower);
-//
 //        return FollowerResponseDto.toDto(savedFollower);
         return null;
     }
 
+
     @Override
     public List<FollowerResponseDto> findAll() {
 
-        List<FollowerResponseDto> allFollowers = new ArrayList<>();
-
-        allFollowers = followerRepository.findAll()
-                .stream()
-                .map(FollowerResponseDto::toDto)
-                .toList();
-
-        return allFollowers;
+//        List<FollowerResponseDto> allFollowers = new ArrayList<>();
+//
+//        allFollowers = followerRepository.findAll()
+//                .stream()
+//                .map(FollowerResponseDto::toDto)
+//                .toList();
+//
+//        return allFollowers;
+        return null;
     }
 
     @Transactional
     @Override
     public UpdateFollowerResponseDto updateFollowingStatus(Long id, Long requestSenderId, Status status) {
-
         // todo
 //        Profile sendingRequestProfile = profileRepository.findByIdOrElseThrow(requestSenderId);
 //        Profile receivingProfile = profileRepository.findByIdOrElseThrow(id);
@@ -70,7 +70,6 @@ public class FollowerServiceImpl implements FollowerService {
 //        Follower savedFollower = followerRepository.save(follower);
 //
 //        return UpdateFollowerResponseDto.toDto(savedFollower);
-
         return null;
     }
 }

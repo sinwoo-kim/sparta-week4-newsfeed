@@ -1,6 +1,7 @@
 package com.spring.instafeed.auth.domain;
 
 import com.spring.instafeed.user.entity.User;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -48,14 +49,13 @@ public class TokenProvider {
      * 토큰에서 사용자 id 추출
      */
     public Long getUserId(String token) {
-        return Long.parseLong(
-                Jwts.parser()
-                        .verifyWith(key)
-                        .build()
-                        .parseSignedClaims(token)
-                        .getPayload()
-                        .getSubject()
-        );
+        Claims claims = Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+
+        return Long.parseLong(claims.get("userId", String.class));
     }
 
     /**

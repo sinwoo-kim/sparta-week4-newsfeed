@@ -1,6 +1,7 @@
-package com.spring.instafeed.auth.web.filter;
+package com.spring.instafeed.auth.web.config;
 
 import com.spring.instafeed.auth.domain.TokenProvider;
+import com.spring.instafeed.auth.web.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
