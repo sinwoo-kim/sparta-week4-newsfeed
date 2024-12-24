@@ -2,10 +2,10 @@ package com.spring.instafeed.newsfeed.dto.response;
 
 import com.spring.instafeed.newsfeed.entity.Newsfeed;
 
-public record NewsfeedCommonResponseDto(String imagePath, String nickname, String content) {
+public record NewsfeedResponseDto(String imagePath, String nickname, String content) {
 
-    public static NewsfeedCommonResponseDto convertToDto(Newsfeed newsfeed) {
-        return new NewsfeedCommonResponseDto(
+    public static NewsfeedResponseDto convertToDto(Newsfeed newsfeed) {
+        return new NewsfeedResponseDto(
                 newsfeed.getImagePath(),
                 newsfeed.getProfile().getNickname(),
                 newsfeed.getContent()

@@ -1,9 +1,9 @@
 package com.spring.instafeed.newsfeed.service;
 
-import com.spring.instafeed.newsfeed.dto.request.NewsfeedCreateRequestDto;
-import com.spring.instafeed.newsfeed.dto.request.NewsfeedModifyRequestDto;
-import com.spring.instafeed.newsfeed.dto.response.NewsfeedCommonResponseDto;
-import com.spring.instafeed.newsfeed.dto.response.NewsfeedPageResponseDto;
+import com.spring.instafeed.newsfeed.dto.request.CreateNewsfeedRequestDto;
+import com.spring.instafeed.newsfeed.dto.request.UpdateNewsfeedRequestDto;
+import com.spring.instafeed.newsfeed.dto.response.NewsfeedResponseDto;
+import com.spring.instafeed.newsfeed.dto.response.ReadNewsfeedResponseDto;
 import com.spring.instafeed.newsfeed.entity.Newsfeed;
 import com.spring.instafeed.profile.entity.Profile;
 import com.spring.instafeed.newsfeed.repository.NewsfeedRepository;
@@ -40,16 +40,13 @@ public class NewsfeedService {
      * @return NewsfeedCommonResponseDto 게시물 정보를 담은 공통 DTO
      */
     @Transactional
-    public NewsfeedCommonResponseDto createNewsfeed(NewsfeedCreateRequestDto createRequestDto) {
+    public NewsfeedResponseDto createNewsfeed(CreateNewsfeedRequestDto createRequestDto) {
         Long profileId = createRequestDto.profileId();
         Profile foundProfile = profileRepository.findById(profileId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile id를 찾을 수 없어요"));
-        Newsfeed newNewsfeed = Newsfeed.of(createRequestDto, foundProfile);
+        Newsfeed newNewsfeed = Newsfeed.create(createRequestDto, foundProfile);
         Newsfeed savedNewsfeed = newsfeedRepository.save(newNewsfeed);
-        return NewsfeedCommonResponseDto.convertToDto(savedNewsfeed);
+        return NewsfeedResponseDto.convertToDto(savedNewsfeed);
     }
-
-
-// service
 
     /**
      * 게시물 페이징 조회 서비스
@@ -57,11 +54,11 @@ public class NewsfeedService {
      * @param pageable 페이징 정보 (페이지 번호, 크기 등)
      * @return Page<NewsfeedResponseDto> 일정 페이징 응답 DTO
      */
-    public Page<NewsfeedPageResponseDto> findNewsfeedListWithPaging(Pageable pageable) {
+    public Page<ReadNewsfeedResponseDto> findNewsfeedListWithPaging(Pageable pageable) {
         // 모든 게시물 데이터를 수정일 기준 내림차순으로 조회
         Page<Newsfeed> newsfeedPage = newsfeedRepository.findAllByOrderByUpdatedAtDesc(pageable);
         // 조회된 게시물들을 DTO로 변환하여 반환
-        return newsfeedPage.map(newsfeed -> new NewsfeedPageResponseDto(
+        return newsfeedPage.map(newsfeed -> new ReadNewsfeedResponseDto(
                 newsfeed.getNewsfeedId(),
                 newsfeed.getProfile().getNickname(),
                 newsfeed.getImagePath(),
@@ -75,9 +72,9 @@ public class NewsfeedService {
      * @param newsfeedId
      * @return NewsfeedCommonResponseDto
      */
-    public NewsfeedCommonResponseDto findNewsfeed(Long newsfeedId) {
+    public NewsfeedResponseDto findNewsfeed(Long newsfeedId) {
         Newsfeed foundNewsfeed = findNewsfeedById(newsfeedId);
-        return NewsfeedCommonResponseDto.convertToDto(foundNewsfeed);
+        return NewsfeedResponseDto.convertToDto(foundNewsfeed);
     }
 
     /**
@@ -92,7 +89,7 @@ public class NewsfeedService {
      * @return NewsfeedCommonResponseDto
      */
     @Transactional
-    public NewsfeedCommonResponseDto modifyNewsfeed(Long newsfeedId, NewsfeedModifyRequestDto modifyRequestDto) {
+    public NewsfeedResponseDto updateNewsfeed(Long newsfeedId, UpdateNewsfeedRequestDto modifyRequestDto) {
         // 게시물 조회
         Newsfeed foundNewsfeed = findNewsfeedById(newsfeedId);
 
@@ -103,7 +100,7 @@ public class NewsfeedService {
         Newsfeed updatedNewsfeed = newsfeedRepository.save(foundNewsfeed);
 
         // 수정된 데이터를 DTO로 변환하여 반환
-        return NewsfeedCommonResponseDto.convertToDto(updatedNewsfeed);
+        return NewsfeedResponseDto.convertToDto(updatedNewsfeed);
     }
 
     /**

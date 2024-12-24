@@ -2,7 +2,7 @@ package com.spring.instafeed.newsfeed.dto.response;
 
 import com.spring.instafeed.newsfeed.entity.Newsfeed;
 
-public record NewsfeedPageResponseDto(Long id, String nickname, String imagePath, String content) {
+public record ReadNewsfeedResponseDto(Long id, String nickname, String imagePath, String content) {
 
     /**
      * NewsfeedDto 내부 레코드
@@ -22,8 +22,8 @@ public record NewsfeedPageResponseDto(Long id, String nickname, String imagePath
      * @param content
      * @return
      */
-    public static NewsfeedPageResponseDto of(Long id, String nickname, String imagePath, String content) {
-        return new NewsfeedPageResponseDto(id, nickname, imagePath, content);
+    public static ReadNewsfeedResponseDto of(Long id, String nickname, String imagePath, String content) {
+        return new ReadNewsfeedResponseDto(id, nickname, imagePath, content);
     }
 
 }

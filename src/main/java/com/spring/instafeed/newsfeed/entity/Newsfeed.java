@@ -1,69 +1,91 @@
 package com.spring.instafeed.newsfeed.entity;
 
-import com.spring.instafeed.newsfeed.dto.request.NewsfeedModifyRequestDto;
-import com.spring.instafeed.profile.entity.Profile;
 import com.spring.instafeed.base.BaseEntity;
-import com.spring.instafeed.newsfeed.dto.request.NewsfeedCreateRequestDto;
+import com.spring.instafeed.newsfeed.dto.request.CreateNewsfeedRequestDto;
+import com.spring.instafeed.newsfeed.dto.request.UpdateNewsfeedRequestDto;
+import com.spring.instafeed.profile.entity.Profile;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 
 @Entity
 @Table(name = "newsfeed")
 @Getter
-@NoArgsConstructor
 public class Newsfeed extends BaseEntity {
 
+    @Comment("게시물 식별자")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "BIGINT")
     private Long newsfeedId;
+
+    @Comment("게시물 이미지 경로")
+    @Column(
+            name = "image_path",
+            nullable = false,
+            length = 255
+    )
     private String imagePath;
+
+    @Comment("게시물 내용")
+    @Column(
+            name = "content",
+            nullable = false,
+            length = 255
+    )
     private String content;
 
     @ManyToOne
     @JoinColumn(name = "profile_id")
     Profile profile;
 
-    // 통일성 주자
-    @Builder
-    private Newsfeed(String imagePath, String content, Profile profile) {
+    protected Newsfeed() {
+    }
+
+    /**
+     * 생성자
+     *
+     * @param imagePath : 게시물의 이미지 경로
+     * @param content   : 게시물의 내용
+     * @param profile   : 게시물을 작성한 사용자의 프로필
+     */
+    private Newsfeed(
+            String imagePath,
+            String content,
+            Profile profile
+    ) {
         this.imagePath = imagePath;
         this.content = content;
         this.profile = profile;
     }
 
     /**
-     * 게시물(Newsfeed) 엔터티 생성 메서드
+     * 기능
+     * DTO와 사용자 정보를 기반으로 새로운 객체 생성
      *
-     * 이 메서드는 요청 DTO와 사용자 정보를 기반으로 새로운 Newsfeed 객체를 생성합니다.
-     *
-     * @param createRequestDto 게시물 생성 요청 정보를 담은 DTO
-     *                         - imagePath: 이미지 경로
-     *                         - content: 게시물 내용
-     *                         - profile: 조회한 프로필
-     *
-     * @param profile 게시물 작성자(User 객체)
-     * @return Newsfeed 생성된 엔티티 객체
+     * @param dto     : 게시물 생성 요청 정보를 담은 DTO
+     * @param profile : 게시물 작성자(User 객체)
+     * @return 생성된 객체
      */
-    public static Newsfeed of(NewsfeedCreateRequestDto createRequestDto, Profile profile) {
-        return new Newsfeed(createRequestDto.imagePath(), createRequestDto.content(), profile);
+    public static Newsfeed create(
+            CreateNewsfeedRequestDto dto,
+            Profile profile
+    ) {
+        return new Newsfeed(
+                dto.imagePath(),
+                dto.content(),
+                profile
+        );
     }
 
     /**
-     * 엔티티 업데이트 메서드
+     * 기능
+     * 게시물 내용 수정
      *
-     * 이 메서드는 조회 된 기존 newsfeed 객체의 내용을 수정합니다.
-     * 요청 DTO에 포함된 변경 사항을 엔티티에 반영하며,
-     * 수정된 객체 자신(this)를 반환합니다.
-     *
-     * @param modifyRequestDto 게시물 수정 요청 정보를 담은 DTO
-     *                         - content: 수정할 게시물 내용
-     * @return Newsfeed 수정된 엔티티 객체 (this 반환)
+     * @param dto 게시물 수정 요청 정보를 담은 DTO
      */
-    public Newsfeed updateNewsfeed(NewsfeedModifyRequestDto modifyRequestDto) {
+    public void updateNewsfeed(UpdateNewsfeedRequestDto dto) {
         // TODO :: null 체크 해야 여기서 해야 하나?
-        this.content = modifyRequestDto.content();
-        return this;
+        this.content = dto.content();
     }
 }
