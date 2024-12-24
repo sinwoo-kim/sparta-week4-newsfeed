@@ -17,16 +17,21 @@ public class TokenProvider {
         this.key = Keys.hmacShaKeyFor(key.getBytes());
     }
 
-    public String createToken(Long userId) {
+    /**
+     * 토큰 생성
+     */
+    public String createToken(User user) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + TOKEN_VALID_TIME);
+        String id = user.getId().toString();
+        String email = user.getEmail();
 
-        Claims claims = Jwts.claims()
-                .subject(userId.toString())
-                .build();
+        HashMap<String, String> claimMap = new HashMap<>();
+        claimMap.put("userId", id);
+        claimMap.put("email", email);
 
         return Jwts.builder()
-                .claims(claims)
+                .claims(claimMap)
                 .issuedAt(now)
                 .expiration(validity)
                 .signWith(key)
