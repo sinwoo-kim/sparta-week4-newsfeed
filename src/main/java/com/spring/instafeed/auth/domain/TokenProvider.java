@@ -38,6 +38,9 @@ public class TokenProvider {
                 .compact();
     }
 
+    /**
+     * 토큰에서 사용자 id 추출
+     */
     public Long getUserId(String token) {
         return Long.parseLong(
                 Jwts.parser()
