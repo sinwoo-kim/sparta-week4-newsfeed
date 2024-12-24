@@ -155,7 +155,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public void deleteProfile(Long id) {
         // todo
-        Profile profile = profileRepository.findById(id)
+        Profile foundProfile = profileRepository.findById(id)
                 .orElseThrow(
                         () -> new ResponseStatusException(
                                 HttpStatus.NOT_FOUND,
@@ -165,16 +165,14 @@ public class ProfileServiceImpl implements ProfileService {
 
         // 이미 삭제된 프로필인지 확인
         // todo
-        if (profile.getIsDeleted()) {
+        if (foundProfile.getIsDeleted()) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Profile is already deleted"
+                    "The requested data has already been deleted"
             );
         }
 
-        // 프로필을 삭제 처리합니다.
-        profile.deleteFromDto();  // 프로필 삭제 처리
-
-        // 삭제된 프로필에 대한 응답 데이터 생성 및 반환
+        // 프로필 삭제 처리
+        foundProfile.markAsDeleted();
     }
 }

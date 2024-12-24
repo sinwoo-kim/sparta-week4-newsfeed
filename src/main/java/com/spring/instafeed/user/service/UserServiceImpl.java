@@ -1,14 +1,20 @@
 package com.spring.instafeed.user.service;
 
-import com.spring.instafeed.user.entity.User;
-import com.spring.instafeed.user.dto.response.UpdateUserResponseDto;
+import com.spring.instafeed.base.BaseEntity;
+import com.spring.instafeed.profile.entity.Profile;
+import com.spring.instafeed.profile.repository.ProfileRepository;
 import com.spring.instafeed.user.dto.response.ReadUserResponseDto;
+import com.spring.instafeed.user.dto.response.UpdateUserResponseDto;
+import com.spring.instafeed.user.entity.User;
 import com.spring.instafeed.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +23,7 @@ public class UserServiceImpl implements UserService {
 
     // 속성
     private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
 
     /**
      * 기능
@@ -85,6 +92,44 @@ public class UserServiceImpl implements UserService {
                         )
                 );
 
+        // 이미 삭제된 사용자인지 확인
+        // todo
+        if (foundUser.getIsDeleted()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "The requested data has already been deleted"
+            );
+        }
+
+        // 사용자 삭제 처리
         foundUser.markAsDeleted();
+
+        //----- 사용자가 작성한 프로필 또한 전부 삭제 처리 구간 시작 -----
+        List<Profile> profiles = new ArrayList<>();
+
+        profiles = profileRepository.findAllByUserIdAndIsDeletedFalse(
+                foundUser.getId()
+        );
+
+        profiles.stream()  // (1) profiles 리스트를 스트림으로 변환
+                .peek(BaseEntity::markAsDeleted) // (2) 각 프로필에 메서드 호출 (사이드 이펙트)
+                .forEach(profile -> {
+                });  // (3) 스트림 소비: 반환하는 값이 없으므로
+
+        //----- 사용자가 작성한 프로필 또한 전부 삭제 처리 구간 마침 -----
+
+        /*
+        [수정 전]
+        profiles.stream()
+        (1) 스트림 생성: profiles 리스트를 스트림으로 변환
+            스트림: 데이터 흐름을 처리하는 객체입
+        .peek(profile -> profile.markAsDeleted())
+        (2) 각 프로필에 markAsDeleted() 메서드 호출 (사이드 이펙트)
+            peek(): 스트림의 각 요소에 작업 수행
+            여기서는 'markAsDeleted()'를 호출하여 프로필을 삭제 상태로 변경
+        .toList();
+        (3) 스트림 결과를 리스트로 수집하는 최종 연산
+            현재 반환하는 값이 없으므로 불필요한 호출에 해당함
+         */
     }
 }

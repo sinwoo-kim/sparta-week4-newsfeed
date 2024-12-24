@@ -90,14 +90,4 @@ public class Profile extends BaseEntity {
         this.content = dto.content();
         this.imagePath = dto.imagePath();
     }
-
-    /**
-     * 프로필 삭제 처리를 위한 메서드
-     * <p>
-     * 특정 삭제 로직을 구현할 수 있으며,
-     * 기본적으로 삭제된 것으로 마킹하는 메서드를 호출합니다.
-     */
-    public void deleteFromDto() {
-        this.markAsDeleted();
-    }
 }
