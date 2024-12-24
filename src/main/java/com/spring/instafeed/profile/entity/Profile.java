@@ -1,6 +1,7 @@
 package com.spring.instafeed.profile.entity;
 
 import com.spring.instafeed.base.BaseEntity;
+import com.spring.instafeed.profile.dto.request.CreateProfileRequestDto;
 import com.spring.instafeed.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
@@ -8,23 +9,25 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "profile")
 @AllArgsConstructor
 public class Profile extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "BIGINT")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)  // 한 명의 사용자에 대해 여러 프로필을 가질 수 있도록 변경
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(nullable = false)
     private String nickname;
     private String content;
     private String imagePath;
@@ -41,21 +44,32 @@ public class Profile extends BaseEntity {
 
     // 생성자 ㅋㅋㅋㅋㅋ 패턴 통일하자..!!!!!!!!!
     /**
-     * Profile 클래스의 생성자입니다.
+     * 프로필 생성자
      *
-     * @param user      이 프로필에 연결된 사용자 객체입니다.
-     *                  사용자 정보에 따라 프로필의 소유자가 결정됩니다.
-     * @param nickname  프로필에서 사용될 사용자 닉네임입니다.
-     *                  다른 사용자에게 표시되는 이름으로, 고유해야 할 수 있습니다.
-     * @param content   프로필에 대한 추가 정보 또는 설명입니다.
-     *                  사용자가 자신의 프로필에 대해 작성한 내용을 나타냅니다.
-     * @param imagePath 프로필 이미지의 경로입니다.
-     *                  이 경로는 사용자의 프로필 사진을 저장하는 위치를 나타냅니다.
+     * @param user      프로필에 연관된 사용자
+     * @param nickname  사용자 프로필의 닉네임
+     * @param content   사용자 프로필의 소개 내용
+     * @param imagePath 사용자 프로필 이미지의 경로
      */
     public Profile(User user, String nickname, String content, String imagePath) {
-        this.user = user;
-        this.nickname = nickname;
-        this.content = content;
-        this.imagePath = imagePath;
+        this.user = user;  // 주어진 사용자로 필드 초기화
+        this.nickname = nickname;  // 주어진 닉네임으로 필드 초기화
+        this.content = content;  // 주어진 내용으로 필드 초기화
+        this.imagePath = imagePath;  // 주어진 이미지 경로로 필드 초기화
+    }
+
+    /**
+     * 프로필 업데이트 메서드
+     *
+     * 프로필의 닉네임, 내용, 이미지 경로를 업데이트합니다.
+     *
+     * @param nickname  새 닉네임
+     * @param content   새 소개 내용
+     * @param imagePath 새 이미지 경로
+     */
+    public void updateProfile(String nickname, String content, String imagePath) {
+        this.nickname = nickname;  // 닉네임을 새로운 값으로 업데이트
+        this.content = content;  // 내용을 새로운 값으로 업데이트
+        this.imagePath = imagePath;  // 이미지 경로를 새로운 값으로 업데이트
     }
 }

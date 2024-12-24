@@ -33,7 +33,9 @@ public abstract class BaseEntity {
     // isDeleted 값을 설정할 수 있는 메서드 추가
     @Comment("삭제 여부")
     @Column(name = "is_deleted", columnDefinition = "TINYINT(0)")
+
     private Boolean isDeleted = false;
+
 
     // 삭제일을 설정할 수 있는 메서드 추가
     @Comment("삭제일")
