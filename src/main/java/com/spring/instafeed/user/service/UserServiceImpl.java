@@ -28,10 +28,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public ReadUserResponseDto findById(Long id) {
         // todo
-        User foundUser = userRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new ResponseStatusException(
+        User foundUser = userRepository.findByIdAndIsDeletedFalse(id)
+                .orElseThrow(
+                        () -> new ResponseStatusException(
                                 HttpStatus.NOT_FOUND,
-                                "입력된 id가 존재하지 않습니다. 다시 입력해주세요."
+                                "Id does not exist"
                         )
                 );
         return ReadUserResponseDto.toDto(foundUser);
@@ -52,12 +53,14 @@ public class UserServiceImpl implements UserService {
             String password
     ) {
         // todo
-        User foundUser = userRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new ResponseStatusException(
+        User foundUser = userRepository.findByIdAndIsDeletedFalse(id)
+                .orElseThrow(
+                        () -> new ResponseStatusException(
                                 HttpStatus.NOT_FOUND,
-                                "입력된 id가 존재하지 않습니다. 다시 입력해주세요."
+                                "Id does not exist"
                         )
                 );
+
         foundUser.update(password);
 
         return new UpdateUserResponseDto("비밀번호 수정에 성공했습니다.");
@@ -74,9 +77,12 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
 
         // todo
-        User foundUser = userRepository.findByIdAndDeletedAtIsNull(id)
+        User foundUser = userRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(
-                        () -> new RuntimeException("사용자가 조회되지 않습니다.")
+                        () -> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Id does not exist"
+                        )
                 );
 
         foundUser.markAsDeleted();

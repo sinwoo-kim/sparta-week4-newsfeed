@@ -67,7 +67,7 @@ public class Profile extends BaseEntity {
      * @param dto  프로필 생성 요청 데이터 전송 객체
      * @return 생성된 프로필 객체
      */
-    public static Profile createFromDto(
+    public static Profile create(
             User user,
             CreateProfileRequestDto dto
     ) {
@@ -85,7 +85,7 @@ public class Profile extends BaseEntity {
      *
      * @param dto 프로필 수정 요청 데이터 전송 객체
      */
-    public void updateFromDto(UpdateProfileRequestDto dto) {
+    public void update(UpdateProfileRequestDto dto) {
         this.nickname = dto.nickname();
         this.content = dto.content();
         this.imagePath = dto.imagePath();

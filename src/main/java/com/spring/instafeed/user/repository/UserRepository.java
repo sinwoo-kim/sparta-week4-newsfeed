@@ -13,5 +13,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param id : 조회하려는 사용자의 식별자
      * @return : Optional<User>
      */
-    Optional<User> findByIdAndDeletedAtIsNull(Long id);
+    Optional<User> findByIdAndIsDeletedFalse(Long id);
 }

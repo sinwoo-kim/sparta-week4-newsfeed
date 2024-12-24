@@ -14,6 +14,7 @@ import java.util.Optional;
 
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
+
     /**
      * 닉네임이 이미 존재하는지 확인합니다.
      *
@@ -22,7 +23,7 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
      */
     boolean existsByNickname(String nickname);
 
-    // 특정 ID에 해당하는 삭제되지 않은 프로필을 조회하는 메소드
+    // 특정 ID에 해당하는 삭제되지 않은 프로필 조회
     Optional<Profile> findByIdAndIsDeletedFalse(Long id);
 
     /**

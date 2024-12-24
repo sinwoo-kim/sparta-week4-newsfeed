@@ -3,7 +3,7 @@ package com.spring.instafeed.profile.controller;
 import com.spring.instafeed.profile.dto.request.CreateProfileRequestDto;
 import com.spring.instafeed.profile.dto.request.UpdateProfileRequestDto;
 import com.spring.instafeed.profile.dto.response.*;
-import com.spring.instafeed.profile.service.ProfileService;
+import com.spring.instafeed.profile.service.ProfileServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ import java.util.List;
 public class ProfileController {
 
     // 속성
-    private final ProfileService profileService;
+    private final ProfileServiceImpl profileServiceImpl;
 
     /**
      * 기능
@@ -34,7 +34,7 @@ public class ProfileController {
     public ResponseEntity<CreateProfileResponseDto> createProfile(
             @RequestBody CreateProfileRequestDto requestDto
     ) {
-        CreateProfileResponseDto responseDto = profileService.createProfile(
+        CreateProfileResponseDto responseDto = profileServiceImpl.createProfile(
                 requestDto.userId(),
                 requestDto
         );
@@ -51,7 +51,7 @@ public class ProfileController {
     public ResponseEntity<List<ReadProfileResponseDto>> readAllProfiles() {
         List<ReadProfileResponseDto> allProfiles = new ArrayList<>();
 
-        allProfiles = profileService.readAllProfiles();
+        allProfiles = profileServiceImpl.readAllProfiles();
 
         return new ResponseEntity<>(allProfiles, HttpStatus.OK);
     }
@@ -69,7 +69,7 @@ public class ProfileController {
     public ResponseEntity<ReadProfileResponseDto> findById(
             @PathVariable("id") Long id
     ) {
-        ReadProfileResponseDto profile = profileService.findById(id);
+        ReadProfileResponseDto profile = profileServiceImpl.findById(id);
 
         return new ResponseEntity<>(profile, HttpStatus.OK);
     }
@@ -88,7 +88,7 @@ public class ProfileController {
             @RequestBody UpdateProfileRequestDto requestDto
     ) {
 
-        UpdateProfileResponseDto responseDto = profileService.updateProfile(
+        UpdateProfileResponseDto responseDto = profileServiceImpl.updateProfile(
                 id,
                 requestDto
         );
@@ -106,7 +106,7 @@ public class ProfileController {
     public ResponseEntity<Void> deleteProfile(
             @PathVariable("id") Long id
     ) {
-        profileService.deleteProfile(id);
+        profileServiceImpl.deleteProfile(id);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
