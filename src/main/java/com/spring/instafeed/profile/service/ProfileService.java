@@ -76,9 +76,10 @@ public class ProfileService {
     @Transactional(readOnly = true)
     public List<QueryProfileResponseDto> getAllProfiles() {
 
-        List<Profile> profiles = profileRepository.findAllActiveProfiles(); // 삭제되지 않은 프로필만 조회
-        return profiles.stream()                             // 프로필 객체를 DTO로 변환
-                .map(QueryProfileResponseDto::of).toList();
+//        List<Profile> profiles = profileRepository.findAllActiveProfiles(); // 삭제되지 않은 프로필만 조회
+//        return profiles.stream()                             // 프로필 객체를 DTO로 변환
+//                .map(QueryProfileResponseDto::of).toList();
+        return null;
   }
 
     /**
@@ -171,10 +172,9 @@ public class ProfileService {
         );
 
         // 삭제된 프로필 저장
-        Profile deletedProfile = profileRepository.save(profile);
-
-        // 삭제된 프로필을 DTO로 변환하여 반환
-        return DeleteProfileResponseDto.of(deletedProfile);
-
+//        Profile deletedProfile = profileRepository.save(profile);
+//
+//        // 삭제된 프로필을 DTO로 변환하여 반환
+//        return DeleteProfileResponseDto.of(deletedProfile);
     }
 }

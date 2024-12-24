@@ -18,30 +18,13 @@ public class UserController {
 
     /**
      * 기능
-     * 회원가입
-     *
-     * @param requestDto : SignUpUserRequestDto
-     * @return UserResponseDto, HttpStatus 201 CREATED
-     */
-    @PostMapping("/signup")
-    public ResponseEntity<UserResponseDto> signUp(@RequestBody SignUpUserRequestDto requestDto) {
-        UserResponseDto responseDto = userService.signUp(
-                requestDto.name(),
-                requestDto.email(),
-                requestDto.password()
-        );
-        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
-    }
-
-    /**
-     * 기능
      * 회원 정보 조회
      *
      * @param id : 조회하려는 사용자의 id
      * @return UserResponseDto, HttpStatus.OK
      */
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDto> findById(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDto> findById(@PathVariable("id") Long id) {
         UserResponseDto responseDto = userService.findById(id);
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
