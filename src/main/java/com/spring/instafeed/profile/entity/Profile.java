@@ -9,43 +9,65 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
+import org.hibernate.annotations.Comment;
 
 @Entity
 @Getter
 @Table(name = "profile")
 public class Profile extends BaseEntity {
 
+    @Comment("프로필 식별자")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "BIGINT")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)  // 한 명의 사용자에 대해 여러 프로필을 가질 수 있도록 변경
+    // 한 명의 사용자가 여러 프로필을 가질 수 있도록 변경
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false)
+    @Comment("사용자 닉네임")
+    @Column(
+            name = "nickname",
+            nullable = false,
+            unique = true,
+            length = 16
+    )
     private String nickname;
+
+    @Comment("프로필 내용")
+    @Column(
+            name = "content",
+            nullable = false,
+            length = 255
+    )
     private String content;
+
+    /*
+    todo
+     경로 길이를 정하는 게 좋을까? 정한다면,
+     만약 경로 길이가 너무 길 땐 현업에서 어떻게 할까?
+     */
+    @Comment("프로필 이미지 경로")
+    @Column(
+            name = "image_path",
+            nullable = false,
+            length = 255
+    )
     private String imagePath;
 
-    /**
-     * 기본 생성자
-     * <p>
-     * JPA에서 엔티티 객체를 매핑할 때 사용되는 기본 생성자입니다.
-     * JPA는 객체를 DB에서 조회하거나 새로운 객체를 생성할 때 기본 생성자를 호출합니다.
-     * 따라서 이 생성자는 JPA에서 객체를 관리하기 위해 필요합니다.
-     */
+    // 기본 생성자
     protected Profile() {
     }
 
     /**
-     * 프로필 생성자
+     * 생성자
      *
-     * @param user      프로필에 연관된 사용자
-     * @param nickname  사용자 프로필의 닉네임
-     * @param content   사용자 프로필의 소개 내용
-     * @param imagePath 사용자 프로필 이미지의 경로
+     * @param user      : 프로필에 연관된 사용자
+     * @param nickname  : 사용자 프로필의 닉네임
+     * @param content   : 사용자 프로필의 소개 내용
+     * @param imagePath : 사용자 프로필 이미지의 경로
      */
     public Profile(
             User user,

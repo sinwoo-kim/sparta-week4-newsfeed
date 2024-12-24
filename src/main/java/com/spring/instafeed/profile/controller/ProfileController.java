@@ -53,6 +53,7 @@ public class ProfileController {
 
         allProfiles = profileServiceImpl.readAllProfiles();
 
+        // todo 깡통 리스트 나오지 않도록 리팩토링 필요
         return new ResponseEntity<>(allProfiles, HttpStatus.OK);
     }
 

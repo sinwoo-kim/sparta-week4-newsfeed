@@ -46,6 +46,13 @@ public class User extends BaseEntity {
     protected User() {
     }
 
+    /**
+     * 생성자
+     *
+     * @param name     : 사용자 본명
+     * @param email    : 사용자 이메일
+     * @param password : 사용자 비밀번호
+     */
     public User(
             String name,
             String email,
