@@ -53,4 +53,13 @@ public class AuthService {
             throw new IllegalArgumentException("Invalid email");
         }
     }
+
+    /**
+     * 비밀번호 검증
+     */
+    private void verifyPassword(String storagePassword, String rawPassword) {
+        if (!Password.generatePassword(storagePassword).matchPassword(rawPassword)) {
+            throw new IllegalArgumentException("Invalid password");
+        }
+    }
 }
