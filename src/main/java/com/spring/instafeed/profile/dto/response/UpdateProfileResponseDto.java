@@ -19,7 +19,7 @@ public record UpdateProfileResponseDto(
      * @param profile 변환할 Profile 엔티티 객체
      * @return Profile을 기반으로 생성된 CreateProfileResponseDto 객체
      */
-    public static UpdateProfileResponseDto of(Profile profile) {
+    public static UpdateProfileResponseDto toDto(Profile profile) {
         return new UpdateProfileResponseDto(
                 profile.getId(),
                 profile.getNickname(),

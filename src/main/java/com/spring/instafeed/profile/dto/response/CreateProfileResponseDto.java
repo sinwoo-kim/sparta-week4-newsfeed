@@ -18,7 +18,7 @@ public record CreateProfileResponseDto(
      * @param profile 변환할 Profile 엔티티 객체
      * @return Profile을 기반으로 생성된 CreateProfileResponseDto 객체
      */
-    public static CreateProfileResponseDto of(Profile profile) {
+    public static CreateProfileResponseDto toDto(Profile profile) {
         return new CreateProfileResponseDto(
                 profile.getId(),
                 profile.getUser() != null ? profile.getUser().getId() : null, // 사용자 ID를 가져옵니다.
@@ -27,5 +27,6 @@ public record CreateProfileResponseDto(
                 profile.getImagePath(),
                 profile.getCreatedAt()
         );
+        // todo
     }
 }

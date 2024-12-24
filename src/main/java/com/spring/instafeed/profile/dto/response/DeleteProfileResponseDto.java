@@ -21,7 +21,7 @@ public record DeleteProfileResponseDto(
      * @param profile 변환할 Profile 엔티티 객체
      * @return Profile을 기반으로 생성된 DeleteProfileResponseDto 객체
      */
-    public static DeleteProfileResponseDto of(Profile profile) {
+    public static DeleteProfileResponseDto toDto(Profile profile) {
         return new DeleteProfileResponseDto(
                 profile.getId(),
                 profile.getNickname(),

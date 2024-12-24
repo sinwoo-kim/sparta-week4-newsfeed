@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserResponseDto findById(Long id) {
+        // todo
         User foundUser = userRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new ResponseStatusException(
                                 HttpStatus.NOT_FOUND,
@@ -50,6 +51,7 @@ public class UserServiceImpl implements UserService {
             Long id,
             String password
     ) {
+        // todo
         User foundUser = userRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new ResponseStatusException(
                                 HttpStatus.NOT_FOUND,
@@ -71,10 +73,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Long id) {
 
+        // todo
         User foundUser = userRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(
-                        () -> new RuntimeException("사용자가 조회되지 않습니다."
-                        )
+                        () -> new RuntimeException("사용자가 조회되지 않습니다.")
                 );
 
         foundUser.markAsDeleted();
