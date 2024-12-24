@@ -80,7 +80,7 @@ public class ProfileService {
 //        return profiles.stream()                             // 프로필 객체를 DTO로 변환
 //                .map(QueryProfileResponseDto::of).toList();
         return null;
-  }
+    }
 
     /**
      * ID로 프로필을 조회합니다.
@@ -172,9 +172,10 @@ public class ProfileService {
         );
 
         // 삭제된 프로필 저장
-//        Profile deletedProfile = profileRepository.save(profile);
-//
-//        // 삭제된 프로필을 DTO로 변환하여 반환
-//        return DeleteProfileResponseDto.of(deletedProfile);
+        Profile deletedProfile = profileRepository.save(profile);
+
+        // 삭제된 프로필을 DTO로 변환하여 반환
+        return DeleteProfileResponseDto.of(deletedProfile);
+
     }
 }

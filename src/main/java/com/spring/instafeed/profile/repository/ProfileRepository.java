@@ -30,6 +30,14 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
     List<Profile> findAllActiveProfiles();
 
     /**
+     * 삭제되지 않은 프로필을 ID로 조회합니다.
+     *
+     * @param id : 조회하려는 프로필의 식별자
+     * @return 삭제되지 않은 프로필이 존재하면 Optional로 반환, 없으면 빈 Optional 반환
+     */
+    Optional<Profile> findByIdAndIsDeletedFalse(Long id);
+
+    /**
      * 삭제되지 않은 모든 프로필을 조회합니다.
      *
      * @return 삭제되지 않은 프로필의 리스트

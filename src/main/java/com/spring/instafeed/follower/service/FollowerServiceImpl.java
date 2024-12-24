@@ -23,6 +23,7 @@ public class FollowerServiceImpl implements FollowerService {
 
     @Override
     public FollowerResponseDto sendFollowRequest(Long senderId, Long receiverId) {
+        // todo
 
 //        Profile sendingProfile = profileRepository.findByIdOrElseThrow(senderId);
 //        Profile receivingProfile = profileRepository.findByIdOrElseThrow(receiverId);
@@ -34,7 +35,6 @@ public class FollowerServiceImpl implements FollowerService {
 //        );
 //
 //        Follower savedFollower = followerRepository.save(follower);
-
 //        return FollowerResponseDto.toDto(savedFollower);
         return null;
     }
@@ -57,7 +57,7 @@ public class FollowerServiceImpl implements FollowerService {
     @Transactional
     @Override
     public UpdateFollowerResponseDto updateFollowingStatus(Long id, Long requestSenderId, Status status) {
-
+        // todo
 //        Profile sendingRequestProfile = profileRepository.findByIdOrElseThrow(requestSenderId);
 //        Profile receivingProfile = profileRepository.findByIdOrElseThrow(id);
 //
