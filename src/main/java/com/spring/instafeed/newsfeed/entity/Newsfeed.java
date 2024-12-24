@@ -2,19 +2,16 @@ package com.spring.instafeed.newsfeed.entity;
 
 import com.spring.instafeed.newsfeed.dto.request.NewsfeedModifyRequestDto;
 import com.spring.instafeed.profile.entity.Profile;
-import com.spring.instafeed.user.entity.User;
 import com.spring.instafeed.base.BaseEntity;
 import com.spring.instafeed.newsfeed.dto.request.NewsfeedCreateRequestDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "newsfeed")
 @Getter
-@Setter
 @NoArgsConstructor
 public class Newsfeed extends BaseEntity {
 
@@ -28,6 +25,9 @@ public class Newsfeed extends BaseEntity {
     @JoinColumn(name = "profile_id")
     Profile profile;
 
+
+
+    // 통일성 주자
     @Builder
     private Newsfeed(String imagePath, String content, Profile profile) {
         this.imagePath = imagePath;

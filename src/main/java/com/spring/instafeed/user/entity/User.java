@@ -19,29 +19,33 @@ public class User extends BaseEntity {
     private Long id;
 
     @Comment("사용자 이름")
-    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(16)")
+    @Column(name = "name", nullable = false, length = 16)
     private String name;
+    // [수정 전] columnDefinition = "VARCHAR(16)"
+    // [수정 후] length = 16
 
     @Comment("사용자 이메일")
-    @Column(name = "email", nullable = false, unique = true, columnDefinition = "VARCHAR(255)")
+    @Column(name = "email", nullable = false, unique = true, length = 255)
     private String email;
+    // [수정 전] columnDefinition = "VARCHAR(255)"
+    // [수정 후] length = 255
 
     @Comment("사용자 비밀번호")
-    @Column(name = "password", nullable = false, columnDefinition = "VARCHAR(255)")
+    @Column(name = "password", nullable = false, length = 255)
     private String password;
+    // [수정 전] columnDefinition = "VARCHAR(255)"
+    // [수정 후] length = 255
 
-    // 기본 생성자
-    public User() {
+    protected User() {
     }
+    // [수정 전] public User() {}
 
-    /**
-     * 생성자
-     *
-     * @param name     : 사용자 이름
-     * @param email    : 사용자 이메일
-     * @param password : 사용자 비밀번호
-     */
-    public User(String name, String email, String password) {
+
+    public User(
+            String name,
+            String email,
+            String password
+    ) {
         this.name = name;
         this.email = email;
         this.password = password;

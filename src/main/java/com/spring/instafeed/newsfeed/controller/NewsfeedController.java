@@ -8,6 +8,9 @@ import com.spring.instafeed.newsfeed.service.NewsfeedService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,18 +42,42 @@ public class NewsfeedController {
         return new ResponseEntity<NewsfeedCommonResponseDto>((response), HttpStatus.CREATED);
     }
 
+    // controller
     /**
-     * 게시물 목록 조회 API
+     * 게시물 페이징 조회 API
+     * 모든 게시물을 페이징 처리하여 조회하고 반환합니다.
      *
-     * 게시물 전체 목록을 조회합니다.
-     *
-     * @return NewsfeedListResponseDto
+     * @param page 조회할 페이지 번호 (기본값: 0)
+     * @param size 조회할 페이지 크기 (기본값: 10)
+     * @return ResponseEntity<Page<NewsfeedResponseDto>> 페이징 처리된 게시물 목록
      */
-    @GetMapping
-    public ResponseEntity<NewsfeedListResponseDto> findNewsfeedListAPI() { //깡통 x 코드 컨벤션 깨짐
-        NewsfeedListResponseDto response = newsfeedService.findNewsfeedList();
-        return new ResponseEntity<NewsfeedListResponseDto>(response, HttpStatus.CREATED);
+    @GetMapping("/paged")
+    public ResponseEntity<Page<NewsfeedListResponseDto>> findNewsfeedListAPI(
+            @RequestParam(value = "page", defaultValue = "0") int page,  // 기본값은 첫 페이지
+            @RequestParam(value = "size", defaultValue = "10") int size) {  // 기본값은 10개 항목
+        try {
+            // 페이징 정보 기반으로 게시물 조회
+            Pageable pageable = PageRequest.of(page, size);
+            Page<NewsfeedListResponseDto> newsfeedsPage = newsfeedService.findNewsfeedListWithPaging(pageable);
+            return new ResponseEntity<>(newsfeedsPage, HttpStatus.OK); // 200 OK 반환
+        } catch (Exception e) {
+            // 예외 발생 시 500 Internal Server Error 반환
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
+//    /**
+//     * 게시물 목록 조회 API
+//     *
+//     * 게시물 전체 목록을 조회합니다.
+//     *
+//     * @return NewsfeedListResponseDto
+//     */
+//    @GetMapping
+//    public ResponseEntity<NewsfeedListResponseDto> findNewsfeedListAPI() { //깡통 x 코드 컨벤션 깨짐
+//        NewsfeedListResponseDto response = newsfeedService.findNewsfeedList();
+//        return new ResponseEntity<NewsfeedListResponseDto>(response, HttpStatus.CREATED);
+//    }
 
     /**
      * 게시물 단건 조회 API

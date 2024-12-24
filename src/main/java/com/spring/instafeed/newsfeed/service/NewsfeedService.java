@@ -12,12 +12,12 @@ import com.spring.instafeed.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -50,26 +50,44 @@ public class NewsfeedService {
     }
 
 
+// service
     /**
-     * 게시물 목록 조회 메서드
-     * <p>
-     * 데이터베이스에서 모든 게시물을 조회하고, DTO로 변환하여 반환합니다.
+     * 게시물 페이징 조회 서비스
      *
-     * @return NewsfeedListResponseDto 게시물 목록을 담은 DTO
+     * @param pageable 페이징 정보 (페이지 번호, 크기 등)
+     * @return Page<NewsfeedResponseDto> 일정 페이징 응답 DTO
      */
-    public NewsfeedListResponseDto findNewsfeedList() {
-
-        List<Newsfeed> foundList = newsfeedRepository.findAll();
-
-        // 게시물 목록 DTO로 변환
-        List<NewsfeedListResponseDto.NewsfeedDto> NewsfeedDtoList = foundList.stream()
-                .map(NewsfeedListResponseDto.NewsfeedDto::createFrom)// DTO 변환
-                .toList(); // 리스트로 수집
-
-        log.info("NewsfeedDtoList = {}", NewsfeedDtoList);
-        // 최종 DTO 반환
-        return NewsfeedListResponseDto.createFrom(NewsfeedDtoList);
+    public Page<NewsfeedListResponseDto> findNewsfeedListWithPaging(Pageable pageable) {
+        // 모든 게시물 데이터를 수정일 기준 내림차순으로 조회
+        Page<Newsfeed> newsfeedPage = newsfeedRepository.findAllByOrderByUpdatedAtDesc(pageable);
+        // 조회된 게시물들을 DTO로 변환하여 반환
+        return newsfeedPage.map(newsfeed -> new NewsfeedListResponseDto(
+                newsfeed.getNewsfeedId(),
+                newsfeed.getImagePath(),
+                newsfeed.getContent()
+        ));
     }
+
+//    /**
+//     * 게시물 목록 조회 메서드
+//     * <p>
+//     * 데이터베이스에서 모든 게시물을 조회하고, DTO로 변환하여 반환합니다.
+//     *
+//     * @return NewsfeedListResponseDto 게시물 목록을 담은 DTO
+//     */
+//    public NewsfeedListResponseDto findNewsfeedList() {
+//
+//        List<Newsfeed> foundList = newsfeedRepository.findAll();
+//
+//        // 게시물 목록 DTO로 변환
+//        List<NewsfeedListResponseDto.NewsfeedDto> NewsfeedDtoList = foundList.stream()
+//                .map(NewsfeedListResponseDto.NewsfeedDto::createFrom)// DTO 변환
+//                .toList(); // 리스트로 수집
+//
+//        log.info("NewsfeedDtoList = {}", NewsfeedDtoList);
+//        // 최종 DTO 반환
+//        return NewsfeedListResponseDto.createFrom(NewsfeedDtoList);
+//    }
 
     /**
      * 게시물 단건 조회 메서드
