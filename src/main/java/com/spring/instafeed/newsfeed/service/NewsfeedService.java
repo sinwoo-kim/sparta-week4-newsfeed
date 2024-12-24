@@ -42,7 +42,7 @@ public class NewsfeedService {
      */
     @Transactional
     public NewsfeedCommonResponseDto createNewsfeed(NewsfeedCreateRequestDto createRequestDto) {
-        Long profileId = createRequestDto.getProfileId();
+        Long profileId = createRequestDto.profileId();
         Profile foundProfile = profileRepository.findById(profileId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile id를 찾을 수 없어요"));
         Newsfeed newNewsfeed = Newsfeed.of(createRequestDto, foundProfile);
         Newsfeed savedNewsfeed = newsfeedRepository.save(newNewsfeed);

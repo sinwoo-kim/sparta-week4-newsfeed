@@ -51,8 +51,8 @@ public class Newsfeed extends BaseEntity {
      */
     public static Newsfeed of(NewsfeedCreateRequestDto createRequestDto, Profile profile) {
         return Newsfeed.builder()
-                .imagePath(createRequestDto.getImagePath())
-                .content(createRequestDto.getContent())
+                .imagePath(createRequestDto.imagePath())
+                .content(createRequestDto.content())
                 .profile(profile)
                 .build();
     }
@@ -70,7 +70,7 @@ public class Newsfeed extends BaseEntity {
      */
     public Newsfeed updateNewsfeed(NewsfeedModifyRequestDto modifyRequestDto) {
         // TODO :: null 체크 해야 되는가?
-        this.content = modifyRequestDto.getContent();
+        this.content = modifyRequestDto.content();
         return this;
     }
 }
