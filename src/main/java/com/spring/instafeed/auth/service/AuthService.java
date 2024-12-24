@@ -42,4 +42,15 @@ public class AuthService {
 
         return createToken(user);
     }
+
+    /**
+     * 사용된적이 있는 이메일인지 검증
+     */
+    private void verifyEmail(SignUpRequestDto dto) {
+        Email email = Email.generateEmail(dto.email());
+
+        if (userAuthRepository.existsEmail(email.getEmailText())) {
+            throw new IllegalArgumentException("Invalid email");
+        }
+    }
 }
