@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
-    // 속성
     private final UserServiceImpl userService;
-
     /**
      * 기능
      * 회원 정보 조회

@@ -7,9 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.Optional;
 
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
@@ -21,9 +18,6 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
      * @return 닉네임이 존재하면 true, 그렇지 않으면 false
      */
     boolean existsByNickname(String nickname);
-
-    // 특정 ID에 해당하는 삭제되지 않은 프로필을 조회하는 메소드
-    Optional<Profile> findByIdAndIsDeletedFalse(Long id);
 
     // @Query를 사용하여 삭제되지 않은 모든 프로필을 조회하는 커스텀 쿼리 메소드
     @Query("SELECT p FROM Profile p WHERE p.isDeleted = false")
@@ -37,3 +31,4 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
      */
     List<Profile> findAllByIsDeletedFalse();
 }
+
