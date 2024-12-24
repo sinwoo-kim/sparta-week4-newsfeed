@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface FollowerRepository extends JpaRepository<Follower, Long> {
 
-    List<Follower> findAll();
+    List<Follower> findAllAndDeletedAtIsNull();
 }

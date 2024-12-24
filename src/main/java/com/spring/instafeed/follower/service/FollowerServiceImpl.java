@@ -43,7 +43,7 @@ public class FollowerServiceImpl implements FollowerService {
 
         List<FollowerResponseDto> allFollowers = new ArrayList<>();
 
-        allFollowers = followerRepository.findAll()
+        allFollowers = followerRepository.findAllAndDeletedAtIsNull()
                 .stream()
                 .map(FollowerResponseDto::toDto)
                 .toList();
