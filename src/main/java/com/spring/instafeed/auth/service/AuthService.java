@@ -32,4 +32,14 @@ public class AuthService {
         return createToken(user);
     }
 
+    /**
+     * 로그인
+     */
+    public AccessTokenResponseDto loginUser(LoginRequestDto dto) {
+        User user = userAuthRepository.findByEmail(dto.email());
+
+        verifyPassword(user.getPassword(), dto.password());
+
+        return createToken(user);
+    }
 }
