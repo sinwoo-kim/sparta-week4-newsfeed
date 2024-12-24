@@ -1,6 +1,5 @@
 package com.spring.instafeed.user.controller;
 
-import com.spring.instafeed.user.dto.request.SignUpUserRequestDto;
 import com.spring.instafeed.user.dto.request.UpdateUserRequestDto;
 import com.spring.instafeed.user.dto.response.UpdateUserResponseDto;
 import com.spring.instafeed.user.dto.response.UserResponseDto;
@@ -15,9 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
     private final UserServiceImpl userService;
-
-
-
     /**
      * 기능
      * 회원 정보 조회
