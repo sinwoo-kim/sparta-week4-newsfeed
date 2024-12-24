@@ -2,7 +2,7 @@ package com.spring.instafeed.user.controller;
 
 import com.spring.instafeed.user.dto.request.UpdateUserRequestDto;
 import com.spring.instafeed.user.dto.response.UpdateUserResponseDto;
-import com.spring.instafeed.user.dto.response.UserResponseDto;
+import com.spring.instafeed.user.dto.response.ReadUserResponseDto;
 import com.spring.instafeed.user.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,8 +25,10 @@ public class UserController {
      * @return UserResponseDto, HttpStatus.OK
      */
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDto> findById(@PathVariable("id") Long id) {
-        UserResponseDto responseDto = userService.findById(id);
+    public ResponseEntity<ReadUserResponseDto> findById(
+            @PathVariable("id") Long id
+    ) {
+        ReadUserResponseDto responseDto = userService.findById(id);
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
@@ -59,8 +61,10 @@ public class UserController {
      * @return HttpStatus.OK
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        userService.delete(id);
+    public ResponseEntity<Void> deleteUser(
+            @PathVariable("id") Long id
+    ) {
+        userService.deleteUser(id);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -2,7 +2,7 @@ package com.spring.instafeed.user.service;
 
 import com.spring.instafeed.user.entity.User;
 import com.spring.instafeed.user.dto.response.UpdateUserResponseDto;
-import com.spring.instafeed.user.dto.response.UserResponseDto;
+import com.spring.instafeed.user.dto.response.ReadUserResponseDto;
 import com.spring.instafeed.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
      * @return UserResponseDto
      */
     @Override
-    public UserResponseDto findById(Long id) {
+    public ReadUserResponseDto findById(Long id) {
         // todo
         User foundUser = userRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
                                 "입력된 id가 존재하지 않습니다. 다시 입력해주세요."
                         )
                 );
-        return UserResponseDto.toDto(foundUser);
+        return ReadUserResponseDto.toDto(foundUser);
     }
 
     /**
@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
      */
     @Transactional
     @Override
-    public void delete(Long id) {
+    public void deleteUser(Long id) {
 
         // todo
         User foundUser = userRepository.findByIdAndDeletedAtIsNull(id)

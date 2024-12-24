@@ -66,10 +66,10 @@ public class ProfileController {
      * @return 조회된 프로필 정보를 담은 Response DTO
      */
     @GetMapping("/{id}")
-    public ResponseEntity<ReadProfileResponseDto> readEachProfile(
+    public ResponseEntity<ReadProfileResponseDto> findById(
             @PathVariable("id") Long id
     ) {
-        ReadProfileResponseDto profile = profileService.readEachProfile(id);
+        ReadProfileResponseDto profile = profileService.findById(id);
 
         return new ResponseEntity<>(profile, HttpStatus.OK);
     }

@@ -98,7 +98,7 @@ public class ProfileService {
      * @return 조회된 프로필에 대한 응답 데이터
      * @throws ResponseStatusException 프로필이 존재하지 않으면 예외 발생
      */
-    public ReadProfileResponseDto readEachProfile(Long id) {
+    public ReadProfileResponseDto findById(Long id) {
         // 주어진 ID로 삭제되지 않은 프로필 조회
         Profile profile = profileRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(

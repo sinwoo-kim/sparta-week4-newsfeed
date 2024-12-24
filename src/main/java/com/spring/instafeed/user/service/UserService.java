@@ -1,7 +1,7 @@
 package com.spring.instafeed.user.service;
 
 import com.spring.instafeed.user.dto.response.UpdateUserResponseDto;
-import com.spring.instafeed.user.dto.response.UserResponseDto;
+import com.spring.instafeed.user.dto.response.ReadUserResponseDto;
 
 public interface UserService {
 
@@ -12,7 +12,7 @@ public interface UserService {
      * @param id : 조회하려는 사용자의 식별자
      * @return UserResponseDto
      */
-    UserResponseDto findById(Long id);
+    ReadUserResponseDto findById(Long id);
 
     /**
      * 기능
@@ -32,5 +32,5 @@ public interface UserService {
      *
      * @param id : 삭제하려는 사용자의 식별자
      */
-    void delete(Long id);
+    void deleteUser(Long id);
 }
