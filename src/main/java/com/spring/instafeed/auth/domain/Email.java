@@ -17,6 +17,9 @@ public class Email {
         this.emailText = email;
     }
 
+    /**
+     * 입력받은 email 을 검증 후 Email 객체 생성
+     */
     public static Email generateEmail(String email) {
         if (email == null || email.isEmpty()) {
             throw new IllegalArgumentException("Email must not be empty");
@@ -28,6 +31,9 @@ public class Email {
         return new Email(email);
     }
 
+    /**
+     * 이메일 형식 검증
+     */
     private static boolean validateEmail(String email) {
         return pattern.matcher(email).matches();
     }
