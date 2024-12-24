@@ -1,6 +1,5 @@
 package com.spring.instafeed.user.controller;
 
-import com.spring.instafeed.user.dto.request.SignUpUserRequestDto;
 import com.spring.instafeed.user.dto.request.UpdateUserRequestDto;
 import com.spring.instafeed.user.dto.response.UpdateUserResponseDto;
 import com.spring.instafeed.user.dto.response.UserResponseDto;
@@ -14,24 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
+    // 속성
     private final UserServiceImpl userService;
-
-    /**
-     * 기능
-     * 회원가입
-     *
-     * @param requestDto : SignUpUserRequestDto
-     * @return UserResponseDto, HttpStatus 201 CREATED
-     */
-    @PostMapping("/signup")
-    public ResponseEntity<UserResponseDto> signUp(@RequestBody SignUpUserRequestDto requestDto) {
-        UserResponseDto responseDto = userService.signUp(
-                requestDto.name(),
-                requestDto.email(),
-                requestDto.password()
-        );
-        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
-    }
 
     /**
      * 기능

@@ -23,19 +23,21 @@ public class FollowerServiceImpl implements FollowerService {
 
     @Override
     public FollowerResponseDto sendFollowRequest(Long senderId, Long receiverId) {
+        // todo
 
-        Profile sendingProfile = profileRepository.findByIdOrElseThrow(senderId);
-        Profile receivingProfile = profileRepository.findByIdOrElseThrow(receiverId);
-
-        Follower follower = new Follower(
-                sendingProfile,
-                receivingProfile,
-                Status.PENDING
-        );
-
-        Follower savedFollower = followerRepository.save(follower);
-
-        return FollowerResponseDto.toDto(savedFollower);
+//        Profile sendingProfile = profileRepository.findByIdOrElseThrow(senderId);
+//        Profile receivingProfile = profileRepository.findByIdOrElseThrow(receiverId);
+//
+//        Follower follower = new Follower(
+//                sendingProfile,
+//                receivingProfile,
+//                Status.PENDING
+//        );
+//
+//        Follower savedFollower = followerRepository.save(follower);
+//
+//        return FollowerResponseDto.toDto(savedFollower);
+        return null;
     }
 
     @Override
@@ -43,7 +45,7 @@ public class FollowerServiceImpl implements FollowerService {
 
         List<FollowerResponseDto> allFollowers = new ArrayList<>();
 
-        allFollowers = followerRepository.findAllAndDeletedAtIsNull()
+        allFollowers = followerRepository.findAll()
                 .stream()
                 .map(FollowerResponseDto::toDto)
                 .toList();
@@ -55,17 +57,20 @@ public class FollowerServiceImpl implements FollowerService {
     @Override
     public UpdateFollowerResponseDto updateFollowingStatus(Long id, Long requestSenderId, Status status) {
 
-        Profile sendingRequestProfile = profileRepository.findByIdOrElseThrow(requestSenderId);
-        Profile receivingProfile = profileRepository.findByIdOrElseThrow(id);
+        // todo
+//        Profile sendingRequestProfile = profileRepository.findByIdOrElseThrow(requestSenderId);
+//        Profile receivingProfile = profileRepository.findByIdOrElseThrow(id);
+//
+//        Follower follower = new Follower(
+//                sendingRequestProfile,
+//                receivingProfile,
+//                status
+//        );
+//
+//        Follower savedFollower = followerRepository.save(follower);
+//
+//        return UpdateFollowerResponseDto.toDto(savedFollower);
 
-        Follower follower = new Follower(
-                sendingRequestProfile,
-                receivingProfile,
-                status
-        );
-
-        Follower savedFollower = followerRepository.save(follower);
-
-        return UpdateFollowerResponseDto.toDto(savedFollower);
+        return null;
     }
 }
