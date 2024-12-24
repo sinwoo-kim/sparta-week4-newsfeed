@@ -2,8 +2,6 @@ package com.spring.instafeed.profile.repository;
 
 import com.spring.instafeed.profile.entity.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,16 +30,4 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
      * @return 삭제되지 않은 프로필의 리스트
      */
     List<Profile> findAllByIsDeletedFalse();
-
-    /**
-     * 주어진 ID에 해당하는 프로필을 조회하고, 존재하지 않을 경우 예외를 발생시킵니다.
-     *
-     * @param id : 조회하려는 프로필의 식별자
-     * @return 조회된 프로필
-     * @throws ResponseStatusException : 프로필이 존재하지 않을 경우 404 Not Found 예외 발생
-     */
-    default Profile findByIdOrElseThrow(Long id) {
-        return findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile not found"));
-    }
 }
