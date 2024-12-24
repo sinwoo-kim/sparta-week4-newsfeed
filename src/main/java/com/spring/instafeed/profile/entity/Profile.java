@@ -2,20 +2,17 @@ package com.spring.instafeed.profile.entity;
 
 import com.spring.instafeed.base.BaseEntity;
 import com.spring.instafeed.profile.dto.request.CreateProfileRequestDto;
+import com.spring.instafeed.profile.dto.request.UpdateProfileRequestDto;
 import com.spring.instafeed.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Table(name = "profile")
-@AllArgsConstructor
 public class Profile extends BaseEntity {
 
     @Id
@@ -42,7 +39,6 @@ public class Profile extends BaseEntity {
     protected Profile() {
     }
 
-    // 생성자 ㅋㅋㅋㅋㅋ 패턴 통일하자..!!!!!!!!!
     /**
      * 프로필 생성자
      *
@@ -59,17 +55,34 @@ public class Profile extends BaseEntity {
     }
 
     /**
-     * 프로필 업데이트 메서드
+     * DTO로부터 프로필 객체를 생성하는 정적 메서드
      *
-     * 프로필의 닉네임, 내용, 이미지 경로를 업데이트합니다.
-     *
-     * @param nickname  새 닉네임
-     * @param content   새 소개 내용
-     * @param imagePath 새 이미지 경로
+     * @param user 프로필에 연관된 사용자
+     * @param dto  프로필 생성 요청 데이터 전송 객체
+     * @return 생성된 프로필 객체
      */
-    public void updateProfile(String nickname, String content, String imagePath) {
-        this.nickname = nickname;  // 닉네임을 새로운 값으로 업데이트
-        this.content = content;  // 내용을 새로운 값으로 업데이트
-        this.imagePath = imagePath;  // 이미지 경로를 새로운 값으로 업데이트
+    public static Profile createFromDto(User user, CreateProfileRequestDto dto) {
+        return new Profile(user, dto.nickname(), dto.content(), dto.imagePath());
+    }
+
+    /**
+     * 프로필 정보를 DTO로부터 업데이트하는 메서드
+     *
+     * @param dto 프로필 수정 요청 데이터 전송 객체
+     */
+    public void updateFromDto(UpdateProfileRequestDto dto) {
+        this.nickname = dto.nickname();  // 닉네임을 새로운 값으로 업데이트
+        this.content = dto.content();     // 내용을 새로운 값으로 업데이트
+        this.imagePath = dto.imagePath(); // 이미지 경로를 새로운 값으로 업데이트
+    }
+
+    /**
+     * 프로필 삭제 처리를 위한 메서드
+     *
+     * 특정 삭제 로직을 구현할 수 있으며,
+     * 기본적으로 삭제된 것으로 마킹하는 메서드를 호출합니다.
+     */
+    public void deleteFromDto() {
+        this.markAsDeleted(); // 삭제 처리
     }
 }

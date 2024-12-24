@@ -27,6 +27,10 @@ public record UserResponseDto(
      * @return UserResponseDto
      */
     public static UserResponseDto toDto(User user) {
-        return new UserResponseDto(user.getId(), user.getName(), user.getEmail());
+        return new UserResponseDto(
+                user.getId(),
+                user.getName(),
+                user.getEmail()
+        );
     }
 }

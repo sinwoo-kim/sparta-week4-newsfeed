@@ -10,17 +10,18 @@ import com.spring.instafeed.profile.entity.Profile;
 import com.spring.instafeed.profile.repository.ProfileRepository;
 import com.spring.instafeed.user.entity.User;
 import com.spring.instafeed.user.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ProfileService {
 
@@ -35,16 +36,8 @@ public class ProfileService {
      * @return 생성된 프로필에 대한 응답 데이터
      * @throws ResponseStatusException 사용자가 존재하지 않거나, 닉네임이 이미 존재할 경우 예외 발생
      */
-    @Transactional
     public CreateProfileResponseDto createProfile(Long userId, CreateProfileRequestDto createProfileRequestDto) {
-
-        // 사용자 ID가 null인지 확인
-        if (userId == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User ID must not be null");
-        }
-        // 필요한 부분인지 검증 필요
-
-        // 주어진 userId로 User 엔티티를 조회
+        // 사용자 ID로 사용자를 조회합니다.
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
@@ -54,12 +47,7 @@ public class ProfileService {
         }
 
         // 새로운 프로필 객체를 생성합니다.
-        Profile profile = new Profile(
-                user,
-                createProfileRequestDto.nickname(),
-                createProfileRequestDto.content(),
-                createProfileRequestDto.imagePath()
-        );
+        Profile profile = Profile.createFromDto(user, createProfileRequestDto);
 
         // 프로필을 데이터베이스에 저장합니다.
         Profile savedProfile = profileRepository.save(profile);
@@ -73,13 +61,14 @@ public class ProfileService {
      *
      * @return 삭제되지 않은 프로필의 리스트
      */
-    @Transactional(readOnly = true)
     public List<QueryProfileResponseDto> getAllProfiles() {
+        // 삭제되지 않은 모든 프로필을 조회합니다.
+        List<Profile> profiles = profileRepository.findAllByIsDeletedFalse();
 
-//        List<Profile> profiles = profileRepository.findAllActiveProfiles(); // 삭제되지 않은 프로필만 조회
-//        return profiles.stream()                             // 프로필 객체를 DTO로 변환
-//                .map(QueryProfileResponseDto::of).toList();
-        return null;
+        // 프로필 리스트를 응답 DTO 리스트로 변환합니다.
+        return profiles.stream()
+                .map(QueryProfileResponseDto::of)  // 각 Profile을 QueryProfileResponseDto로 변환
+                .collect(Collectors.toList());      // 리스트로 수집
     }
 
     /**
@@ -89,18 +78,13 @@ public class ProfileService {
      * @return 조회된 프로필에 대한 응답 데이터
      * @throws ResponseStatusException 프로필이 존재하지 않을 경우 예외 발생
      */
-    @Transactional(readOnly = true)
     public QueryProfileResponseDto getProfileById(Long id) {
         // 주어진 ID로 삭제되지 않은 프로필을 조회합니다.
         Profile profile = profileRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile not found"));
 
         // 조회된 프로필에 대한 응답 데이터 생성 및 반환
-        return new QueryProfileResponseDto(
-                profile.getNickname(),
-                profile.getContent(),
-                profile.getImagePath()
-        );
+        return QueryProfileResponseDto.of(profile);
     }
 
     /**
@@ -111,30 +95,16 @@ public class ProfileService {
      * @return 수정된 프로필에 대한 응답 데이터
      * @throws ResponseStatusException 프로필이 존재하지 않을 경우 예외 발생
      */
-    @Transactional
     public UpdateProfileResponseDto updateProfile(Long profileId, UpdateProfileRequestDto updateProfileRequestDto) {
         // 주어진 ID로 프로필을 조회합니다.
         Profile existingProfile = profileRepository.findById(profileId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile not found"));
 
-        // 프로필 정보를 업데이트합니다.
-        existingProfile.updateProfile(
-                updateProfileRequestDto.nickname(),
-                updateProfileRequestDto.content(),
-                updateProfileRequestDto.imagePath()
-        );
-
+        // 프로필 정보를 DTO로부터 업데이트합니다.
+        existingProfile.updateFromDto(updateProfileRequestDto); // UpdateProfileRequestDto를 사용하여 프로필 정보 업데이트
 
         // 수정된 프로필에 대한 응답 데이터 생성 및 반환
-        return new UpdateProfileResponseDto(
-                existingProfile.getId(),
-                existingProfile.getUser().getId(),
-                existingProfile.getNickname(),
-                existingProfile.getContent(),
-                existingProfile.getImagePath(),
-                existingProfile.getCreatedAt(),
-                existingProfile.getUpdatedAt()
-        );
+        return UpdateProfileResponseDto.of(existingProfile); // 기존 프로필 객체를 사용하여 응답 생성
     }
 
     /**
@@ -144,7 +114,6 @@ public class ProfileService {
      * @return 삭제된 프로필에 대한 응답 데이터
      * @throws ResponseStatusException 프로필이 존재하지 않거나 이미 삭제된 경우 예외 발생
      */
-    @Transactional
     public DeleteProfileResponseDto deleteProfile(Long id) {
         // 주어진 ID로 프로필을 조회합니다.
         Profile profile = profileRepository.findById(id)
@@ -156,26 +125,9 @@ public class ProfileService {
         }
 
         // 프로필을 삭제 처리합니다.
-        profile.markAsDeleted();
+        profile.deleteFromDto();  // 프로필 삭제 처리
 
         // 삭제된 프로필에 대한 응답 데이터 생성 및 반환
-        return new DeleteProfileResponseDto(
-                profile.getId(),
-                profile.getUser() != null ? profile.getUser().getId() : null,
-                profile.getNickname(),
-                profile.getContent(),
-                profile.getImagePath(),
-                profile.getCreatedAt(),
-                profile.getUpdatedAt(),
-                profile.getIsDeleted(),
-                profile.getDeletedAt()
-        );
-
-        // 삭제된 프로필 저장
-        Profile deletedProfile = profileRepository.save(profile);
-
-        // 삭제된 프로필을 DTO로 변환하여 반환
-        return DeleteProfileResponseDto.of(deletedProfile);
-
+        return DeleteProfileResponseDto.of(profile);
     }
 }

@@ -20,29 +20,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 기능
-     * 회원가입
-     *
-     * @param name     : 사용자 이름
-     * @param email    : 사용자 이메일
-     * @param password : 사용자 비밀번호
-     * @return UserResponseDto
-     */
-    @Transactional
-    @Override
-    public UserResponseDto signUp(
-            String name,
-            String email,
-            String password
-    ) {
-        User user = new User(name, email, password);
-
-        User savedUser = userRepository.save(user);
-
-        return UserResponseDto.toDto(savedUser);
-    }
-
-    /**
-     * 기능
      * 회원 정보 조회
      *
      * @param id : 조회하려는 사용자의 식별자
