@@ -1,13 +1,19 @@
 package com.spring.instafeed.auth.domain;
 
-import io.jsonwebtoken.Claims;
+import com.spring.instafeed.user.entity.User;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.HashMap;
 
+@Component
+@Slf4j
 public class TokenProvider {
 
     private final SecretKey key;
@@ -50,5 +56,22 @@ public class TokenProvider {
                         .getPayload()
                         .getSubject()
         );
+    }
+
+    /**
+     * 토큰의 유효성 검사
+     */
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+            return true;
+        } catch (ExpiredJwtException e) {
+            log.info("claims {}", e.getClaims());
+            return false;
+        }
     }
 }
