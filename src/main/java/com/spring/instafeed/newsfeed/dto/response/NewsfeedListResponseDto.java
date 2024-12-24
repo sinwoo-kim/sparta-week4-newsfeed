@@ -15,6 +15,7 @@ public class NewsfeedListResponseDto {
         this.newsfeedList = newsfeedList;
     }
 
+    // private로 선언하여 직접 객체 생성을 막고, 대신 createFrom() 팩토리 메서드를 통해 객체 생성.
     public static NewsfeedListResponseDto createFrom(List<NewsfeedDto> courseDtoList) {
         return new NewsfeedListResponseDto(courseDtoList);
     }

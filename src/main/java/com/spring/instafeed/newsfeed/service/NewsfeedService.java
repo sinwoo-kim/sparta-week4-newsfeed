@@ -9,20 +9,19 @@ import com.spring.instafeed.newsfeed.repository.NewsfeedRepository;
 import com.spring.instafeed.profile.entity.Profile;
 import com.spring.instafeed.profile.repository.ProfileRepository;
 import com.spring.instafeed.user.repository.UserRepository;
-
+import jakarta.transaction.Transactional; //
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true) // read-only로 적용하면 빠질 일 없음, setter는 쓰기 전용
 public class NewsfeedService {
 
     private final NewsfeedRepository newsfeedRepository;
@@ -40,7 +39,7 @@ public class NewsfeedService {
      * @param createRequestDto 게시물 생성 요청 정보를 담은 DTO
      * @return NewsfeedCommonResponseDto 게시물 정보를 담은 공통 DTO
      */
-    @Transactional
+    @Transactional // read-only로 적용하면 빠질 일 없음, setter는 쓰기 전용
     public NewsfeedCommonResponseDto createNewsfeed(NewsfeedCreateRequestDto createRequestDto) {
         Long profileId = createRequestDto.getProfileId();
         Profile foundProfile = profileRepository.findById(profileId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile id를 찾을 수 없어요"));
@@ -125,7 +124,6 @@ public class NewsfeedService {
      *
      * @param newsfeedId
      */
-    @Transactional
     public void deleteNewsfeed(Long newsfeedId) {
         Newsfeed foundNewsfeed = findNewsfeedById(newsfeedId);
 
