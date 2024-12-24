@@ -1,6 +1,5 @@
 package com.spring.instafeed.user.controller;
 
-
 import com.spring.instafeed.user.dto.request.SignUpUserRequestDto;
 import com.spring.instafeed.user.dto.request.UpdateUserRequestDto;
 import com.spring.instafeed.user.dto.response.UpdateUserResponseDto;
@@ -22,12 +21,15 @@ public class UserController {
      * 회원가입
      *
      * @param requestDto : SignUpUserRequestDto
-     * @return UserResponseDto, HttpStatus.CREATED
+     * @return UserResponseDto, HttpStatus 201 CREATED
      */
     @PostMapping("/signup")
     public ResponseEntity<UserResponseDto> signUp(@RequestBody SignUpUserRequestDto requestDto) {
-        UserResponseDto responseDto = userService.signUp(requestDto.getName(), requestDto.getEmail(), requestDto.getPassword());
-
+        UserResponseDto responseDto = userService.signUp(
+                requestDto.name(),
+                requestDto.email(),
+                requestDto.password()
+        );
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
@@ -54,12 +56,14 @@ public class UserController {
      * @return UserResponseDto, HttpStatus.OK // 수정 필요
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<UpdateUserResponseDto> updatePasswordById(
+    public ResponseEntity<UpdateUserResponseDto> updatePassword(
             @PathVariable Long id,
             @RequestBody UpdateUserRequestDto requestDto
     ) {
-        UpdateUserResponseDto responseDto = userService.updatePasswordById(id, requestDto.getPassword());
-
+        UpdateUserResponseDto responseDto = userService.updatePassword(
+                id,
+                requestDto.password()
+        );
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 

@@ -37,7 +37,14 @@ public class ProfileService {
      */
     @Transactional
     public CreateProfileResponseDto createProfile(Long userId, CreateProfileRequestDto createProfileRequestDto) {
-        // 사용자 ID로 사용자를 조회합니다.
+
+        // 사용자 ID가 null인지 확인
+        if (userId == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User ID must not be null");
+        }
+        // 필요한 부분인지 검증 필요
+
+        // 주어진 userId로 User 엔티티를 조회
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
@@ -68,17 +75,11 @@ public class ProfileService {
      */
     @Transactional(readOnly = true)
     public List<QueryProfileResponseDto> getAllProfiles() {
-        // 삭제되지 않은 모든 프로필을 조회합니다.
-        List<Profile> profiles = profileRepository.findAllByIsDeletedFalse();
-        // 프로필 리스트를 응답 DTO 리스트로 변환합니다.
-        return profiles.stream()
-                .map(profile -> new QueryProfileResponseDto(
-                        profile.getNickname(),
-                        profile.getContent(),
-                        profile.getImagePath()
-                ))
-                .collect(Collectors.toList());
-    }
+
+        List<Profile> profiles = profileRepository.findAllActiveProfiles(); // 삭제되지 않은 프로필만 조회
+        return profiles.stream()                             // 프로필 객체를 DTO로 변환
+                .map(QueryProfileResponseDto::of).toList();
+  }
 
     /**
      * ID로 프로필을 조회합니다.
@@ -121,6 +122,7 @@ public class ProfileService {
                 updateProfileRequestDto.content(),
                 updateProfileRequestDto.imagePath()
         );
+
 
         // 수정된 프로필에 대한 응답 데이터 생성 및 반환
         return new UpdateProfileResponseDto(
@@ -167,5 +169,12 @@ public class ProfileService {
                 profile.getIsDeleted(),
                 profile.getDeletedAt()
         );
+
+        // 삭제된 프로필 저장
+        Profile deletedProfile = profileRepository.save(profile);
+
+        // 삭제된 프로필을 DTO로 변환하여 반환
+        return DeleteProfileResponseDto.of(deletedProfile);
+
     }
 }

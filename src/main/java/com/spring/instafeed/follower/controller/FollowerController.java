@@ -20,10 +20,13 @@ public class FollowerController {
     private final FollowerServiceImpl followerService;
 
     @PostMapping
-    public ResponseEntity<FollowerResponseDto> sendFollowRequest(@RequestBody CreateFollowerRequestDto requestDto) {
-
-        FollowerResponseDto responseDto = followerService.sendFollowRequest(requestDto.getSenderId(), requestDto.getReceiverId());
-
+    public ResponseEntity<FollowerResponseDto> sendFollowRequest(
+            @RequestBody CreateFollowerRequestDto requestDto
+    ) {
+        FollowerResponseDto responseDto = followerService.sendFollowRequest(
+                requestDto.senderId(),
+                requestDto.receiverId()
+        );
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
@@ -49,8 +52,8 @@ public class FollowerController {
     ) {
         UpdateFollowerResponseDto responseDto = followerService.updateFollowingStatus(
                 id,
-                requestDto.getRequestSenderId(),
-                requestDto.getStatus()
+                requestDto.requestSenderId(),
+                requestDto.status()
         );
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }

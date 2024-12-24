@@ -23,9 +23,4 @@ public abstract class BaseFollowerEntity {
     @Comment("삭제일")
     @Column(name = "deleted_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime deletedAt;
-
-    public BaseFollowerEntity(LocalDateTime acceptedAt, LocalDateTime deletedAt) {
-        this.acceptedAt = acceptedAt;
-        this.deletedAt = deletedAt;
-    }
 }
