@@ -62,4 +62,12 @@ public class AuthService {
             throw new IllegalArgumentException("Invalid password");
         }
     }
+
+    /**
+     * 유저 정보를 기반으로 토큰 생성
+     */
+    private AccessTokenResponseDto createToken(User user) {
+        String token = tokenProvider.createToken(user);
+        return new AccessTokenResponseDto(token, "Bearer", user.getId(), "create token");
+    }
 }
