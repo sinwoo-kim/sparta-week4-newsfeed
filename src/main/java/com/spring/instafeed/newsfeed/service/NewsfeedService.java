@@ -15,6 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -63,13 +67,36 @@ public class NewsfeedService {
      * 게시물 목록 페이징 조회
      *
      * @param pageable 페이징 정보 (페이지 번호, 크기 등)
-     * @return Page<ReadNewsfeedResponseDto> 일정 페이징 응답 DTO
+     * @return List<ReadNewsfeedResponseDto> 일정 페이징 응답 DTO
      */
-    public Page<ReadNewsfeedResponseDto> readAllNewsfeeds(Pageable pageable) {
-        // 모든 게시물을 수정일 기준 내림차순 조회
-        Page<Newsfeed> allNewsfeeds = newsfeedRepository.findAllByIsDeletedFalseOrderByUpdatedAtDesc(pageable);
+    public List<ReadNewsfeedResponseDto> readAllNewsfeeds(Pageable pageable) {
 
-        return allNewsfeeds.map(ReadNewsfeedResponseDto::toDto);
+        Page<Newsfeed> allNewsfeeds = newsfeedRepository
+                .findAllByIsDeletedFalseOrderByUpdatedAtDesc(pageable);
+
+        List<ReadNewsfeedResponseDto> newsfeedList = new ArrayList<>();
+
+        newsfeedList = allNewsfeeds
+                .getContent()
+                .stream()
+                .map(ReadNewsfeedResponseDto::toDto)
+                .toList();
+
+        return newsfeedList;
+
+        /*
+        [람다 반영 전 코드]
+        newsfeedList = allNewsfeeds
+        .getContent()
+        .stream()
+        .map(newsfeed -> new ReadNewsfeedResponseDto(
+                newsfeed.getId(),
+                newsfeed.getProfile().getNickname(),
+                newsfeed.getContent(),
+                newsfeed.getImagePath()
+        ))
+        .toList();
+         */
     }
 
     /**

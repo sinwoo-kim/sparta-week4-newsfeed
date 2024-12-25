@@ -15,6 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/newsfeeds")
@@ -52,16 +55,20 @@ public class NewsfeedController {
      * @return ResponseEntity<Page < NewsfeedResponseDto>> 페이징 처리된 게시물 목록
      */
     @GetMapping
-    public ResponseEntity<Page<ReadNewsfeedResponseDto>> readAllNewsfeeds(
-            @RequestParam(value = "page", defaultValue = "0")
-            int page,  // 기본값은 첫 페이지
+    public ResponseEntity<List<ReadNewsfeedResponseDto>> readAllNewsfeeds(
+            @RequestParam(value = "page", defaultValue = "0") int page,  // 기본값은 첫 페이지
             @RequestParam(value = "size", defaultValue = "10") int size // 기본값은 10개 항목
     ) {
         // 페이징 정보 기반으로 게시물 조회
         page = Math.max(page - 1, 0); // 사용자가 1 입력한다는 점 반영 및 음수가 되지 않도록 최솟값 설정
+
         Pageable pageable = PageRequest.of(page, size);
-        Page<ReadNewsfeedResponseDto> responseDto = newsfeedService.readAllNewsfeeds(pageable);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+
+        List<ReadNewsfeedResponseDto> allNewsfeeds = new ArrayList<>();
+
+        allNewsfeeds = newsfeedService.readAllNewsfeeds(pageable);
+
+        return new ResponseEntity<>(allNewsfeeds, HttpStatus.OK);
     }
 
     /**
