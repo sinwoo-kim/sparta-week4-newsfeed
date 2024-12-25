@@ -12,7 +12,7 @@ public interface UserService {
      * @param id : 조회하려는 사용자의 식별자
      * @return UserResponseDto
      */
-    ReadUserResponseDto findById(Long id);
+    ReadUserResponseDto readUserById(Long id);
 
     /**
      * 기능

@@ -1,6 +1,5 @@
 package com.spring.instafeed.profile.service;
 
-import com.spring.instafeed.profile.dto.request.UpdateProfileRequestDto;
 import com.spring.instafeed.profile.dto.response.*;
 
 import java.util.List;
@@ -22,7 +21,7 @@ public interface ProfileService {
      */
     List<ReadProfileResponseDto> readAllProfiles();
 
-    ReadProfileResponseDto findById(Long id);
+    ReadProfileResponseDto readProfileById(Long id);
 
     UpdateProfileResponseDto updateProfile(
             Long id,

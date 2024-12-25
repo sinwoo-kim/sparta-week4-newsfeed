@@ -33,11 +33,12 @@ public class NewsfeedController {
     public ResponseEntity<CreateNewsfeedResponseDto> createNewsfeed(
             @RequestBody CreateNewsfeedRequestDto requestDto
     ) {
-        CreateNewsfeedResponseDto responseDto = newsfeedService.createNewsfeed(
-                requestDto.profileId(),
-                requestDto.content(),
-                requestDto.imagePath()
-        );
+        CreateNewsfeedResponseDto responseDto = newsfeedService
+                .createNewsfeed(
+                        requestDto.profileId(),
+                        requestDto.content(),
+                        requestDto.imagePath()
+                );
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
@@ -51,8 +52,10 @@ public class NewsfeedController {
      */
     @GetMapping
     public ResponseEntity<List<ReadNewsfeedResponseDto>> readAllNewsfeeds(
-            @RequestParam(value = "page", defaultValue = "0") int page,  // 기본값은 첫 페이지
-            @RequestParam(value = "size", defaultValue = "10") int size // 기본값은 10개 항목
+            @RequestParam(value = "page", defaultValue = "0")
+            int page,  // 기본값은 첫 페이지
+            @RequestParam(value = "size", defaultValue = "10")
+            int size // 기본값은 10개 항목
     ) {
         page = Math.max(page - 1, 0);
         // 사용자가 1 입력한다는 점 반영 및 음수가 되지 않도록 최솟값 설정
@@ -74,10 +77,11 @@ public class NewsfeedController {
      * @return NewsfeedCommonResponseDto 게시물 정보를 반환하는 공통 DTO
      */
     @GetMapping("/{id}")
-    public ResponseEntity<ReadNewsfeedResponseDto> findById(
+    public ResponseEntity<ReadNewsfeedResponseDto> readNewsfeedById(
             @PathVariable("id") Long id
     ) {
-        ReadNewsfeedResponseDto responseDto = newsfeedService.readNewsfeed(id);
+        ReadNewsfeedResponseDto responseDto = newsfeedService
+                .readNewsfeedById(id);
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
@@ -95,16 +99,18 @@ public class NewsfeedController {
             @PathVariable("id") Long id,
             @RequestBody UpdateNewsfeedRequestDto requestDto
     ) {
-        UpdateNewsfeedResponseDto responseDto = newsfeedService.updateNewsfeed(
-                id,
-                requestDto.content()
-        );
+        UpdateNewsfeedResponseDto responseDto = newsfeedService
+                .updateNewsfeed(
+                        id,
+                        requestDto.content()
+                );
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     /**
      * 기능
      * 게시물 단건 삭제
+     *
      * @param id : 삭제하려는 게시물의 식별자
      * @return : 상태 코드 메시지(200 OK)만 반환
      */

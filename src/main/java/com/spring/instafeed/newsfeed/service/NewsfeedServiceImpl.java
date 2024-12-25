@@ -49,12 +49,12 @@ public class NewsfeedServiceImpl implements NewsfeedService {
                                 "Id does not exist"
                         )
                 );
+
         Newsfeed newsfeedToSave = Newsfeed.create(
                 foundProfile,
                 content,
                 imagePath
         );
-
         Newsfeed savedNewsfeed = newsfeedRepository
                 .save(newsfeedToSave);
 
@@ -69,8 +69,9 @@ public class NewsfeedServiceImpl implements NewsfeedService {
      * @return List<ReadNewsfeedResponseDto> 일정 페이징 응답 DTO
      */
     @Override
-    public List<ReadNewsfeedResponseDto> readAllNewsfeeds(Pageable pageable) {
-
+    public List<ReadNewsfeedResponseDto> readAllNewsfeeds(
+            Pageable pageable
+    ) {
         Page<Newsfeed> allNewsfeeds = newsfeedRepository
                 .findAllByIsDeletedFalseOrderByUpdatedAtDesc(pageable);
 
@@ -106,7 +107,7 @@ public class NewsfeedServiceImpl implements NewsfeedService {
      * @return ReadNewsfeedResponseDto
      */
     @Override
-    public ReadNewsfeedResponseDto readNewsfeed(Long id) {
+    public ReadNewsfeedResponseDto readNewsfeedById(Long id) {
         Newsfeed foundNewsfeed = newsfeedRepository
                 .findByIdAndIsDeletedFalse(id)
                 .orElseThrow(

@@ -25,10 +25,11 @@ public class UserController {
      * @return UserResponseDto, HttpStatus.OK
      */
     @GetMapping("/{id}")
-    public ResponseEntity<ReadUserResponseDto> findById(
+    public ResponseEntity<ReadUserResponseDto> readUserById(
             @PathVariable("id") Long id
     ) {
-        ReadUserResponseDto responseDto = userService.findById(id);
+        ReadUserResponseDto responseDto = userService
+                .readUserById(id);
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
@@ -46,10 +47,11 @@ public class UserController {
             @PathVariable("id") Long id,
             @RequestBody UpdateUserRequestDto requestDto
     ) {
-        UpdateUserResponseDto responseDto = userService.updatePassword(
-                id,
-                requestDto.password()
-        );
+        UpdateUserResponseDto responseDto = userService
+                .updatePassword(
+                        id,
+                        requestDto.password()
+                );
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 

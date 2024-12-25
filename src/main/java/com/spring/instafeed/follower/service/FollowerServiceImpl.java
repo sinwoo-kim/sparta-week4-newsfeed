@@ -1,9 +1,7 @@
 package com.spring.instafeed.follower.service;
 
 import com.spring.instafeed.base.Status;
-import com.spring.instafeed.follower.dto.response.CreateFollowerResponseDto;
-import com.spring.instafeed.follower.dto.response.ReadFollowerResponseDto;
-import com.spring.instafeed.follower.dto.response.UpdateFollowerResponseDto;
+import com.spring.instafeed.follower.dto.response.*;
 import com.spring.instafeed.follower.entity.Follower;
 import com.spring.instafeed.follower.repository.FollowerRepository;
 import com.spring.instafeed.profile.entity.Profile;
@@ -50,8 +48,7 @@ public class FollowerServiceImpl implements FollowerService {
                                 "Id does not exist"
                         )
                 );
-
-        // ----- 사용자가 자기 자신을 팔로잉 요청하는지 검증 구간 시작 -----
+        // 사용자가 자기 자신을 팔로잉 요청하는지 검증 시작
         Long senderUserId = senderProfile.getUser().getId();
         Long receiverUserId = receiverProfile.getUser().getId();
 
@@ -62,9 +59,9 @@ public class FollowerServiceImpl implements FollowerService {
                     "Cannot follow your own profile"
             );
         }
-        // ----- 사용자가 자기 자신을 팔로잉 요청하는지 검증 구간 마침 -----
+        // 사용자가 자기 자신을 팔로잉 요청하는지 검증 종료
 
-        // ----- 팔로잉 요청이 있는지 검증 구간 시작 -----
+        // 동일한 팔로잉 요청이 있는지 검증 시작
         // todo
         followerRepository
                 .findBySenderProfileIdAndReceiverProfileId(
@@ -78,9 +75,9 @@ public class FollowerServiceImpl implements FollowerService {
                             );
                         }
                 );
-        // ----- 팔로잉 요청이 있는지 검증 구간 마침 -----
+        // 동일한 팔로잉 요청이 있는지 검증 종료
 
-        // ----- 반대로 팔로잉 요청이 있는지 검증 구간 시작 -----
+        // 반대로 팔로잉 요청이 있는지 검증 시작
         // todo
         followerRepository
                 .findBySenderProfileIdAndReceiverProfileId(
@@ -94,15 +91,15 @@ public class FollowerServiceImpl implements FollowerService {
                             );
                         }
                 );
-        // ----- 반대로 팔로잉 요청이 있는지 검증 구간 마침 -----
+        // 반대로 팔로잉 요청이 있는지 검증 종료
 
         Follower followerToSave = Follower.create(
                 senderProfile,
                 receiverProfile,
                 Status.PENDING
         );
-
-        Follower savedFollower = followerRepository.save(followerToSave);
+        Follower savedFollower = followerRepository
+                .save(followerToSave);
 
         return CreateFollowerResponseDto.toDto(savedFollower);
     }
@@ -145,7 +142,6 @@ public class FollowerServiceImpl implements FollowerService {
                                 "Id does not exist"
                         )
                 );
-
         foundFollower.update(status);
 
         return UpdateFollowerResponseDto.toDto(foundFollower);

@@ -1,7 +1,6 @@
 package com.spring.instafeed.newsfeed.entity;
 
 import com.spring.instafeed.base.BaseEntity;
-import com.spring.instafeed.newsfeed.dto.request.UpdateNewsfeedRequestDto;
 import com.spring.instafeed.profile.entity.Profile;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -36,7 +35,7 @@ public class Newsfeed extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "profile_id")
-    Profile profile;
+    private Profile profile;
 
     protected Newsfeed() {
     }

@@ -107,7 +107,7 @@ public class ProfileServiceImpl implements ProfileService {
      * @throws ResponseStatusException 프로필이 존재하지 않으면 예외 발생
      */
     @Override
-    public ReadProfileResponseDto findById(Long id) {
+    public ReadProfileResponseDto readProfileById(Long id) {
         // todo
         Profile foundProfile = profileRepository
                 .findByIdAndIsDeletedFalse(id)
@@ -117,7 +117,6 @@ public class ProfileServiceImpl implements ProfileService {
                                 "Id does not exist"
                         )
                 );
-
         return ReadProfileResponseDto.toDto(foundProfile);
     }
 
@@ -138,7 +137,6 @@ public class ProfileServiceImpl implements ProfileService {
                                 "Id does not exist"
                         )
                 );
-
         foundProfile.update(content);
 
         return UpdateProfileResponseDto.toDto(foundProfile);
@@ -178,13 +176,15 @@ public class ProfileServiceImpl implements ProfileService {
         // 삭제된 프로필이 작성한 게시물도 함께 삭제 처리
         List<Newsfeed> newsfeeds = new ArrayList<>();
 
-        newsfeeds = newsfeedRepository.findAllByProfileIdAndIsDeletedFalse(
-                foundProfile.getId()
-        );
+        newsfeeds = newsfeedRepository
+                .findAllByProfileIdAndIsDeletedFalse(
+                        foundProfile.getId()
+                );
 
         newsfeeds.stream()
                 .peek(BaseEntity::markAsDeleted)
                 .forEach(newsfeed -> {
-                });
+                        }
+                );
     }
 }

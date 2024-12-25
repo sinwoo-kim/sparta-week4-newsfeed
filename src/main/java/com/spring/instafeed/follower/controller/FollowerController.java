@@ -6,7 +6,7 @@ import com.spring.instafeed.follower.dto.request.UpdateFollowerRequestDto;
 import com.spring.instafeed.follower.dto.response.CreateFollowerResponseDto;
 import com.spring.instafeed.follower.dto.response.ReadFollowerResponseDto;
 import com.spring.instafeed.follower.dto.response.UpdateFollowerResponseDto;
-import com.spring.instafeed.follower.service.FollowerService;
+import com.spring.instafeed.follower.service.FollowerServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,16 +21,17 @@ import java.util.List;
 public class FollowerController {
 
     // 속성
-    private final FollowerService followerService;
+    private final FollowerServiceImpl followerService;
 
     @PostMapping
     public ResponseEntity<CreateFollowerResponseDto> createFollower(
             @RequestBody CreateFollowerRequestDto requestDto
     ) {
-        CreateFollowerResponseDto responseDto = followerService.createFollower(
-                requestDto.senderProfileId(),
-                requestDto.receiverProfileId()
-        );
+        CreateFollowerResponseDto responseDto = followerService
+                .createFollower(
+                        requestDto.senderProfileId(),
+                        requestDto.receiverProfileId()
+                );
 
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
@@ -48,13 +49,13 @@ public class FollowerController {
     public ResponseEntity<UpdateFollowerResponseDto> updateFollower(
             @PathVariable("id") Long id,
             @RequestBody UpdateFollowerRequestDto requestDto
-            ) {
-        UpdateFollowerResponseDto responseDto = followerService.updateFollower(
-                id,
-                requestDto.senderProfileId(),
-                requestDto.status()
-        );
-
+    ) {
+        UpdateFollowerResponseDto responseDto = followerService
+                .updateFollower(
+                        id,
+                        requestDto.senderProfileId(),
+                        requestDto.status()
+                );
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 }
