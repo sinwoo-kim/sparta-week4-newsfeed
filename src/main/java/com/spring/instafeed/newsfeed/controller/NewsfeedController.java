@@ -2,6 +2,7 @@ package com.spring.instafeed.newsfeed.controller;
 
 import com.spring.instafeed.newsfeed.dto.request.CreateNewsfeedRequestDto;
 import com.spring.instafeed.newsfeed.dto.request.UpdateNewsfeedRequestDto;
+import com.spring.instafeed.newsfeed.dto.response.CreateNewsfeedResponseDto;
 import com.spring.instafeed.newsfeed.dto.response.NewsfeedResponseDto;
 import com.spring.instafeed.newsfeed.dto.response.ReadNewsfeedResponseDto;
 import com.spring.instafeed.newsfeed.service.NewsfeedService;
@@ -28,16 +29,17 @@ public class NewsfeedController {
      * 게시물 생성
      *
      * @param requestDto : 게시물 생성 요청에 해당하는 Request DTO
-     * @return NewsfeedCommonResponseDto
+     * @return NewsfeedResponseDto
      */
     @PostMapping
-    public ResponseEntity<NewsfeedResponseDto> createNewsfeed(
+    public ResponseEntity<CreateNewsfeedResponseDto> createNewsfeed(
             @RequestBody CreateNewsfeedRequestDto requestDto
     ) {
-        NewsfeedResponseDto responseDto = newsfeedService.createNewsfeed(
-                requestDto
+        CreateNewsfeedResponseDto responseDto = newsfeedService.createNewsfeed(
+                requestDto.profileId(),
+                requestDto.content(),
+                requestDto.imagePath()
         );
-
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
@@ -51,12 +53,9 @@ public class NewsfeedController {
      */
     @GetMapping("/paged")
     public ResponseEntity<Page<ReadNewsfeedResponseDto>> readAllNewsfeeds(
-            @RequestParam(
-                    value = "page", defaultValue = "0"
-            )
+            @RequestParam(value = "page", defaultValue = "0")
             int page,  // 기본값은 첫 페이지
-            @RequestParam(value = "size", defaultValue = "10"
-            ) int size // 기본값은 10개 항목
+            @RequestParam(value = "size", defaultValue = "10") int size // 기본값은 10개 항목
     ) {
         try {
             // 페이징 정보 기반으로 게시물 조회
@@ -77,7 +76,7 @@ public class NewsfeedController {
      * @return NewsfeedCommonResponseDto 게시물 정보를 반환하는 공통 DTO
      */
     @GetMapping("/{id}")
-    public ResponseEntity<NewsfeedResponseDto> findbyid(
+    public ResponseEntity<NewsfeedResponseDto> findById(
             @PathVariable("id") Long id
     ) {
         NewsfeedResponseDto responseDto = newsfeedService.findNewsfeed(id);
@@ -103,7 +102,6 @@ public class NewsfeedController {
                 requestDto
         );
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
-
     }
 
     /**

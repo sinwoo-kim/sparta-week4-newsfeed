@@ -1,15 +1,13 @@
 package com.spring.instafeed.newsfeed.service;
 
-import com.spring.instafeed.newsfeed.dto.request.CreateNewsfeedRequestDto;
 import com.spring.instafeed.newsfeed.dto.request.UpdateNewsfeedRequestDto;
+import com.spring.instafeed.newsfeed.dto.response.CreateNewsfeedResponseDto;
 import com.spring.instafeed.newsfeed.dto.response.NewsfeedResponseDto;
 import com.spring.instafeed.newsfeed.dto.response.ReadNewsfeedResponseDto;
 import com.spring.instafeed.newsfeed.entity.Newsfeed;
-import com.spring.instafeed.profile.entity.Profile;
 import com.spring.instafeed.newsfeed.repository.NewsfeedRepository;
+import com.spring.instafeed.profile.entity.Profile;
 import com.spring.instafeed.profile.repository.ProfileRepository;
-import com.spring.instafeed.user.repository.UserRepository;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,26 +24,40 @@ import org.springframework.web.server.ResponseStatusException;
 public class NewsfeedService {
 
     private final NewsfeedRepository newsfeedRepository;
-    private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
 
     /**
-     * 게시물 생성 메서드
-     * <p>
-     * foundProfile 객체을 활용하여 닉네임을 가져옵니다.
-     * <p>TODO</p>
-     * - 코드 검토 필요
+     * 기능
+     * 뉴스피드 생성
      *
-     * @param createRequestDto 게시물 생성 요청 정보를 담은 DTO
-     * @return NewsfeedCommonResponseDto 게시물 정보를 담은 공통 DTO
+     * @param profileId : 게시물을 작성하는 사용자의 프로필 ID
+     * @param content : 게시물의 내용
+     * @param imagePath : 게시물에 첨부된 이미지 경로
+     * @return CreateNewsfeedResponseDto : 생성된 뉴스피드를 DTO 형태로 반환
      */
     @Transactional
-    public NewsfeedResponseDto createNewsfeed(CreateNewsfeedRequestDto createRequestDto) {
-        Long profileId = createRequestDto.profileId();
-        Profile foundProfile = profileRepository.findById(profileId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Profile id를 찾을 수 없어요"));
-        Newsfeed newNewsfeed = Newsfeed.create(createRequestDto, foundProfile);
-        Newsfeed savedNewsfeed = newsfeedRepository.save(newNewsfeed);
-        return NewsfeedResponseDto.convertToDto(savedNewsfeed);
+    public CreateNewsfeedResponseDto createNewsfeed(
+            Long profileId,
+            String content,
+            String imagePath
+    ) {
+        Profile foundProfile = profileRepository
+                .findById(profileId)
+                .orElseThrow(
+                        () -> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Id does not exist"
+                        )
+                );
+        Newsfeed newsfeedToSave = Newsfeed.create(
+                foundProfile,
+                content,
+                imagePath
+        );
+
+        Newsfeed savedNewsfeed = newsfeedRepository.save(newsfeedToSave);
+
+        return CreateNewsfeedResponseDto.toDto(savedNewsfeed);
     }
 
     /**
@@ -74,7 +86,7 @@ public class NewsfeedService {
      */
     public NewsfeedResponseDto findNewsfeed(Long newsfeedId) {
         Newsfeed foundNewsfeed = findNewsfeedById(newsfeedId);
-        return NewsfeedResponseDto.convertToDto(foundNewsfeed);
+        return NewsfeedResponseDto.toDto(foundNewsfeed);
     }
 
     /**
@@ -100,7 +112,7 @@ public class NewsfeedService {
         Newsfeed updatedNewsfeed = newsfeedRepository.save(foundNewsfeed);
 
         // 수정된 데이터를 DTO로 변환하여 반환
-        return NewsfeedResponseDto.convertToDto(updatedNewsfeed);
+        return NewsfeedResponseDto.toDto(updatedNewsfeed);
     }
 
     /**
