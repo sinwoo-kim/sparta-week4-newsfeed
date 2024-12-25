@@ -50,6 +50,18 @@ public class Follower extends BaseFollowerEntity {
         this.status = status;
     }
 
+    public static Follower create(
+            Profile senderProfile,
+            Profile receiverProfile,
+            Status status
+    ) {
+        return new Follower(
+                senderProfile,
+                receiverProfile,
+                status
+        );
+    }
+
     public void update (Status status) {
         this.status = status;
     }

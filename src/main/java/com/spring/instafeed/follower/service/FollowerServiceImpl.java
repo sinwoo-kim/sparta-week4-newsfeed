@@ -96,7 +96,7 @@ public class FollowerServiceImpl implements FollowerService {
                 );
         // ----- 반대로 팔로잉 요청이 있는지 검증 구간 마침 -----
 
-        Follower followerToSave = new Follower(
+        Follower followerToSave = Follower.create(
                 senderProfile,
                 receiverProfile,
                 Status.PENDING

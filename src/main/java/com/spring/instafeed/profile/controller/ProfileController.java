@@ -90,7 +90,7 @@ public class ProfileController {
 
         UpdateProfileResponseDto responseDto = profileServiceImpl.updateProfile(
                 id,
-                requestDto
+                requestDto.content()
         );
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }

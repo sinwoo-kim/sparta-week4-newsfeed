@@ -26,7 +26,7 @@ public interface ProfileService {
 
     UpdateProfileResponseDto updateProfile(
             Long id,
-            UpdateProfileRequestDto requestDto
+            String content
     );
 
     void deleteProfile(Long id);

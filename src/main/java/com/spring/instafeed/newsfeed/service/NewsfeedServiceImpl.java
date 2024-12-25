@@ -32,7 +32,7 @@ public class NewsfeedServiceImpl implements NewsfeedService {
      * @param profileId : 게시물을 작성하는 사용자의 프로필 ID
      * @param content   : 게시물의 내용
      * @param imagePath : 게시물에 첨부된 이미지 경로
-     * @return CreateNewsfeedResponseDto : 생성된 뉴스피드를 DTO 형태로 반환
+     * @return CreateNewsfeedResponseDto
      */
     @Transactional
     @Override
@@ -55,7 +55,8 @@ public class NewsfeedServiceImpl implements NewsfeedService {
                 imagePath
         );
 
-        Newsfeed savedNewsfeed = newsfeedRepository.save(newsfeedToSave);
+        Newsfeed savedNewsfeed = newsfeedRepository
+                .save(newsfeedToSave);
 
         return CreateNewsfeedResponseDto.toDto(savedNewsfeed);
     }

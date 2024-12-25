@@ -1,17 +1,18 @@
 package com.spring.instafeed.profile.service;
 
-import com.spring.instafeed.profile.dto.request.UpdateProfileRequestDto;
+import com.spring.instafeed.base.BaseEntity;
+import com.spring.instafeed.newsfeed.entity.Newsfeed;
+import com.spring.instafeed.newsfeed.repository.NewsfeedRepository;
 import com.spring.instafeed.profile.dto.response.*;
 import com.spring.instafeed.profile.entity.Profile;
 import com.spring.instafeed.profile.repository.ProfileRepository;
 import com.spring.instafeed.user.entity.User;
 import com.spring.instafeed.user.repository.UserRepository;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ public class ProfileServiceImpl implements ProfileService {
     // 속성
     private final ProfileRepository profileRepository;
     private final UserRepository userRepository;
+    private final NewsfeedRepository newsfeedRepository;
 
     /**
      * 기능
@@ -62,7 +64,6 @@ public class ProfileServiceImpl implements ProfileService {
                         }
                 );
 
-        // 새로운 프로필 객체를 생성합니다.
         Profile profileToSave = Profile.create(
                 foundUser,
                 nickname,
@@ -70,8 +71,8 @@ public class ProfileServiceImpl implements ProfileService {
                 imagePath
         );
 
-        // 프로필을 데이터베이스에 저장합니다.
-        Profile savedProfile = profileRepository.save(profileToSave);
+        Profile savedProfile = profileRepository
+                .save(profileToSave);
 
         // 저장된 프로필을 DTO로 생성 및 반환
         return CreateProfileResponseDto.toDto(savedProfile);
@@ -120,19 +121,12 @@ public class ProfileServiceImpl implements ProfileService {
         return ReadProfileResponseDto.toDto(foundProfile);
     }
 
-    /**
-     * 프로필을 수정합니다.
-     *
-     * @param id         수정할 프로필의 ID
-     * @param requestDto 프로필 수정 요청 데이터
-     * @return 수정된 프로필에 대한 응답 데이터
-     * @throws ResponseStatusException 프로필이 존재하지 않을 경우 예외 발생
-     */
+
     @Transactional
     @Override
     public UpdateProfileResponseDto updateProfile(
             Long id,
-            UpdateProfileRequestDto requestDto
+            String content
     ) {
 
         // todo
@@ -145,7 +139,7 @@ public class ProfileServiceImpl implements ProfileService {
                         )
                 );
 
-        foundProfile.update(requestDto);
+        foundProfile.update(content);
 
         return UpdateProfileResponseDto.toDto(foundProfile);
     }
@@ -155,7 +149,6 @@ public class ProfileServiceImpl implements ProfileService {
      * 프로필 삭제
      *
      * @param id : 삭제할 프로필의 ID
-     * @throws ResponseStatusException 프로필이 존재하지 않거나 이미 삭제된 경우 예외 발생
      */
     @Transactional
     @Override
@@ -181,5 +174,17 @@ public class ProfileServiceImpl implements ProfileService {
 
         // 프로필 삭제 처리
         foundProfile.markAsDeleted();
+
+        // 삭제된 프로필이 작성한 게시물도 함께 삭제 처리
+        List<Newsfeed> newsfeeds = new ArrayList<>();
+
+        newsfeeds = newsfeedRepository.findAllByProfileIdAndIsDeletedFalse(
+                foundProfile.getId()
+        );
+
+        newsfeeds.stream()
+                .peek(BaseEntity::markAsDeleted)
+                .forEach(newsfeed -> {
+                });
     }
 }

@@ -1,13 +1,8 @@
 package com.spring.instafeed.profile.entity;
 
 import com.spring.instafeed.base.BaseEntity;
-import com.spring.instafeed.profile.dto.request.CreateProfileRequestDto;
-import com.spring.instafeed.profile.dto.request.UpdateProfileRequestDto;
 import com.spring.instafeed.user.entity.User;
 import jakarta.persistence.*;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import org.hibernate.annotations.Comment;
 
@@ -99,11 +94,9 @@ public class Profile extends BaseEntity {
      * 기능
      * 프로필 정보를 DTO로부터 업데이트하는 메서드
      *
-     * @param dto 프로필 수정 요청 데이터 전송 객체
+     * @param content 수정하려는 프로필의 내용
      */
-    public void update(UpdateProfileRequestDto dto) {
-        this.nickname = dto.nickname();
-        this.content = dto.content();
-        this.imagePath = dto.imagePath();
+    public void update(String content) {
+        this.content = content;
     }
 }
