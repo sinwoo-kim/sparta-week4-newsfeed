@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +25,7 @@ public class ProfileController {
      * 프로필 생성
      *
      * @param requestDto : 프로필 생성 요청 DTO (userId 포함)
-     * @return createProfileResponseDto 생성된 프로필 정보를 담은 응답 DTO
-     * @throws ResponseStatusException : 사용자 ID가 null이거나, 사용자가 존재하지 않으면 예외 발생
-     * @throws ResponseStatusException : 닉네임이 중복되는 경우 예외 발생
+     * @return CreateProfileResponseDto
      */
     @PostMapping
     public ResponseEntity<CreateProfileResponseDto> createProfile(
@@ -36,7 +33,9 @@ public class ProfileController {
     ) {
         CreateProfileResponseDto responseDto = profileServiceImpl.createProfile(
                 requestDto.userId(),
-                requestDto
+                requestDto.nickname(),
+                requestDto.content(),
+                requestDto.imagePath()
         );
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }

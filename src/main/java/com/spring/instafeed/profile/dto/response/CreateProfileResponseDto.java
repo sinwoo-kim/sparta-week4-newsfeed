@@ -21,7 +21,7 @@ public record CreateProfileResponseDto(
     public static CreateProfileResponseDto toDto(Profile profile) {
         return new CreateProfileResponseDto(
                 profile.getId(),
-                profile.getUser() != null ? profile.getUser().getId() : null, // 사용자 ID를 가져옵니다.
+                profile.getUser().getId(),
                 profile.getNickname(),
                 profile.getContent(),
                 profile.getImagePath(),

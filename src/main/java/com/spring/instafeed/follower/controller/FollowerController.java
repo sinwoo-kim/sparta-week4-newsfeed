@@ -20,6 +20,7 @@ import java.util.List;
 @RequestMapping("/followers")
 public class FollowerController {
 
+    // 속성
     private final FollowerService followerService;
 
     @PostMapping

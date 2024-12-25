@@ -1,11 +1,7 @@
 package com.spring.instafeed.profile.service;
 
-import com.spring.instafeed.profile.dto.request.CreateProfileRequestDto;
 import com.spring.instafeed.profile.dto.request.UpdateProfileRequestDto;
-import com.spring.instafeed.profile.dto.response.CreateProfileResponseDto;
-import com.spring.instafeed.profile.dto.response.DeleteProfileResponseDto;
-import com.spring.instafeed.profile.dto.response.ReadProfileResponseDto;
-import com.spring.instafeed.profile.dto.response.UpdateProfileResponseDto;
+import com.spring.instafeed.profile.dto.response.*;
 
 import java.util.List;
 
@@ -13,7 +9,9 @@ public interface ProfileService {
 
     CreateProfileResponseDto createProfile(
             Long userId,
-            CreateProfileRequestDto requestDto
+            String nickname,
+            String content,
+            String imagePath
     );
 
     /**
@@ -24,9 +22,7 @@ public interface ProfileService {
      */
     List<ReadProfileResponseDto> readAllProfiles();
 
-
     ReadProfileResponseDto findById(Long id);
-
 
     UpdateProfileResponseDto updateProfile(
             Long id,

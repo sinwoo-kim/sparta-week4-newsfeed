@@ -1,6 +1,5 @@
 package com.spring.instafeed.profile.service;
 
-import com.spring.instafeed.profile.dto.request.CreateProfileRequestDto;
 import com.spring.instafeed.profile.dto.request.UpdateProfileRequestDto;
 import com.spring.instafeed.profile.dto.response.*;
 import com.spring.instafeed.profile.entity.Profile;
@@ -30,19 +29,21 @@ public class ProfileServiceImpl implements ProfileService {
      * 기능
      * 프로필 생성
      *
-     * @param userId     : 프로필을 생성할 사용자의 Id
-     * @param requestDto : 프로필 생성 요청 데이터
+     * @param userId   : 프로필을 생성할 사용자의 Id
+     * @param nickname : 사용자가 등록하려는 닉네임
      * @return 생성된 프로필에 대한 응답 데이터
-     * @throws ResponseStatusException : 사용자가 존재하지 않거나 닉네임이 이미 존재하면 예외 발생
      */
     @Transactional
     @Override
     public CreateProfileResponseDto createProfile(
             Long userId,
-            CreateProfileRequestDto requestDto
+            String nickname,
+            String content,
+            String imagePath
     ) {
         // todo
-        User foundUser = userRepository.findById(userId)
+        User foundUser = userRepository
+                .findByIdAndIsDeletedFalse(userId)
                 .orElseThrow(
                         () -> new ResponseStatusException(
                                 HttpStatus.NOT_FOUND,
@@ -50,26 +51,29 @@ public class ProfileServiceImpl implements ProfileService {
                         )
                 );
 
-        // 닉네임이 이미 존재하는지 검증
-        boolean existsNickname = profileRepository.existsByNickname(
-                requestDto.nickname()
-        );
-
         // todo
-        if (existsNickname) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Nickname already exists"
-            );
-        }
+        profileRepository
+                .findByNickname(nickname)
+                .ifPresent(existingNickname -> {
+                            throw new ResponseStatusException(
+                                    HttpStatus.BAD_REQUEST,
+                                    "The requested data already exists"
+                            );
+                        }
+                );
 
         // 새로운 프로필 객체를 생성합니다.
-        Profile profileToSave = Profile.create(foundUser, requestDto);
+        Profile profileToSave = Profile.create(
+                foundUser,
+                nickname,
+                content,
+                imagePath
+        );
 
         // 프로필을 데이터베이스에 저장합니다.
         Profile savedProfile = profileRepository.save(profileToSave);
 
-        // 저장된 프로필에 대한 응답 데이터 생성 및 반환
+        // 저장된 프로필을 DTO로 생성 및 반환
         return CreateProfileResponseDto.toDto(savedProfile);
     }
 
@@ -104,7 +108,8 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public ReadProfileResponseDto findById(Long id) {
         // todo
-        Profile foundProfile = profileRepository.findByIdAndIsDeletedFalse(id)
+        Profile foundProfile = profileRepository
+                .findByIdAndIsDeletedFalse(id)
                 .orElseThrow(
                         () -> new ResponseStatusException(
                                 HttpStatus.NOT_FOUND,
@@ -131,7 +136,8 @@ public class ProfileServiceImpl implements ProfileService {
     ) {
 
         // todo
-        Profile foundProfile = profileRepository.findByIdAndIsDeletedFalse(id)
+        Profile foundProfile = profileRepository
+                .findByIdAndIsDeletedFalse(id)
                 .orElseThrow(
                         () -> new ResponseStatusException(
                                 HttpStatus.NOT_FOUND,
@@ -155,7 +161,8 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public void deleteProfile(Long id) {
         // todo
-        Profile foundProfile = profileRepository.findById(id)
+        Profile foundProfile = profileRepository
+                .findById(id)
                 .orElseThrow(
                         () -> new ResponseStatusException(
                                 HttpStatus.NOT_FOUND,

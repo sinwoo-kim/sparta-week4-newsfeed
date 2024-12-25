@@ -81,23 +81,17 @@ public class Profile extends BaseEntity {
         this.imagePath = imagePath;
     }
 
-    /**
-     * 기능
-     * DTO로부터 프로필 객체를 생성하는 정적 메서드
-     *
-     * @param user 프로필에 연관된 사용자
-     * @param dto  프로필 생성 요청 데이터 전송 객체
-     * @return 생성된 프로필 객체
-     */
     public static Profile create(
             User user,
-            CreateProfileRequestDto dto
+            String nickname,
+            String content,
+            String imagePath
     ) {
         return new Profile(
                 user,
-                dto.nickname(),
-                dto.content(),
-                dto.imagePath()
+                nickname,
+                content,
+                imagePath
         );
     }
 

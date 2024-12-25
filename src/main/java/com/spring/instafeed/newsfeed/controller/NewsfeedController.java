@@ -3,9 +3,8 @@ package com.spring.instafeed.newsfeed.controller;
 import com.spring.instafeed.newsfeed.dto.request.CreateNewsfeedRequestDto;
 import com.spring.instafeed.newsfeed.dto.request.UpdateNewsfeedRequestDto;
 import com.spring.instafeed.newsfeed.dto.response.*;
-import com.spring.instafeed.newsfeed.service.NewsfeedService;
+import com.spring.instafeed.newsfeed.service.NewsfeedServiceImpl;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -15,14 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
 @RestController
 @RequestMapping("/newsfeeds")
 @RequiredArgsConstructor
 public class NewsfeedController {
 
     // 속성
-    private final NewsfeedService newsfeedService;
+    private final NewsfeedServiceImpl newsfeedService;
 
     /**
      * 기능
