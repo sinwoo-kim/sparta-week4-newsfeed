@@ -52,6 +52,20 @@ public class FollowerServiceImpl implements FollowerService {
                         )
                 );
 
+        // ----- 사용자가 자기 자신을 팔로잉 요청하는지 검증 구간 시작 -----
+        Long senderUserId = senderProfile.getUser().getId();
+
+        Long receiverUserId = receiverProfile.getUser().getId();
+
+        // todo
+        if(senderUserId.equals(receiverUserId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Cannot follow your own profile"
+            );
+        }
+        // ----- 사용자가 자기 자신을 팔로잉 요청하는지 검증 구간 마침 -----
+
         Follower followerToSave = new Follower(
                 senderProfile,
                 receiverProfile,
@@ -79,23 +93,21 @@ public class FollowerServiceImpl implements FollowerService {
         return allFollowers;
     }
 
-//
 //    @Transactional
 //    @Override
 //    public UpdateFollowerResponseDto updateFollowingStatus(Long id, Long requestSenderId, Status status) {
-//        // todo
-////        Profile sendingRequestProfile = profileRepository.findByIdOrElseThrow(requestSenderId);
-////        Profile receivingProfile = profileRepository.findByIdOrElseThrow(id);
-////
-////        Follower follower = new Follower(
-////                sendingRequestProfile,
-////                receivingProfile,
-////                status
-////        );
-////
-////        Follower savedFollower = followerRepository.save(follower);
-////
-////        return UpdateFollowerResponseDto.toDto(savedFollower);
+//        Profile sendingRequestProfile = profileRepository.findByIdOrElseThrow(requestSenderId);
+//        Profile receivingProfile = profileRepository.findByIdOrElseThrow(id);
+//
+//        Follower follower = new Follower(
+//                sendingRequestProfile,
+//                receivingProfile,
+//                status
+//        );
+//
+//        Follower savedFollower = followerRepository.save(follower);
+//
+//        return UpdateFollowerResponseDto.toDto(savedFollower);
 //        return null;
 //    }
 }
