@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -54,17 +53,47 @@ public class FollowerServiceImpl implements FollowerService {
 
         // ----- 사용자가 자기 자신을 팔로잉 요청하는지 검증 구간 시작 -----
         Long senderUserId = senderProfile.getUser().getId();
-
         Long receiverUserId = receiverProfile.getUser().getId();
 
         // todo
-        if(senderUserId.equals(receiverUserId)) {
+        if (senderUserId.equals(receiverUserId)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Cannot follow your own profile"
             );
         }
         // ----- 사용자가 자기 자신을 팔로잉 요청하는지 검증 구간 마침 -----
+
+        // ----- 팔로잉 요청이 있는지 검증 구간 시작 -----
+        // todo
+        followerRepository
+                .findBySenderProfileIdAndReceiverProfileId(
+                        senderProfileId,
+                        receiverProfileId
+                )
+                .ifPresent(follower -> {
+                            throw new ResponseStatusException(
+                                    HttpStatus.BAD_REQUEST,
+                                    "The requested data already exists"
+                            );
+                        }
+                );
+        // ----- 팔로잉 요청이 있는지 검증 구간 마침 -----
+
+        // ----- 반대로 팔로잉 요청이 있는지 검증 구간 시작 -----
+        followerRepository
+                .findBySenderProfileIdAndReceiverProfileId(
+                        receiverProfileId,
+                        senderProfileId
+                )
+                .ifPresent(reverseFollower -> {
+                            throw new ResponseStatusException(
+                                    HttpStatus.BAD_REQUEST,
+                                    "The reverse requested data already exists"
+                            );
+                        }
+                );
+        // ----- 반대로 팔로잉 요청이 있는지 검증 구간 마침 -----
 
         Follower followerToSave = new Follower(
                 senderProfile,
