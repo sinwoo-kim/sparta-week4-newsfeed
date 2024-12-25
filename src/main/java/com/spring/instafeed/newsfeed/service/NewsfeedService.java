@@ -1,6 +1,5 @@
 package com.spring.instafeed.newsfeed.service;
 
-import com.spring.instafeed.newsfeed.dto.request.UpdateNewsfeedRequestDto;
 import com.spring.instafeed.newsfeed.dto.response.*;
 import com.spring.instafeed.newsfeed.entity.Newsfeed;
 import com.spring.instafeed.newsfeed.repository.NewsfeedRepository;
@@ -112,33 +111,34 @@ public class NewsfeedService {
                         )
                 );
         return ReadNewsfeedResponseDto.toDto(foundNewsfeed);
+        // todo
     }
 
     /**
-     * 게시물 단건 수정 메서드
+     * 기능
+     * 게시물 단건 수정 (내용만, 인스타그램은 이미지 수정 기능이 없으므로)
      *
-     * <p>TODO</p>
-     * - 작성자 검증 로직 코드 검토 필요합니다.
-     * - 예외 공통 처리 미구현
-     *
-     * @param newsfeedId
-     * @param modifyRequestDto
-     * @return NewsfeedCommonResponseDto
+     * @param id      : 수정하려는 게시물의 식별자
+     * @param content : 수정하려는 게시물의 내용
+     * @return UpdateNewsfeedResponseDt
      */
     @Transactional
-    public NewsfeedResponseDto updateNewsfeed(Long newsfeedId, UpdateNewsfeedRequestDto modifyRequestDto) {
-        // 게시물 조회
-        Newsfeed foundNewsfeed = findNewsfeedById(newsfeedId);
+    public UpdateNewsfeedResponseDto updateNewsfeed(
+            Long id,
+            String content
+    ) {
+        Newsfeed foundNewsfeed = newsfeedRepository.findByIdAndIsDeletedFalse(id)
+                .orElseThrow(
+                        () -> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Id does not exist"
+                        )
+                );
+        foundNewsfeed.update(content);
 
-        // 수정 요청 데이터 반영
-        foundNewsfeed.updateNewsfeed(modifyRequestDto);
-
-        // 데이터베이스에 저장
-        Newsfeed updatedNewsfeed = newsfeedRepository.save(foundNewsfeed);
-
-        // 수정된 데이터를 DTO로 변환하여 반환
-        return NewsfeedResponseDto.toDto(updatedNewsfeed);
+        return UpdateNewsfeedResponseDto.toDto(foundNewsfeed);
     }
+    // todo
 
     /**
      * 게시물 단건 삭제 메서드
@@ -156,9 +156,6 @@ public class NewsfeedService {
         newsfeedRepository.deleteById(foundNewsfeed.getId());
     }
 
-
-    /* ----------------------------------------공통 메서드---------------------------------------------------*/
-
     /**
      * newsfeed Id 조회 (if false -> 예외 처리)
      *
@@ -171,4 +168,3 @@ public class NewsfeedService {
 
     }
 }
-

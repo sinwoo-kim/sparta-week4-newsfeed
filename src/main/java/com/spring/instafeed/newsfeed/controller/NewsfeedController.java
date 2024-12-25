@@ -2,9 +2,7 @@ package com.spring.instafeed.newsfeed.controller;
 
 import com.spring.instafeed.newsfeed.dto.request.CreateNewsfeedRequestDto;
 import com.spring.instafeed.newsfeed.dto.request.UpdateNewsfeedRequestDto;
-import com.spring.instafeed.newsfeed.dto.response.CreateNewsfeedResponseDto;
-import com.spring.instafeed.newsfeed.dto.response.NewsfeedResponseDto;
-import com.spring.instafeed.newsfeed.dto.response.ReadNewsfeedResponseDto;
+import com.spring.instafeed.newsfeed.dto.response.*;
 import com.spring.instafeed.newsfeed.service.NewsfeedService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,8 +56,8 @@ public class NewsfeedController {
             @RequestParam(value = "page", defaultValue = "0") int page,  // 기본값은 첫 페이지
             @RequestParam(value = "size", defaultValue = "10") int size // 기본값은 10개 항목
     ) {
-        // 페이징 정보 기반으로 게시물 조회
-        page = Math.max(page - 1, 0); // 사용자가 1 입력한다는 점 반영 및 음수가 되지 않도록 최솟값 설정
+        page = Math.max(page - 1, 0);
+        // 사용자가 1 입력한다는 점 반영 및 음수가 되지 않도록 최솟값 설정
 
         Pageable pageable = PageRequest.of(page, size);
 
@@ -92,16 +90,16 @@ public class NewsfeedController {
      *
      * @param id         수정할 게시물의 ID (경로 변수로 전달)
      * @param requestDto 게시물 수정 요청 정보를 담고 있는 DTO
-     * @return NewsfeedCommonResponseDto 게시물 정보를 반환하는 공통 DTO
+     * @return NewsfeedCommonResponseDto 게시물 정보 반환 DTO
      */
     @PatchMapping("/{id}")
-    public ResponseEntity<NewsfeedResponseDto> updateNewsfeed(
+    public ResponseEntity<UpdateNewsfeedResponseDto> updateNewsfeed(
             @PathVariable("id") Long id,
             @RequestBody UpdateNewsfeedRequestDto requestDto
     ) {
-        NewsfeedResponseDto responseDto = newsfeedService.updateNewsfeed(
+        UpdateNewsfeedResponseDto responseDto = newsfeedService.updateNewsfeed(
                 id,
-                requestDto
+                requestDto.content()
         );
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }

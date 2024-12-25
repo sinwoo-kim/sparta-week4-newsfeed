@@ -74,10 +74,9 @@ public class Newsfeed extends BaseEntity {
      * 기능
      * 게시물 내용 수정
      *
-     * @param dto 게시물 수정 요청 정보를 담은 DTO
+     * @param content 수정하려는 게시물의 내용
      */
-    public void updateNewsfeed(UpdateNewsfeedRequestDto dto) {
-        // TODO :: null 체크 해야 여기서 해야 하나?
-        this.content = dto.content();
+    public void update(String content) {
+        this.content = content;
     }
 }
