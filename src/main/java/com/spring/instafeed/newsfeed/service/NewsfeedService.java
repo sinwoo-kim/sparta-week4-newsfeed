@@ -141,30 +141,31 @@ public class NewsfeedService {
     // todo
 
     /**
-     * 게시물 단건 삭제 메서드
-     *
-     * <p>TODO</p>
-     * - 예외 공통 처리 미구현
-     * - isDeleted , DeleteAt 어떻게 적용해야되는지?
-     *
-     * @param newsfeedId
+     * 기능
+     * 게시물 단건 삭제
+     * @param id : 삭제하려는 게시물의 식별자
      */
     @Transactional
-    public void deleteNewsfeed(Long newsfeedId) {
-        Newsfeed foundNewsfeed = findNewsfeedById(newsfeedId);
+    public void deleteNewsfeed(Long id) {
+        // todo
+        Newsfeed foundNewsfeed = newsfeedRepository.findById(id)
+                .orElseThrow(
+                        () -> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Id does not exist"
+                        )
+                );
 
-        newsfeedRepository.deleteById(foundNewsfeed.getId());
-    }
+        // 이미 삭제된 게시물인지 확인
+        // todo
+        if (foundNewsfeed.getIsDeleted()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "The requested data has already been deleted"
+            );
+        }
 
-    /**
-     * newsfeed Id 조회 (if false -> 예외 처리)
-     *
-     * @param newsfeedId
-     * @return Newsfeed
-     */
-
-    private Newsfeed findNewsfeedById(Long newsfeedId) {
-        return newsfeedRepository.findById(newsfeedId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "newsfeed id를 찾을 수 없어요"));
-
+        // 게시물 삭제 처리
+        foundNewsfeed.markAsDeleted();
     }
 }

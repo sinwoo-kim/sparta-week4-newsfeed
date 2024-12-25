@@ -106,10 +106,9 @@ public class NewsfeedController {
 
     /**
      * 기능
-     * 게시물 삭제
-     *
-     * @param id 삭제할 게시물의 ID (경로 변수로 전달)
-     * @return ResponseEntity<String> 삭제 성공 메시지 반환
+     * 게시물 단건 삭제
+     * @param id : 삭제하려는 게시물의 식별자
+     * @return : 상태 코드 메시지(200 OK)만 반환
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNewsfeed(
