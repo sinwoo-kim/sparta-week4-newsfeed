@@ -17,7 +17,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -83,7 +82,7 @@ public class NewsfeedService {
                 .toList();
 
         return newsfeedList;
-
+    }
         /*
         [람다 반영 전 코드]
         newsfeedList = allNewsfeeds
@@ -97,17 +96,22 @@ public class NewsfeedService {
         ))
         .toList();
          */
-    }
 
     /**
      * 게시물 단건 조회 메서드.
      *
-     * @param newsfeedId
-     * @return NewsfeedCommonResponseDto
+     * @param id : 조회하려는 게시물의 식별자
+     * @return ReadNewsfeedResponseDto
      */
-    public NewsfeedResponseDto findNewsfeed(Long newsfeedId) {
-        Newsfeed foundNewsfeed = findNewsfeedById(newsfeedId);
-        return NewsfeedResponseDto.toDto(foundNewsfeed);
+    public ReadNewsfeedResponseDto readNewsfeed(Long id) {
+        Newsfeed foundNewsfeed = newsfeedRepository.findByIdAndIsDeletedFalse(id)
+                .orElseThrow(
+                        () -> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Id does not exist"
+                        )
+                );
+        return ReadNewsfeedResponseDto.toDto(foundNewsfeed);
     }
 
     /**
