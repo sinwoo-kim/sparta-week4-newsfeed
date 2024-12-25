@@ -1,9 +1,7 @@
 package com.spring.instafeed.newsfeed.service;
 
 import com.spring.instafeed.newsfeed.dto.request.UpdateNewsfeedRequestDto;
-import com.spring.instafeed.newsfeed.dto.response.CreateNewsfeedResponseDto;
-import com.spring.instafeed.newsfeed.dto.response.NewsfeedResponseDto;
-import com.spring.instafeed.newsfeed.dto.response.ReadNewsfeedResponseDto;
+import com.spring.instafeed.newsfeed.dto.response.*;
 import com.spring.instafeed.newsfeed.entity.Newsfeed;
 import com.spring.instafeed.newsfeed.repository.NewsfeedRepository;
 import com.spring.instafeed.profile.entity.Profile;
@@ -31,7 +29,7 @@ public class NewsfeedService {
      * 뉴스피드 생성
      *
      * @param profileId : 게시물을 작성하는 사용자의 프로필 ID
-     * @param content : 게시물의 내용
+     * @param content   : 게시물의 내용
      * @param imagePath : 게시물에 첨부된 이미지 경로
      * @return CreateNewsfeedResponseDto : 생성된 뉴스피드를 DTO 형태로 반환
      */
@@ -61,21 +59,17 @@ public class NewsfeedService {
     }
 
     /**
-     * 게시물 페이징 조회 서비스
+     * 기능
+     * 게시물 목록 페이징 조회
      *
      * @param pageable 페이징 정보 (페이지 번호, 크기 등)
-     * @return Page<NewsfeedResponseDto> 일정 페이징 응답 DTO
+     * @return Page<ReadNewsfeedResponseDto> 일정 페이징 응답 DTO
      */
-    public Page<ReadNewsfeedResponseDto> findNewsfeedListWithPaging(Pageable pageable) {
-        // 모든 게시물 데이터를 수정일 기준 내림차순으로 조회
-        Page<Newsfeed> newsfeedPage = newsfeedRepository.findAllByOrderByUpdatedAtDesc(pageable);
-        // 조회된 게시물들을 DTO로 변환하여 반환
-        return newsfeedPage.map(newsfeed -> new ReadNewsfeedResponseDto(
-                newsfeed.getNewsfeedId(),
-                newsfeed.getProfile().getNickname(),
-                newsfeed.getImagePath(),
-                newsfeed.getContent()
-        ));
+    public Page<ReadNewsfeedResponseDto> readAllNewsfeeds(Pageable pageable) {
+        // 모든 게시물을 수정일 기준 내림차순 조회
+        Page<Newsfeed> allNewsfeeds = newsfeedRepository.findAllByIsDeletedFalseOrderByUpdatedAtDesc(pageable);
+
+        return allNewsfeeds.map(ReadNewsfeedResponseDto::toDto);
     }
 
     /**
@@ -128,7 +122,7 @@ public class NewsfeedService {
     public void deleteNewsfeed(Long newsfeedId) {
         Newsfeed foundNewsfeed = findNewsfeedById(newsfeedId);
 
-        newsfeedRepository.deleteById(foundNewsfeed.getNewsfeedId());
+        newsfeedRepository.deleteById(foundNewsfeed.getId());
     }
 
 

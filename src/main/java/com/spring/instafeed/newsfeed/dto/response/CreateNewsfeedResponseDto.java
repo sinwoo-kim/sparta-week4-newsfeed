@@ -11,7 +11,7 @@ public record CreateNewsfeedResponseDto(
 
     public static CreateNewsfeedResponseDto toDto(Newsfeed newsfeed) {
         return new CreateNewsfeedResponseDto(
-                newsfeed.getNewsfeedId(),
+                newsfeed.getId(),
                 newsfeed.getProfile().getNickname(),
                 newsfeed.getContent(),
                 newsfeed.getImagePath()

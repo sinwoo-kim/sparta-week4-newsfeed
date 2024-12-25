@@ -51,21 +51,17 @@ public class NewsfeedController {
      * @param size 조회할 페이지 크기 (기본값: 10)
      * @return ResponseEntity<Page < NewsfeedResponseDto>> 페이징 처리된 게시물 목록
      */
-    @GetMapping("/paged")
+    @GetMapping
     public ResponseEntity<Page<ReadNewsfeedResponseDto>> readAllNewsfeeds(
             @RequestParam(value = "page", defaultValue = "0")
             int page,  // 기본값은 첫 페이지
             @RequestParam(value = "size", defaultValue = "10") int size // 기본값은 10개 항목
     ) {
-        try {
-            // 페이징 정보 기반으로 게시물 조회
-            Pageable pageable = PageRequest.of(page, size);
-            Page<ReadNewsfeedResponseDto> newsfeedsPage = newsfeedService.findNewsfeedListWithPaging(pageable);
-            return new ResponseEntity<>(newsfeedsPage, HttpStatus.OK);
-        } catch (Exception e) {
-            // 예외 발생 시 500 Internal Server Error 반환
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        // 페이징 정보 기반으로 게시물 조회
+        page = Math.max(page - 1, 0); // 사용자가 1 입력한다는 점 반영 및 음수가 되지 않도록 최솟값 설정
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ReadNewsfeedResponseDto> responseDto = newsfeedService.readAllNewsfeeds(pageable);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     /**

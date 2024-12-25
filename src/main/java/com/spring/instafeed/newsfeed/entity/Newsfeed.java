@@ -16,7 +16,7 @@ public class Newsfeed extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "BIGINT")
-    private Long newsfeedId;
+    private Long id;
 
     @Comment("게시물 내용")
     @Column(
@@ -52,7 +52,6 @@ public class Newsfeed extends BaseEntity {
             Profile profile,
             String content,
             String imagePath
-
     ) {
         this.profile = profile;
         this.content = content;
