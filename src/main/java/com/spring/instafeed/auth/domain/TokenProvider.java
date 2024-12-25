@@ -46,7 +46,7 @@ public class TokenProvider {
     }
 
     /**
-     * 토큰에서 사용자 id 추출
+     * 토큰에서 사용자 senderProfileId 추출
      */
     public Long getUserId(String token) {
         Claims claims = Jwts.parser()

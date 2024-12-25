@@ -21,7 +21,7 @@ public class UserController {
      * 기능
      * 회원 정보 조회
      *
-     * @param id : 조회하려는 사용자의 id
+     * @param id : 조회하려는 사용자의 senderProfileId
      * @return UserResponseDto, HttpStatus.OK
      */
     @GetMapping("/{id}")
@@ -57,7 +57,7 @@ public class UserController {
      * 기능
      * 사용자 소프트 딜리트
      *
-     * @param id : 삭제하려는 사용자의 id
+     * @param id : 삭제하려는 사용자의 senderProfileId
      * @return HttpStatus.OK
      */
     @DeleteMapping("/{id}")

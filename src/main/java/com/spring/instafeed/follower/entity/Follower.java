@@ -2,6 +2,7 @@ package com.spring.instafeed.follower.entity;
 
 import com.spring.instafeed.base.BaseFollowerEntity;
 import com.spring.instafeed.base.Status;
+import com.spring.instafeed.follower.dto.request.UpdateFollowerRequestDto;
 import com.spring.instafeed.profile.entity.Profile;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -46,6 +47,10 @@ public class Follower extends BaseFollowerEntity {
     ) {
         this.senderProfile = senderProfile;
         this.receiverProfile = receiverProfile;
+        this.status = status;
+    }
+
+    public void update (Status status) {
         this.status = status;
     }
 }
