@@ -1,6 +1,5 @@
 package com.spring.instafeed.common;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
@@ -29,7 +28,6 @@ public abstract class BaseFollowerEntity {
             updatable = false,
             columnDefinition = "TIMESTAMP"
     )
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
     @Comment("상태 변경일")
@@ -38,6 +36,5 @@ public abstract class BaseFollowerEntity {
             name = "updated_at",
             columnDefinition = "TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
     )
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
 }
