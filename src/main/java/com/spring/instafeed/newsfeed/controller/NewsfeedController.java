@@ -3,6 +3,7 @@ package com.spring.instafeed.newsfeed.controller;
 import com.spring.instafeed.newsfeed.dto.request.CreateNewsfeedRequestDto;
 import com.spring.instafeed.newsfeed.dto.request.UpdateNewsfeedRequestDto;
 import com.spring.instafeed.newsfeed.dto.response.*;
+import com.spring.instafeed.newsfeed.dto.response.ContentsWrapperResponseDto;
 import com.spring.instafeed.newsfeed.service.NewsfeedServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -51,22 +52,15 @@ public class NewsfeedController {
      * @return ResponseEntity<Page < NewsfeedResponseDto>> 페이징 처리된 게시물 목록
      */
     @GetMapping
-    public ResponseEntity<List<ReadNewsfeedResponseDto>> readAllNewsfeeds(
-            @RequestParam(value = "page", defaultValue = "0")
-            int page,  // 기본값은 첫 페이지
-            @RequestParam(value = "size", defaultValue = "10")
-            int size // 기본값은 10개 항목
+    public ResponseEntity<ContentsWrapperResponseDto> readAllNewsfeeds(
+            @RequestParam(value = "page", defaultValue = "1") int page, // 기본값: 1페이지
+            @RequestParam(value = "size", defaultValue = "10") int size // 기본값: 10개 항목
     ) {
-        page = Math.max(page - 1, 0);
-        // 사용자가 1 입력한다는 점 반영 및 음수가 되지 않도록 최솟값 설정
-
+        page = Math.max(page - 1, 0); // 1부터 시작하는 페이지 번호를 0부터 시작하도록 조정
         Pageable pageable = PageRequest.of(page, size);
 
-        List<ReadNewsfeedResponseDto> allNewsfeeds = new ArrayList<>();
-
-        allNewsfeeds = newsfeedService.readAllNewsfeeds(pageable);
-
-        return new ResponseEntity<>(allNewsfeeds, HttpStatus.OK);
+        ContentsWrapperResponseDto responseDto = newsfeedService.readAllNewsfeeds(pageable);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     /**

@@ -8,8 +8,8 @@ public record CreateProfileResponseDto(
         Long id,
         Long userId,
         String nickname,
-        String content,
         String imagePath,
+        String content,
         LocalDateTime createdAt
 ) {
     /**
@@ -23,8 +23,8 @@ public record CreateProfileResponseDto(
                 profile.getId(),
                 profile.getUser().getId(),
                 profile.getNickname(),
-                profile.getContent(),
                 profile.getImagePath(),
+                profile.getContent(),
                 profile.getCreatedAt()
         );
         // todo

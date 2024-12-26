@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 public record UpdateProfileResponseDto(
         Long id,
         String nickname,
-        String content,
         String imagePath,
+        String content,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
@@ -23,8 +23,8 @@ public record UpdateProfileResponseDto(
         return new UpdateProfileResponseDto(
                 profile.getId(),
                 profile.getNickname(),
-                profile.getContent(),
                 profile.getImagePath(),
+                profile.getContent(),
                 profile.getCreatedAt(),
                 profile.getUpdatedAt()
         );
