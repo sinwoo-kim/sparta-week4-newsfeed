@@ -1,6 +1,6 @@
 package com.spring.instafeed.follower.dto.response;
 
-import com.spring.instafeed.base.Status;
+import com.spring.instafeed.common.Status;
 import com.spring.instafeed.follower.entity.Follower;
 
 import java.time.LocalDateTime;

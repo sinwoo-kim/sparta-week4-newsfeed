@@ -1,11 +1,13 @@
 package com.spring.instafeed.auth.web.filter;
 
 import com.spring.instafeed.auth.domain.TokenProvider;
+import com.spring.instafeed.exception.invalid.InvalidTokenException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.PatternMatchUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -23,10 +25,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // 토큰의 유효성 검사
         if (token == null || !tokenProvider.validateToken(token)) {
-            throw new IllegalArgumentException("Invalid or missing token");
+            throw new InvalidTokenException(HttpStatus.UNAUTHORIZED, "Invalid or missing token");
         }
 
         Long userId = tokenProvider.getUserId(token);
+
         request.setAttribute("userId", userId);
 
         filterChain.doFilter(request, response);
