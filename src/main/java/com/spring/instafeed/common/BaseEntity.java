@@ -1,4 +1,4 @@
-package com.spring.instafeed.base;
+package com.spring.instafeed.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
