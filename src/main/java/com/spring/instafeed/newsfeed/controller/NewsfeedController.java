@@ -71,17 +71,17 @@ public class NewsfeedController {
      * @param request : 조회할 게시물의 user 정보를 포함한 HttpServletRequest
      * @return NewsfeedCommonResponseDto 게시물 정보를 반환하는 공통 DTO
      */
-    @GetMapping
-    public ResponseEntity<ReadNewsfeedResponseDto> readNewsfeedById(
-            HttpServletRequest request
-    ) {
-        Long id = (Long) request.getAttribute("userId");
-
-        ReadNewsfeedResponseDto responseDto = newsfeedService
-                .readNewsfeedById(id);
-
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
+//    @GetMapping
+//    public ResponseEntity<ReadNewsfeedResponseDto> readNewsfeedById(
+//            HttpServletRequest request
+//    ) {
+//        Long id = (Long) request.getAttribute("userId");
+//
+//        ReadNewsfeedResponseDto responseDto = newsfeedService
+//                .readNewsfeedById(id);
+//
+//        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+//    }
 
     /**
      * 기능

@@ -1,5 +1,6 @@
 package com.spring.instafeed.common;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
@@ -21,25 +22,40 @@ public abstract class BaseEntity {
     @Comment("생성일")
     @CreatedDate
     @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMP")
+    @Column(
+            name = "created_at",
+            nullable = false,
+            updatable = false,
+            columnDefinition = "TIMESTAMP"
+    )
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
     @Comment("수정일")
     @LastModifiedDate
-    @Column(name = "updated_at", nullable = false, columnDefinition = "TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+    @Column(
+            name = "updated_at",
+            nullable = false,
+            columnDefinition = "TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
     )
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
 
     // isDeleted 값을 설정할 수 있는 메서드 추가
     @Comment("삭제 여부")
-    @Column(name = "is_deleted", columnDefinition = "TINYINT(0)")
-
+    @Column(
+            name = "is_deleted",
+            columnDefinition = "TINYINT(0)"
+    )
     private Boolean isDeleted = false;
-
 
     // 삭제일을 설정할 수 있는 메서드 추가
     @Comment("삭제일")
-    @Column(name = "deleted_at", columnDefinition = "TIMESTAMP")
+    @Column(
+            name = "deleted_at",
+            columnDefinition = "TIMESTAMP"
+    )
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime deletedAt;
 
     public void markAsDeleted() {
