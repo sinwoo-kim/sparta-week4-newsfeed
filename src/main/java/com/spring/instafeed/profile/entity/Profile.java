@@ -90,13 +90,13 @@ public class Profile extends BaseEntity {
         );
     }
 
-    /**
-     * 기능
-     * 프로필 정보를 DTO로부터 업데이트하는 메서드
-     *
-     * @param content 수정하려는 프로필의 내용
-     */
-    public void update(String content) {
+    public void update(
+            String nickname,
+            String content,
+            String imagePath
+    ) {
+        this.nickname = nickname;
         this.content = content;
+        this.imagePath = imagePath;
     }
 }

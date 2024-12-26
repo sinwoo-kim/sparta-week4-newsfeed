@@ -96,7 +96,9 @@ public class ProfileController {
         UpdateProfileResponseDto responseDto = profileService
                 .updateProfile(
                         id,
-                        requestDto.content()
+                        requestDto.nickname(),
+                        requestDto.content(),
+                        requestDto.imagePath()
                 );
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }

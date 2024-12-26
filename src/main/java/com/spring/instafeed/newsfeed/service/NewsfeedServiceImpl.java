@@ -3,6 +3,7 @@ package com.spring.instafeed.newsfeed.service;
 import com.spring.instafeed.exception.data.DataNotFoundException;
 import com.spring.instafeed.exception.data.DataAlreadyDeletedException;
 import com.spring.instafeed.newsfeed.dto.response.*;
+import com.spring.instafeed.newsfeed.dto.response.ContentsWrapperResponseDto;
 import com.spring.instafeed.newsfeed.entity.Newsfeed;
 import com.spring.instafeed.newsfeed.repository.NewsfeedRepository;
 import com.spring.instafeed.profile.entity.Profile;
@@ -71,21 +72,19 @@ public class NewsfeedServiceImpl implements NewsfeedService {
      * @return List<ReadNewsfeedResponseDto> 일정 페이징 응답 DTO
      */
     @Override
-    public List<ReadNewsfeedResponseDto> readAllNewsfeeds(
-            Pageable pageable
-    ) {
+    public ContentsWrapperResponseDto readAllNewsfeeds(Pageable pageable) {
         Page<Newsfeed> allNewsfeeds = newsfeedRepository
                 .findAllByIsDeletedFalseOrderByUpdatedAtDesc(pageable);
 
-        List<ReadNewsfeedResponseDto> newsfeedList = new ArrayList<>();
-
-        newsfeedList = allNewsfeeds
+        // Newsfeed를 DTO로 변환
+        List<ReadNewsfeedResponseDto> newsfeedList = allNewsfeeds
                 .getContent()
                 .stream()
                 .map(ReadNewsfeedResponseDto::toDto)
                 .toList();
 
-        return newsfeedList;
+        // Wrapper DTO로 반환
+        return new ContentsWrapperResponseDto(newsfeedList);
     }
         /*
         [람다 반영 전 코드]
