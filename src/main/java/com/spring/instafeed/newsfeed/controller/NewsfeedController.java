@@ -13,9 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @RestController
 @RequestMapping("/newsfeeds")
 @RequiredArgsConstructor
@@ -52,7 +49,7 @@ public class NewsfeedController {
      * @param size : 조회할 페이지 크기 (기본값: 10)
      * @return ResponseEntity<Page < NewsfeedResponseDto>> 페이징 처리된 게시물 목록
      */
-    @GetMapping
+    @GetMapping("/list")
     public ResponseEntity<ContentsWrapperResponseDto> readAllNewsfeeds(
             @RequestParam(value = "page", defaultValue = "1") int page, // 기본값: 1페이지
             @RequestParam(value = "size", defaultValue = "10") int size // 기본값: 10개 항목
