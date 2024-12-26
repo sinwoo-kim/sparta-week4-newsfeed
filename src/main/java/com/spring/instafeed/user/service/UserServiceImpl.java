@@ -1,5 +1,6 @@
 package com.spring.instafeed.user.service;
 
+import com.spring.instafeed.auth.domain.Password;
 import com.spring.instafeed.base.BaseEntity;
 import com.spring.instafeed.newsfeed.entity.Newsfeed;
 import com.spring.instafeed.newsfeed.repository.NewsfeedRepository;
@@ -50,18 +51,17 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 기능
-     * 비밀번호 수정
-     *
-     * @param id       : 비밀번호를 수정하려는 사용자의 식별자
-     * @param password : 수정하려는 비밀번호
-     * @return UserResponseDto
+     * @param id          : 비밀번호를 수정하려는 사용자의 식별자
+     * @param oldPassword : 기존의 비밀번호
+     * @param newPassword : 새로운 비밀번호
+     * @return UpdateUserResponseDto
      */
     @Transactional
     @Override
     public UpdateUserResponseDto updatePassword(
             Long id,
-            String password
+            String oldPassword,
+            String newPassword
     ) {
         // todo
         User foundUser = userRepository
@@ -72,7 +72,33 @@ public class UserServiceImpl implements UserService {
                                 "Id does not exist"
                         )
                 );
-        foundUser.update(password);
+        Password foundPassword = Password
+                .generatePassword(foundUser.getPassword());
+
+        boolean isPasswordDifferent = !foundPassword
+                .matchPassword(oldPassword);
+
+        // todo
+        if (isPasswordDifferent) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED
+                    , "Password does not match"
+            );
+        }
+        boolean isPasswordSame = foundPassword
+                .matchPassword(newPassword);
+
+        // todo
+        if (isPasswordSame) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST
+                    , "New password must not be the same as the existing password."
+            );
+        }
+        Password passwordToUpdate = Password
+                .generateEncryptedPassword(newPassword);
+
+        foundUser.update(passwordToUpdate.getEncryptedPassword());
 
         return new UpdateUserResponseDto("비밀번호 수정에 성공했습니다.");
     }
@@ -85,7 +111,10 @@ public class UserServiceImpl implements UserService {
      */
     @Transactional
     @Override
-    public void deleteUser(Long id) {
+    public void deleteUser(
+            Long id,
+            String password
+    ) {
 
         // todo
         User foundUser = userRepository
@@ -96,6 +125,20 @@ public class UserServiceImpl implements UserService {
                                 "Id does not exist"
                         )
                 );
+
+        Password foundPassword = Password
+                .generatePassword(foundUser.getPassword());
+
+        boolean isPasswordDifferent = !foundPassword
+                .matchPassword(password);
+
+        // todo
+        if (isPasswordDifferent) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED
+                    , "Password does not match"
+            );
+        }
 
         // 이미 삭제된 사용자인지 확인
         // todo
