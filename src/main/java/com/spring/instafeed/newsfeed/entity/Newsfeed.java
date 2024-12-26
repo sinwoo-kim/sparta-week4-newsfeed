@@ -33,6 +33,14 @@ public class Newsfeed extends BaseEntity {
     )
     private String imagePath;
 
+    @Comment("게시물을 작성한 사용자의 닉네임")
+    @Column(
+            name = "nickname",
+            nullable = false,
+            length = 16
+    )
+    private String nickname;
+
     @ManyToOne
     @JoinColumn(name = "profile_id")
     private Profile profile;
@@ -40,13 +48,6 @@ public class Newsfeed extends BaseEntity {
     protected Newsfeed() {
     }
 
-    /**
-     * 생성자
-     *
-     * @param imagePath : 게시물의 이미지 경로
-     * @param content   : 게시물의 내용
-     * @param profile   : 게시물을 작성한 사용자의 프로필
-     */
     public Newsfeed(
             Profile profile,
             String content,
@@ -55,6 +56,7 @@ public class Newsfeed extends BaseEntity {
         this.profile = profile;
         this.content = content;
         this.imagePath = imagePath;
+        this.nickname = profile.getNickname();
     }
 
     public static Newsfeed create(
@@ -77,5 +79,9 @@ public class Newsfeed extends BaseEntity {
      */
     public void update(String content) {
         this.content = content;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
     }
 }
