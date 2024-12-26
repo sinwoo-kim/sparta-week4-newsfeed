@@ -155,6 +155,7 @@ public class UserServiceImpl implements UserService {
                         foundUser.getId()
                 );
 
+        // 프로필 삭제할 때 사용자가 작성한 게시물도 함께 삭제 처리
         profiles.stream()
                 .peek(BaseEntity::markAsDeleted)
                 .forEach(profile -> {

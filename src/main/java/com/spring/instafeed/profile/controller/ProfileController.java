@@ -66,17 +66,17 @@ public class ProfileController {
      * @param request : 조회할 프로필의 user 정보를 포함한 HttpServletRequest
      * @return 조회된 프로필 정보를 담은 Response DTO
      */
-    @GetMapping
-    public ResponseEntity<ReadProfileResponseDto> readProfileById(
-            HttpServletRequest request
-    ) {
-        Long id = (Long) request.getAttribute("userId");
-
-        ReadProfileResponseDto profile = profileService
-                .readProfileById(id);
-
-        return new ResponseEntity<>(profile, HttpStatus.OK);
-    }
+//    @GetMapping
+//    public ResponseEntity<ReadProfileResponseDto> readProfileById(
+//            HttpServletRequest request
+//    ) {
+//        Long id = (Long) request.getAttribute("userId");
+//
+//        ReadProfileResponseDto profile = profileService
+//                .readProfileById(id);
+//
+//        return new ResponseEntity<>(profile, HttpStatus.OK);
+//    }
 
     /**
      * 기능
