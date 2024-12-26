@@ -1,6 +1,9 @@
 package com.spring.instafeed.profile.service;
 
-import com.spring.instafeed.base.BaseEntity;
+import com.spring.instafeed.common.BaseEntity;
+import com.spring.instafeed.exception.data.DataNotFoundException;
+import com.spring.instafeed.exception.data.DataAlreadyDeletedException;
+import com.spring.instafeed.exception.data.DataAlreadyExistsException;
 import com.spring.instafeed.newsfeed.entity.Newsfeed;
 import com.spring.instafeed.newsfeed.repository.NewsfeedRepository;
 import com.spring.instafeed.profile.dto.response.*;
@@ -43,21 +46,19 @@ public class ProfileServiceImpl implements ProfileService {
             String content,
             String imagePath
     ) {
-        // todo
         User foundUser = userRepository
                 .findByIdAndIsDeletedFalse(userId)
                 .orElseThrow(
-                        () -> new ResponseStatusException(
+                        () -> new DataNotFoundException(
                                 HttpStatus.NOT_FOUND,
                                 "Id does not exist"
                         )
                 );
 
-        // todo
         profileRepository
                 .findByNickname(nickname)
                 .ifPresent(existingNickname -> {
-                            throw new ResponseStatusException(
+                            throw new DataAlreadyExistsException(
                                     HttpStatus.BAD_REQUEST,
                                     "The requested data already exists"
                             );
@@ -108,11 +109,10 @@ public class ProfileServiceImpl implements ProfileService {
      */
     @Override
     public ReadProfileResponseDto readProfileById(Long id) {
-        // todo
         Profile foundProfile = profileRepository
                 .findByIdAndIsDeletedFalse(id)
                 .orElseThrow(
-                        () -> new ResponseStatusException(
+                        () -> new DataNotFoundException(
                                 HttpStatus.NOT_FOUND,
                                 "Id does not exist"
                         )
@@ -128,11 +128,10 @@ public class ProfileServiceImpl implements ProfileService {
             String content
     ) {
 
-        // todo
         Profile foundProfile = profileRepository
                 .findByIdAndIsDeletedFalse(id)
                 .orElseThrow(
-                        () -> new ResponseStatusException(
+                        () -> new DataNotFoundException(
                                 HttpStatus.NOT_FOUND,
                                 "Id does not exist"
                         )
@@ -151,21 +150,19 @@ public class ProfileServiceImpl implements ProfileService {
     @Transactional
     @Override
     public void deleteProfile(Long id) {
-        // todo
         Profile foundProfile = profileRepository
                 .findById(id)
                 .orElseThrow(
-                        () -> new ResponseStatusException(
+                        () -> new DataNotFoundException(
                                 HttpStatus.NOT_FOUND,
                                 "Id does not exist"
                         )
                 );
 
         // 이미 삭제된 프로필인지 확인
-        // todo
         if (foundProfile.getIsDeleted()) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
+            throw new DataAlreadyDeletedException(
+                    HttpStatus.CONFLICT,
                     "The requested data has already been deleted"
             );
         }
