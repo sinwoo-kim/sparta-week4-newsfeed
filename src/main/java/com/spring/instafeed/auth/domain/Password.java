@@ -3,8 +3,14 @@ package com.spring.instafeed.auth.domain;
 import com.spring.instafeed.auth.util.BCryptUtil;
 import lombok.Getter;
 
+import java.util.regex.Pattern;
+
 @Getter
 public class Password {
+
+    private static final String PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+
+    private static final Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
 
     private final String encryptedPassword;
 
@@ -12,6 +18,7 @@ public class Password {
         if (encryptedPassword == null || encryptedPassword.isEmpty()) {
             throw new IllegalArgumentException("Password must not be null or empty");
         }
+
         this.encryptedPassword = encryptedPassword;
     }
 
@@ -27,6 +34,15 @@ public class Password {
      */
     public static Password generatePassword(String encryptedPassword) {
         return new Password(encryptedPassword);
+    }
+
+    /**
+     * 비밀번호 형식 검증
+     */
+    public static void validatePassword(String password) {
+        if (!pattern.matcher(password).matches()) {
+            throw new IllegalArgumentException("Password must contain at least 8 characters, including uppercase, lowercase, number, and special character.");
+        }
     }
 
     /**
