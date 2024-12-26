@@ -54,19 +54,14 @@ public class NewsfeedController {
     public ResponseEntity<List<ReadNewsfeedResponseDto>> readAllNewsfeeds(
             @RequestParam(value = "page", defaultValue = "0")
             int page,  // 기본값은 첫 페이지
-            @RequestParam(value = "size", defaultValue = "10")
+            @RequestParam(value = "size", defaultValue = "1")
             int size // 기본값은 10개 항목
     ) {
         page = Math.max(page - 1, 0);
         // 사용자가 1 입력한다는 점 반영 및 음수가 되지 않도록 최솟값 설정
-
         Pageable pageable = PageRequest.of(page, size);
 
-        List<ReadNewsfeedResponseDto> allNewsfeeds = new ArrayList<>();
-
-        allNewsfeeds = newsfeedService.readAllNewsfeeds(pageable);
-
-        return new ResponseEntity<>(allNewsfeeds, HttpStatus.OK);
+        return new ResponseEntity<>(newsfeedService.readAllNewsfeeds(pageable), HttpStatus.OK);
     }
 
     /**

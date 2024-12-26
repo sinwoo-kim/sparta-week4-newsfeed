@@ -25,7 +25,10 @@ public interface ProfileService {
 
     UpdateProfileResponseDto updateProfile(
             Long id,
-            String content
+            String nickname,
+            String content,
+            String imagePath
+
     );
 
     void deleteProfile(Long id);

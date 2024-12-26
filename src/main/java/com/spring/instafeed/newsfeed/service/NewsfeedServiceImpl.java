@@ -169,7 +169,8 @@ public class NewsfeedServiceImpl implements NewsfeedService {
 
         // 이미 삭제된 게시물인지 확인
         // todo
-        if (foundNewsfeed.getIsDeleted()) {
+        if (foundNewsfeed.getIsDeleted()
+        ) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "The requested data has already been deleted"

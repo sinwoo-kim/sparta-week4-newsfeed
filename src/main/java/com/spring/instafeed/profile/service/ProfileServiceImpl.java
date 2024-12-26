@@ -125,7 +125,9 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public UpdateProfileResponseDto updateProfile(
             Long id,
-            String content
+            String nickname,
+            String content,
+            String imagePath
     ) {
 
         // todo
