@@ -1,10 +1,11 @@
-package com.spring.instafeed.exception.auth;
+package com.spring.instafeed.exception.invalid;
 
+import com.spring.instafeed.exception.common.BaseException;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class InvalidEmailException extends RuntimeException {
+public class InvalidEmailException extends RuntimeException implements BaseException {
 
     private final HttpStatus status;
 
