@@ -22,11 +22,17 @@ public class AuthService {
      * 회원 가입
      */
     public AccessTokenResponseDto signUpUser(SignUpRequestDto dto) {
+        // 이메일 형식 검증
         verifyEmail(dto);
 
+        // 비밀번호 형식 검증
+        Password.validatePassword(dto.password());
+
+        // 비밀번호 암호화
         String encryptedPassword = Password.generateEncryptedPassword(dto.password())
                 .getEncryptedPassword();
 
+        // 유저 등록
         User user = userAuthRepository.registerUser(new User(dto.name(), dto.email(), encryptedPassword));
 
         return createToken(user);
@@ -38,7 +44,8 @@ public class AuthService {
     public AccessTokenResponseDto loginUser(LoginRequestDto dto) {
         User user = userAuthRepository.findByEmail(dto.email());
 
-        verifyPassword(user.getPassword(), dto.password());
+        // 비밀번호가 일치하는지 검증
+        matchPassword(user.getPassword(), dto.password());
 
         return createToken(user);
     }
@@ -57,7 +64,7 @@ public class AuthService {
     /**
      * 비밀번호 검증
      */
-    private void verifyPassword(String storagePassword, String rawPassword) {
+    private void matchPassword(String storagePassword, String rawPassword) {
         if (!Password.generatePassword(storagePassword).matchPassword(rawPassword)) {
             throw new IllegalArgumentException("Invalid password");
         }
