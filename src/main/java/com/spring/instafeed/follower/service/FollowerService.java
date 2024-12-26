@@ -1,9 +1,7 @@
 package com.spring.instafeed.follower.service;
 
 import com.spring.instafeed.base.Status;
-import com.spring.instafeed.follower.dto.response.CreateFollowerResponseDto;
-import com.spring.instafeed.follower.dto.response.ReadFollowerResponseDto;
-import com.spring.instafeed.follower.dto.response.UpdateFollowerResponseDto;
+import com.spring.instafeed.follower.dto.response.*;
 
 import java.util.List;
 
@@ -18,7 +16,6 @@ public interface FollowerService {
 
     UpdateFollowerResponseDto updateFollower(
             Long id,
-            Long senderProfileId,
             Status status
     );
 }

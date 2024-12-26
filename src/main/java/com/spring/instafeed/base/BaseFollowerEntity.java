@@ -5,7 +5,10 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -16,11 +19,22 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseFollowerEntity {
 
-    @Comment("수락일")
-    @Column(name = "accepted_at", updatable = false, columnDefinition = "TIMESTAMP")
-    private LocalDateTime acceptedAt;
+    @Comment("생성일")
+    @CreatedDate
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(
+            name = "created_at",
+            nullable = false,
+            updatable = false,
+            columnDefinition = "TIMESTAMP"
+    )
+    private LocalDateTime createdAt;
 
-    @Comment("삭제일")
-    @Column(name = "deleted_at", columnDefinition = "TIMESTAMP")
-    private LocalDateTime deletedAt;
+    @Comment("상태 변경일")
+    @LastModifiedDate
+    @Column(
+            name = "updated_at",
+            columnDefinition = "TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+    )
+    private LocalDateTime updatedAt;
 }

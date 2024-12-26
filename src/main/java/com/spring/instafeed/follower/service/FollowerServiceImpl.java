@@ -109,7 +109,7 @@ public class FollowerServiceImpl implements FollowerService {
 
         List<Follower> followers = new ArrayList<>();
 
-        followers = followerRepository.findAll();
+        followers = followerRepository.findAllByStatusIsNotNull();
 
         List<ReadFollowerResponseDto> allFollowers = new ArrayList<>();
 
@@ -124,18 +124,9 @@ public class FollowerServiceImpl implements FollowerService {
     @Override
     public UpdateFollowerResponseDto updateFollower(
             Long id,
-            Long senderProfileId,
             Status status
     ) {
         Follower foundFollower = followerRepository.findById(id)
-                .orElseThrow(
-                        () -> new ResponseStatusException(
-                                HttpStatus.NOT_FOUND,
-                                "Id does not exist"
-                        )
-                );
-
-        profileRepository.findById(senderProfileId)
                 .orElseThrow(
                         () -> new ResponseStatusException(
                                 HttpStatus.NOT_FOUND,
