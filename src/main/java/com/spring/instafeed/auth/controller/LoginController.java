@@ -4,8 +4,7 @@ import com.spring.instafeed.auth.dto.request.LoginRequestDto;
 import com.spring.instafeed.auth.dto.response.AccessTokenResponseDto;
 import com.spring.instafeed.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,19 +18,12 @@ public class LoginController {
 
     private final AuthService authService;
 
+    /**
+     * 로그인
+     */
     @PostMapping("/login")
     public ResponseEntity<AccessTokenResponseDto> login(@RequestBody LoginRequestDto dto) {
-        AccessTokenResponseDto accessTokenResponseDto = authService.loginUser(dto);
-        String token = accessTokenResponseDto.accessToken();
-
-        ResponseCookie cookie = ResponseCookie.from("token", token)
-                .httpOnly(true)
-                .secure(true)
-                .maxAge(60 * 60)
-                .build();
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(accessTokenResponseDto);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(authService.loginUser(dto));
     }
 }
