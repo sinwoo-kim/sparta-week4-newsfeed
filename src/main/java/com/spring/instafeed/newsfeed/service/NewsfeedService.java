@@ -13,7 +13,7 @@ public interface NewsfeedService {
             String imagePath
     );
 
-    List<ReadNewsfeedResponseDto> readAllNewsfeeds(Pageable pageable);
+    ContentsWrapperResponseDto readAllNewsfeeds(Pageable pageable);
 
     ReadNewsfeedResponseDto readNewsfeedById(Long id);
 
