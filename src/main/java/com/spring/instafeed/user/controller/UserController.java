@@ -1,5 +1,6 @@
 package com.spring.instafeed.user.controller;
 
+import com.spring.instafeed.user.dto.request.DeleteUserRequestDto;
 import com.spring.instafeed.user.dto.request.UpdateUserRequestDto;
 import com.spring.instafeed.user.dto.response.UpdateUserResponseDto;
 import com.spring.instafeed.user.dto.response.ReadUserResponseDto;
@@ -50,7 +51,8 @@ public class UserController {
         UpdateUserResponseDto responseDto = userService
                 .updatePassword(
                         id,
-                        requestDto.password()
+                        requestDto.oldPassword(),
+                        requestDto.newPassword()
                 );
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
@@ -64,10 +66,14 @@ public class UserController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(
-            @PathVariable("id") Long id
+            @PathVariable("id") Long id,
+            @RequestBody DeleteUserRequestDto requestDto
     ) {
-        userService.deleteUser(id);
 
+        userService.deleteUser(
+                id,
+                requestDto.password()
+        );
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
