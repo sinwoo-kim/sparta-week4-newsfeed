@@ -1,6 +1,6 @@
 package com.spring.instafeed.auth.domain;
 
-import com.spring.instafeed.exception.auth.InvalidEmailException;
+import com.spring.instafeed.exception.invalid.InvalidEmailException;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 

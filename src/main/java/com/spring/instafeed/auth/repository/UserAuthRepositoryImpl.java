@@ -2,7 +2,7 @@ package com.spring.instafeed.auth.repository;
 
 import com.spring.instafeed.auth.repository.interfaces.UserAuthRepository;
 import com.spring.instafeed.auth.repository.jpa.JpaUserAuthRepository;
-import com.spring.instafeed.exception.auth.EntityNotFoundException;
+import com.spring.instafeed.exception.data.DataNotFoundException;
 import com.spring.instafeed.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,7 @@ public class UserAuthRepositoryImpl implements UserAuthRepository {
     @Override
     public User findByEmail(String email) {
         return jpaUserAuthRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException(HttpStatus.NOT_FOUND,"Entity Not Found"));
+                .orElseThrow(() -> new DataNotFoundException(HttpStatus.NOT_FOUND,"Entity Not Found"));
     }
 
     @Override

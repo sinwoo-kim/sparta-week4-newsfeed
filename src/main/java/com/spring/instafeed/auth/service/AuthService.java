@@ -7,8 +7,8 @@ import com.spring.instafeed.auth.dto.request.LoginRequestDto;
 import com.spring.instafeed.auth.dto.request.SignUpRequestDto;
 import com.spring.instafeed.auth.dto.response.AccessTokenResponseDto;
 import com.spring.instafeed.auth.repository.UserAuthRepositoryImpl;
-import com.spring.instafeed.exception.auth.EmailAlreadyExistsException;
-import com.spring.instafeed.exception.auth.InvalidPasswordException;
+import com.spring.instafeed.exception.data.DataAlreadyExistsException;
+import com.spring.instafeed.exception.invalid.InvalidPasswordException;
 import com.spring.instafeed.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -60,7 +60,7 @@ public class AuthService {
         Email email = Email.generateEmail(dto.email());
 
         if (userAuthRepository.existsEmail(email.getEmailText())) {
-            throw new EmailAlreadyExistsException(HttpStatus.CONFLICT, "Email Already Exists");
+            throw new DataAlreadyExistsException(HttpStatus.CONFLICT, "Email Already Exists");
         }
     }
 
@@ -69,7 +69,7 @@ public class AuthService {
      */
     private void matchPassword(String storagePassword, String rawPassword) {
         if (!Password.generatePassword(storagePassword).matchPassword(rawPassword)) {
-            throw new InvalidPasswordException(HttpStatus.BAD_REQUEST, "The passwords do not match");
+            throw new InvalidPasswordException(HttpStatus.UNAUTHORIZED, "The passwords do not match");
         }
     }
 

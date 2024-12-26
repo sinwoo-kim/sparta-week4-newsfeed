@@ -1,7 +1,7 @@
 package com.spring.instafeed.auth.web.filter;
 
 import com.spring.instafeed.auth.domain.TokenProvider;
-import com.spring.instafeed.exception.auth.InvalidTokenException;
+import com.spring.instafeed.exception.invalid.InvalidTokenException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

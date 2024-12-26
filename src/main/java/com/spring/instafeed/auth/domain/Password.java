@@ -1,7 +1,7 @@
 package com.spring.instafeed.auth.domain;
 
 import com.spring.instafeed.auth.util.BCryptUtil;
-import com.spring.instafeed.exception.auth.InvalidPasswordException;
+import com.spring.instafeed.exception.invalid.InvalidPasswordException;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
