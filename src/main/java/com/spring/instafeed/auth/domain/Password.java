@@ -1,7 +1,9 @@
 package com.spring.instafeed.auth.domain;
 
 import com.spring.instafeed.auth.util.BCryptUtil;
+import com.spring.instafeed.exception.auth.InvalidPasswordException;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 import java.util.regex.Pattern;
 
@@ -16,7 +18,7 @@ public class Password {
 
     private Password(String encryptedPassword) {
         if (encryptedPassword == null || encryptedPassword.isEmpty()) {
-            throw new IllegalArgumentException("Password must not be null or empty");
+            throw new InvalidPasswordException(HttpStatus.BAD_REQUEST, "Password must not be null or empty");
         }
 
         this.encryptedPassword = encryptedPassword;
@@ -41,7 +43,7 @@ public class Password {
      */
     public static void validatePassword(String password) {
         if (!pattern.matcher(password).matches()) {
-            throw new IllegalArgumentException("Password must contain at least 8 characters, including uppercase, lowercase, number, and special character.");
+            throw new InvalidPasswordException(HttpStatus.BAD_REQUEST, "Password must contain at least 8 characters, including uppercase, lowercase, number, and special character.");
         }
     }
 
