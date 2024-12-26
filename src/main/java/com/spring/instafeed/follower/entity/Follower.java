@@ -1,7 +1,7 @@
 package com.spring.instafeed.follower.entity;
 
-import com.spring.instafeed.base.BaseFollowerEntity;
-import com.spring.instafeed.base.Status;
+import com.spring.instafeed.common.BaseFollowerEntity;
+import com.spring.instafeed.common.Status;
 import com.spring.instafeed.profile.entity.Profile;
 import jakarta.persistence.*;
 import lombok.Getter;

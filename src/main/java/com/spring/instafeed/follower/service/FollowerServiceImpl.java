@@ -1,6 +1,8 @@
 package com.spring.instafeed.follower.service;
 
-import com.spring.instafeed.base.Status;
+import com.spring.instafeed.common.Status;
+import com.spring.instafeed.exception.data.DataNotFoundException;
+import com.spring.instafeed.exception.invalid.InvalidFollowRequestException;
 import com.spring.instafeed.follower.dto.response.*;
 import com.spring.instafeed.follower.entity.Follower;
 import com.spring.instafeed.follower.repository.FollowerRepository;
@@ -10,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,21 +30,19 @@ public class FollowerServiceImpl implements FollowerService {
             Long senderProfileId,
             Long receiverProfileId
     ) {
-        // todo
         Profile senderProfile = profileRepository
                 .findById(senderProfileId)
                 .orElseThrow(
-                        () -> new ResponseStatusException(
+                        () -> new DataNotFoundException(
                                 HttpStatus.NOT_FOUND,
                                 "Id does not exist"
                         )
                 );
 
-        // todo
         Profile receiverProfile = profileRepository
                 .findById(receiverProfileId)
                 .orElseThrow(
-                        () -> new ResponseStatusException(
+                        () -> new DataNotFoundException(
                                 HttpStatus.NOT_FOUND,
                                 "Id does not exist"
                         )
@@ -52,9 +51,8 @@ public class FollowerServiceImpl implements FollowerService {
         Long senderUserId = senderProfile.getUser().getId();
         Long receiverUserId = receiverProfile.getUser().getId();
 
-        // todo
         if (senderUserId.equals(receiverUserId)) {
-            throw new ResponseStatusException(
+            throw new InvalidFollowRequestException(
                     HttpStatus.BAD_REQUEST,
                     "Cannot follow your own profile"
             );
@@ -62,14 +60,13 @@ public class FollowerServiceImpl implements FollowerService {
         // 사용자가 자기 자신을 팔로잉 요청하는지 검증 종료
 
         // 동일한 팔로잉 요청이 있는지 검증 시작
-        // todo
         followerRepository
                 .findBySenderProfileIdAndReceiverProfileId(
                         senderProfileId,
                         receiverProfileId
                 )
                 .ifPresent(follower -> {
-                            throw new ResponseStatusException(
+                            throw new InvalidFollowRequestException(
                                     HttpStatus.BAD_REQUEST,
                                     "The requested data already exists"
                             );
@@ -78,14 +75,13 @@ public class FollowerServiceImpl implements FollowerService {
         // 동일한 팔로잉 요청이 있는지 검증 종료
 
         // 반대로 팔로잉 요청이 있는지 검증 시작
-        // todo
         followerRepository
                 .findBySenderProfileIdAndReceiverProfileId(
                         receiverProfileId,
                         senderProfileId
                 )
                 .ifPresent(reverseFollower -> {
-                            throw new ResponseStatusException(
+                            throw new InvalidFollowRequestException(
                                     HttpStatus.BAD_REQUEST,
                                     "The reverse requested data already exists"
                             );
@@ -128,7 +124,7 @@ public class FollowerServiceImpl implements FollowerService {
     ) {
         Follower foundFollower = followerRepository.findById(id)
                 .orElseThrow(
-                        () -> new ResponseStatusException(
+                        () -> new DataNotFoundException(
                                 HttpStatus.NOT_FOUND,
                                 "Id does not exist"
                         )

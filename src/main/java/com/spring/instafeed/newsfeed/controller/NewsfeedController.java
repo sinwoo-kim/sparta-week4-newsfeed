@@ -5,6 +5,7 @@ import com.spring.instafeed.newsfeed.dto.request.UpdateNewsfeedRequestDto;
 import com.spring.instafeed.newsfeed.dto.response.*;
 import com.spring.instafeed.newsfeed.dto.response.ContentsWrapperResponseDto;
 import com.spring.instafeed.newsfeed.service.NewsfeedServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -47,8 +48,8 @@ public class NewsfeedController {
      * 기능
      * 게시물 목록을 페이징 조회
      *
-     * @param page 조회할 페이지 번호 (기본값: 0)
-     * @param size 조회할 페이지 크기 (기본값: 10)
+     * @param page : 조회할 페이지 번호 (기본값: 0)
+     * @param size : 조회할 페이지 크기 (기본값: 10)
      * @return ResponseEntity<Page < NewsfeedResponseDto>> 페이징 처리된 게시물 목록
      */
     @GetMapping
@@ -67,13 +68,15 @@ public class NewsfeedController {
      * 기능
      * 게시물 단건 조회
      *
-     * @param id 조회할 게시물의 ID (경로 변수로 전달)
+     * @param request : 조회할 게시물의 user 정보를 포함한 HttpServletRequest
      * @return NewsfeedCommonResponseDto 게시물 정보를 반환하는 공통 DTO
      */
-    @GetMapping("/{id}")
+    @GetMapping
     public ResponseEntity<ReadNewsfeedResponseDto> readNewsfeedById(
-            @PathVariable("id") Long id
+            HttpServletRequest request
     ) {
+        Long id = (Long) request.getAttribute("userId");
+
         ReadNewsfeedResponseDto responseDto = newsfeedService
                 .readNewsfeedById(id);
 
@@ -84,15 +87,17 @@ public class NewsfeedController {
      * 기능
      * 게시물 내용 수정
      *
-     * @param id         수정할 게시물의 ID (경로 변수로 전달)
-     * @param requestDto 게시물 수정 요청 정보를 담고 있는 DTO
+     * @param request : 수정할 게시물의 user 정보를 포함한 HttpServletRequest
+     * @param requestDto : 게시물 수정 요청 정보를 담고 있는 DTO
      * @return NewsfeedCommonResponseDto 게시물 정보 반환 DTO
      */
-    @PatchMapping("/{id}")
+    @PatchMapping
     public ResponseEntity<UpdateNewsfeedResponseDto> updateNewsfeed(
-            @PathVariable("id") Long id,
+            HttpServletRequest request,
             @RequestBody UpdateNewsfeedRequestDto requestDto
     ) {
+        Long id = (Long) request.getAttribute("userId");
+
         UpdateNewsfeedResponseDto responseDto = newsfeedService
                 .updateNewsfeed(
                         id,
@@ -105,13 +110,15 @@ public class NewsfeedController {
      * 기능
      * 게시물 단건 삭제
      *
-     * @param id : 삭제하려는 게시물의 식별자
-     * @return : 상태 코드 메시지(200 OK)만 반환
+     * @param request : 삭제하려는 게시물의 식별자
+     * @return 상태 코드 메시지(200 OK)만 반환
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     public ResponseEntity<Void> deleteNewsfeed(
-            @PathVariable("id") Long id
+            HttpServletRequest request
     ) {
+        Long id = (Long) request.getAttribute("userId");
+
         newsfeedService.deleteNewsfeed(id);
 
         return new ResponseEntity<>(HttpStatus.OK);

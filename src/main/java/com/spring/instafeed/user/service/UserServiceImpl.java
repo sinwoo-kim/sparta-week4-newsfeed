@@ -1,7 +1,10 @@
 package com.spring.instafeed.user.service;
 
 import com.spring.instafeed.auth.domain.Password;
-import com.spring.instafeed.base.BaseEntity;
+import com.spring.instafeed.common.BaseEntity;
+import com.spring.instafeed.exception.data.DataAlreadyDeletedException;
+import com.spring.instafeed.exception.data.DataNotFoundException;
+import com.spring.instafeed.exception.invalid.InvalidPasswordException;
 import com.spring.instafeed.newsfeed.entity.Newsfeed;
 import com.spring.instafeed.newsfeed.repository.NewsfeedRepository;
 import com.spring.instafeed.profile.entity.Profile;
@@ -14,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,11 +40,10 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public ReadUserResponseDto readUserById(Long id) {
-        // todo
         User foundUser = userRepository
                 .findByIdAndIsDeletedFalse(id)
                 .orElseThrow(
-                        () -> new ResponseStatusException(
+                        () -> new DataNotFoundException(
                                 HttpStatus.NOT_FOUND,
                                 "Id does not exist"
                         )
@@ -63,11 +64,10 @@ public class UserServiceImpl implements UserService {
             String oldPassword,
             String newPassword
     ) {
-        // todo
         User foundUser = userRepository
                 .findByIdAndIsDeletedFalse(id)
                 .orElseThrow(
-                        () -> new ResponseStatusException(
+                        () -> new DataNotFoundException(
                                 HttpStatus.NOT_FOUND,
                                 "Id does not exist"
                         )
@@ -78,9 +78,8 @@ public class UserServiceImpl implements UserService {
         boolean isPasswordDifferent = !foundPassword
                 .matchPassword(oldPassword);
 
-        // todo
         if (isPasswordDifferent) {
-            throw new ResponseStatusException(
+            throw new InvalidPasswordException(
                     HttpStatus.UNAUTHORIZED
                     , "Password does not match"
             );
@@ -88,9 +87,8 @@ public class UserServiceImpl implements UserService {
         boolean isPasswordSame = foundPassword
                 .matchPassword(newPassword);
 
-        // todo
         if (isPasswordSame) {
-            throw new ResponseStatusException(
+            throw new InvalidPasswordException(
                     HttpStatus.BAD_REQUEST
                     , "New password must not be the same as the existing password."
             );
@@ -116,11 +114,10 @@ public class UserServiceImpl implements UserService {
             String password
     ) {
 
-        // todo
         User foundUser = userRepository
                 .findByIdAndIsDeletedFalse(id)
                 .orElseThrow(
-                        () -> new ResponseStatusException(
+                        () -> new DataNotFoundException(
                                 HttpStatus.NOT_FOUND,
                                 "Id does not exist"
                         )
@@ -132,18 +129,16 @@ public class UserServiceImpl implements UserService {
         boolean isPasswordDifferent = !foundPassword
                 .matchPassword(password);
 
-        // todo
         if (isPasswordDifferent) {
-            throw new ResponseStatusException(
+            throw new InvalidPasswordException(
                     HttpStatus.UNAUTHORIZED
                     , "Password does not match"
             );
         }
 
         // 이미 삭제된 사용자인지 확인
-        // todo
         if (foundUser.getIsDeleted()) {
-            throw new ResponseStatusException(
+            throw new DataAlreadyDeletedException(
                     HttpStatus.BAD_REQUEST,
                     "The requested data has already been deleted"
             );

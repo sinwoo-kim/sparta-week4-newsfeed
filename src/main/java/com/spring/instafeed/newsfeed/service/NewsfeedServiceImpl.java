@@ -1,5 +1,7 @@
 package com.spring.instafeed.newsfeed.service;
 
+import com.spring.instafeed.exception.data.DataNotFoundException;
+import com.spring.instafeed.exception.data.DataAlreadyDeletedException;
 import com.spring.instafeed.newsfeed.dto.response.*;
 import com.spring.instafeed.newsfeed.dto.response.ContentsWrapperResponseDto;
 import com.spring.instafeed.newsfeed.entity.Newsfeed;
@@ -45,7 +47,7 @@ public class NewsfeedServiceImpl implements NewsfeedService {
         Profile foundProfile = profileRepository
                 .findByIdAndIsDeletedFalse(profileId)
                 .orElseThrow(
-                        () -> new ResponseStatusException(
+                        () -> new DataNotFoundException(
                                 HttpStatus.NOT_FOUND,
                                 "Id does not exist"
                         )
@@ -110,13 +112,12 @@ public class NewsfeedServiceImpl implements NewsfeedService {
         Newsfeed foundNewsfeed = newsfeedRepository
                 .findByIdAndIsDeletedFalse(id)
                 .orElseThrow(
-                        () -> new ResponseStatusException(
+                        () -> new DataNotFoundException(
                                 HttpStatus.NOT_FOUND,
                                 "Id does not exist"
                         )
                 );
         return ReadNewsfeedResponseDto.toDto(foundNewsfeed);
-        // todo
     }
 
     /**
@@ -136,7 +137,7 @@ public class NewsfeedServiceImpl implements NewsfeedService {
         Newsfeed foundNewsfeed = newsfeedRepository
                 .findByIdAndIsDeletedFalse(id)
                 .orElseThrow(
-                        () -> new ResponseStatusException(
+                        () -> new DataNotFoundException(
                                 HttpStatus.NOT_FOUND,
                                 "Id does not exist"
                         )
@@ -145,7 +146,6 @@ public class NewsfeedServiceImpl implements NewsfeedService {
 
         return UpdateNewsfeedResponseDto.toDto(foundNewsfeed);
     }
-    // todo
 
     /**
      * 기능
@@ -156,21 +156,19 @@ public class NewsfeedServiceImpl implements NewsfeedService {
     @Transactional
     @Override
     public void deleteNewsfeed(Long id) {
-        // todo
         Newsfeed foundNewsfeed = newsfeedRepository
                 .findById(id)
                 .orElseThrow(
-                        () -> new ResponseStatusException(
+                        () -> new DataNotFoundException(
                                 HttpStatus.NOT_FOUND,
                                 "Id does not exist"
                         )
                 );
 
         // 이미 삭제된 게시물인지 확인
-        // todo
         if (foundNewsfeed.getIsDeleted()) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
+            throw new DataAlreadyDeletedException(
+                    HttpStatus.CONFLICT,
                     "The requested data has already been deleted"
             );
         }

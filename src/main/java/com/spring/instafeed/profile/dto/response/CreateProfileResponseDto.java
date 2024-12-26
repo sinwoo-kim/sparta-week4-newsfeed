@@ -13,10 +13,10 @@ public record CreateProfileResponseDto(
         LocalDateTime createdAt
 ) {
     /**
-     * Profile 객체를 CreateProfileResponseDto로 변환하는 static 메서드
+     * Profile 객체를 CreateProfileResponseDto 로 변환하는 static 메서드
      *
      * @param profile 변환할 Profile 엔티티 객체
-     * @return Profile을 기반으로 생성된 CreateProfileResponseDto 객체
+     * @return Profile 을 기반으로 생성된 CreateProfileResponseDto 객체
      */
     public static CreateProfileResponseDto toDto(Profile profile) {
         return new CreateProfileResponseDto(
@@ -27,6 +27,5 @@ public record CreateProfileResponseDto(
                 profile.getContent(),
                 profile.getCreatedAt()
         );
-        // todo
     }
 }

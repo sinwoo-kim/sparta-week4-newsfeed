@@ -1,4 +1,4 @@
-package com.spring.instafeed.base;
+package com.spring.instafeed.common;
 
 public enum Status {
     PENDING,

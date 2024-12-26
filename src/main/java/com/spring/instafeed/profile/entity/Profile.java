@@ -1,6 +1,6 @@
 package com.spring.instafeed.profile.entity;
 
-import com.spring.instafeed.base.BaseEntity;
+import com.spring.instafeed.common.BaseEntity;
 import com.spring.instafeed.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;

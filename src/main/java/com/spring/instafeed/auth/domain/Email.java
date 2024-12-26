@@ -1,6 +1,8 @@
 package com.spring.instafeed.auth.domain;
 
+import com.spring.instafeed.exception.invalid.InvalidEmailException;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 import java.util.regex.Pattern;
 
@@ -22,12 +24,13 @@ public class Email {
      */
     public static Email generateEmail(String email) {
         if (email == null || email.isEmpty()) {
-            throw new IllegalArgumentException("Email must not be empty");
+            throw new InvalidEmailException(HttpStatus.BAD_REQUEST, "Email must not be empty");
         }
 
         if (!validateEmail(email)) {
-            throw new IllegalArgumentException("Email is not valid");
+            throw new InvalidEmailException(HttpStatus.BAD_REQUEST, "Email is not valid");
         }
+
         return new Email(email);
     }
 
