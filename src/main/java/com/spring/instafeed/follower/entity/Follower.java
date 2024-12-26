@@ -2,26 +2,30 @@ package com.spring.instafeed.follower.entity;
 
 import com.spring.instafeed.base.BaseFollowerEntity;
 import com.spring.instafeed.base.Status;
+import com.spring.instafeed.follower.dto.request.UpdateFollowerRequestDto;
 import com.spring.instafeed.profile.entity.Profile;
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.hibernate.annotations.Comment;
 
 @Entity
 @Getter
 public class Follower extends BaseFollowerEntity {
 
+    @Comment("팔로잉 식별자")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "sender_profile_id")
-    private Profile sender;
+    private Profile senderProfile;
 
     @ManyToOne
     @JoinColumn(name = "receiver_profile_id")
-    private Profile receiver;
+    private Profile receiverProfile;
 
+    @Comment("팔로잉 상태")
     @Column(length = 32)
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -29,13 +33,36 @@ public class Follower extends BaseFollowerEntity {
     protected Follower() {
     }
 
+    /**
+     * 생성자
+     *
+     * @param senderProfile   : 보내는 사람의 프로필
+     * @param receiverProfile : 받는 사람의 프로필
+     * @param status   : 팔로잉 상태
+     */
     public Follower(
-            Profile sender,
-            Profile receiver,
+            Profile senderProfile,
+            Profile receiverProfile,
             Status status
     ) {
-        this.sender = sender;
-        this.receiver = receiver;
+        this.senderProfile = senderProfile;
+        this.receiverProfile = receiverProfile;
+        this.status = status;
+    }
+
+    public static Follower create(
+            Profile senderProfile,
+            Profile receiverProfile,
+            Status status
+    ) {
+        return new Follower(
+                senderProfile,
+                receiverProfile,
+                status
+        );
+    }
+
+    public void update (Status status) {
         this.status = status;
     }
 }

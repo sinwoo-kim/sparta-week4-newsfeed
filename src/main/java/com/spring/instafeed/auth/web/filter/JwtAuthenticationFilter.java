@@ -15,7 +15,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final TokenProvider tokenProvider;
-    private static final String[] WHITE_LIST = {"/users/signup", "/users/login"};
+    private static final String[] WHITE_LIST = {"/auth/signup", "/auth/login"};
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

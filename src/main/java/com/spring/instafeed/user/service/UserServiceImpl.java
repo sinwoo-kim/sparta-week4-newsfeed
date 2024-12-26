@@ -1,8 +1,13 @@
 package com.spring.instafeed.user.service;
 
-import com.spring.instafeed.user.entity.User;
+import com.spring.instafeed.base.BaseEntity;
+import com.spring.instafeed.newsfeed.entity.Newsfeed;
+import com.spring.instafeed.newsfeed.repository.NewsfeedRepository;
+import com.spring.instafeed.profile.entity.Profile;
+import com.spring.instafeed.profile.repository.ProfileRepository;
+import com.spring.instafeed.user.dto.response.ReadUserResponseDto;
 import com.spring.instafeed.user.dto.response.UpdateUserResponseDto;
-import com.spring.instafeed.user.dto.response.UserResponseDto;
+import com.spring.instafeed.user.entity.User;
 import com.spring.instafeed.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,36 +15,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
     // 속성
+    private final ProfileRepository profileRepository;
     private final UserRepository userRepository;
-
-    /**
-     * 기능
-     * 회원가입
-     *
-     * @param name     : 사용자 이름
-     * @param email    : 사용자 이메일
-     * @param password : 사용자 비밀번호
-     * @return UserResponseDto
-     */
-    @Transactional
-    @Override
-    public UserResponseDto signUp(
-            String name,
-            String email,
-            String password
-    ) {
-        User user = new User(name, email, password);
-
-        User savedUser = userRepository.save(user);
-
-        return UserResponseDto.toDto(savedUser);
-    }
+    private final NewsfeedRepository newsfeedRepository;
 
     /**
      * 기능
@@ -49,14 +36,17 @@ public class UserServiceImpl implements UserService {
      * @return UserResponseDto
      */
     @Override
-    public UserResponseDto findById(Long id) {
-        User foundUser = userRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new ResponseStatusException(
+    public ReadUserResponseDto readUserById(Long id) {
+        // todo
+        User foundUser = userRepository
+                .findByIdAndIsDeletedFalse(id)
+                .orElseThrow(
+                        () -> new ResponseStatusException(
                                 HttpStatus.NOT_FOUND,
-                                "입력된 id가 존재하지 않습니다. 다시 입력해주세요."
+                                "Id does not exist"
                         )
                 );
-        return UserResponseDto.toDto(foundUser);
+        return ReadUserResponseDto.toDto(foundUser);
     }
 
     /**
@@ -73,10 +63,13 @@ public class UserServiceImpl implements UserService {
             Long id,
             String password
     ) {
-        User foundUser = userRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new ResponseStatusException(
+        // todo
+        User foundUser = userRepository
+                .findByIdAndIsDeletedFalse(id)
+                .orElseThrow(
+                        () -> new ResponseStatusException(
                                 HttpStatus.NOT_FOUND,
-                                "입력된 id가 존재하지 않습니다. 다시 입력해주세요."
+                                "Id does not exist"
                         )
                 );
         foundUser.update(password);
@@ -92,14 +85,60 @@ public class UserServiceImpl implements UserService {
      */
     @Transactional
     @Override
-    public void delete(Long id) {
+    public void deleteUser(Long id) {
 
-        User foundUser = userRepository.findByIdAndDeletedAtIsNull(id)
+        // todo
+        User foundUser = userRepository
+                .findByIdAndIsDeletedFalse(id)
                 .orElseThrow(
-                        () -> new RuntimeException("사용자가 조회되지 않습니다."
+                        () -> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Id does not exist"
                         )
                 );
 
+        // 이미 삭제된 사용자인지 확인
+        // todo
+        if (foundUser.getIsDeleted()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "The requested data has already been deleted"
+            );
+        }
+
+        // 사용자 삭제 처리
         foundUser.markAsDeleted();
+
+        //사용자가 작성한 프로필 또한 전부 삭제 처리 시작
+        List<Profile> profiles = new ArrayList<>();
+
+        profiles = profileRepository
+                .findAllByUserIdAndIsDeletedFalse(
+                        foundUser.getId()
+                );
+
+        profiles.stream()
+                .peek(BaseEntity::markAsDeleted)
+                .forEach(profile -> {
+                            List<Newsfeed> newsfeeds = newsfeedRepository
+                                    .findAllByProfileIdAndIsDeletedFalse(
+                                            profile.getId()
+                                    );
+                            newsfeeds.forEach(BaseEntity::markAsDeleted);
+                        }
+                );
     }
 }
+        /*
+        [수정 전]
+        profiles.stream()
+        (1) 스트림 생성: profiles 리스트를 스트림으로 변환
+            스트림: 데이터 흐름을 처리하는 객체입
+        .peek(profile -> profile.markAsDeleted())
+        (2) 각 프로필에 markAsDeleted() 메서드 호출 (사이드 이펙트)
+            peek(): 스트림의 각 요소에 작업 수행
+            여기서는 'markAsDeleted()'를 호출하여 프로필을 삭제 상태로 변경
+        .toList();
+        (3) 스트림 결과를 리스트로 수집하는 최종 연산
+            현재 반환하는 값이 없으므로 불필요한 호출에 해당함
+         */

@@ -1,9 +1,8 @@
 package com.spring.instafeed.user.dto.response;
 
 import com.spring.instafeed.user.entity.User;
-import lombok.Getter;
 
-public record UserResponseDto(
+public record ReadUserResponseDto(
         Long id,
         String name,
         String email
@@ -16,7 +15,7 @@ public record UserResponseDto(
      * @param name  : 사용자 이름
      * @param email : 사용자 이메일
      */
-    public UserResponseDto {
+    public ReadUserResponseDto {
     }
 
     /**
@@ -26,7 +25,11 @@ public record UserResponseDto(
      * @param user : 엔티티
      * @return UserResponseDto
      */
-    public static UserResponseDto toDto(User user) {
-        return new UserResponseDto(user.getId(), user.getName(), user.getEmail());
+    public static ReadUserResponseDto toDto(User user) {
+        return new ReadUserResponseDto(
+                user.getId(),
+                user.getName(),
+                user.getEmail()
+        );
     }
 }

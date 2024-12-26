@@ -1,15 +1,16 @@
 package com.spring.instafeed.follower.service;
 
 import com.spring.instafeed.base.Status;
-import com.spring.instafeed.follower.dto.response.FollowerResponseDto;
-import com.spring.instafeed.follower.dto.response.UpdateFollowerResponseDto;
+import com.spring.instafeed.follower.dto.response.*;
 import com.spring.instafeed.follower.entity.Follower;
 import com.spring.instafeed.follower.repository.FollowerRepository;
 import com.spring.instafeed.profile.entity.Profile;
 import com.spring.instafeed.profile.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,58 +19,131 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class FollowerServiceImpl implements FollowerService {
+    // 속성
     private final FollowerRepository followerRepository;
     private final ProfileRepository profileRepository;
 
+    @Transactional
     @Override
-    public FollowerResponseDto sendFollowRequest(Long senderId, Long receiverId) {
+    public CreateFollowerResponseDto createFollower(
+            Long senderProfileId,
+            Long receiverProfileId
+    ) {
         // todo
+        Profile senderProfile = profileRepository
+                .findById(senderProfileId)
+                .orElseThrow(
+                        () -> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Id does not exist"
+                        )
+                );
 
-//        Profile sendingProfile = profileRepository.findByIdOrElseThrow(senderId);
-//        Profile receivingProfile = profileRepository.findByIdOrElseThrow(receiverId);
-//
-//        Follower follower = new Follower(
-//                sendingProfile,
-//                receivingProfile,
-//                Status.PENDING
-//        );
-//
-//        Follower savedFollower = followerRepository.save(follower);
-//        return FollowerResponseDto.toDto(savedFollower);
-        return null;
+        // todo
+        Profile receiverProfile = profileRepository
+                .findById(receiverProfileId)
+                .orElseThrow(
+                        () -> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Id does not exist"
+                        )
+                );
+        // 사용자가 자기 자신을 팔로잉 요청하는지 검증 시작
+        Long senderUserId = senderProfile.getUser().getId();
+        Long receiverUserId = receiverProfile.getUser().getId();
+
+        // todo
+        if (senderUserId.equals(receiverUserId)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Cannot follow your own profile"
+            );
+        }
+        // 사용자가 자기 자신을 팔로잉 요청하는지 검증 종료
+
+        // 동일한 팔로잉 요청이 있는지 검증 시작
+        // todo
+        followerRepository
+                .findBySenderProfileIdAndReceiverProfileId(
+                        senderProfileId,
+                        receiverProfileId
+                )
+                .ifPresent(follower -> {
+                            throw new ResponseStatusException(
+                                    HttpStatus.BAD_REQUEST,
+                                    "The requested data already exists"
+                            );
+                        }
+                );
+        // 동일한 팔로잉 요청이 있는지 검증 종료
+
+        // 반대로 팔로잉 요청이 있는지 검증 시작
+        // todo
+        followerRepository
+                .findBySenderProfileIdAndReceiverProfileId(
+                        receiverProfileId,
+                        senderProfileId
+                )
+                .ifPresent(reverseFollower -> {
+                            throw new ResponseStatusException(
+                                    HttpStatus.BAD_REQUEST,
+                                    "The reverse requested data already exists"
+                            );
+                        }
+                );
+        // 반대로 팔로잉 요청이 있는지 검증 종료
+
+        Follower followerToSave = Follower.create(
+                senderProfile,
+                receiverProfile,
+                Status.PENDING
+        );
+        Follower savedFollower = followerRepository
+                .save(followerToSave);
+
+        return CreateFollowerResponseDto.toDto(savedFollower);
     }
 
-
     @Override
-    public List<FollowerResponseDto> findAll() {
+    public List<ReadFollowerResponseDto> readAllFollowers() {
 
-//        List<FollowerResponseDto> allFollowers = new ArrayList<>();
-//
-//        allFollowers = followerRepository.findAll()
-//                .stream()
-//                .map(FollowerResponseDto::toDto)
-//                .toList();
-//
-//        return allFollowers;
-        return null;
+        List<Follower> followers = new ArrayList<>();
+
+        followers = followerRepository.findAll();
+
+        List<ReadFollowerResponseDto> allFollowers = new ArrayList<>();
+
+        allFollowers = followers.stream()
+                .map(ReadFollowerResponseDto::toDto)
+                .toList();
+
+        return allFollowers;
     }
 
     @Transactional
     @Override
-    public UpdateFollowerResponseDto updateFollowingStatus(Long id, Long requestSenderId, Status status) {
-        // todo
-//        Profile sendingRequestProfile = profileRepository.findByIdOrElseThrow(requestSenderId);
-//        Profile receivingProfile = profileRepository.findByIdOrElseThrow(id);
-//
-//        Follower follower = new Follower(
-//                sendingRequestProfile,
-//                receivingProfile,
-//                status
-//        );
-//
-//        Follower savedFollower = followerRepository.save(follower);
-//
-//        return UpdateFollowerResponseDto.toDto(savedFollower);
-        return null;
+    public UpdateFollowerResponseDto updateFollower(
+            Long id,
+            Long senderProfileId,
+            Status status
+    ) {
+        Follower foundFollower = followerRepository.findById(id)
+                .orElseThrow(
+                        () -> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Id does not exist"
+                        )
+                );
+
+        profileRepository.findById(senderProfileId)
+                .orElseThrow(
+                        () -> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "Id does not exist"
+                        )
+                );
+        foundFollower.update(status);
+
+        return UpdateFollowerResponseDto.toDto(foundFollower);
     }
 }

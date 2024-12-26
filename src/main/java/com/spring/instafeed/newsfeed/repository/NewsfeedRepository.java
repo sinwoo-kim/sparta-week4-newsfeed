@@ -5,6 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface NewsfeedRepository extends JpaRepository<Newsfeed, Long> {
 
     /**
@@ -13,6 +16,9 @@ public interface NewsfeedRepository extends JpaRepository<Newsfeed, Long> {
      * @param pageable 페이징 정보
      * @return Page<Newsfeed> 페이징 처리된 게시물 데이터
      */
-    Page<Newsfeed> findAllByOrderByUpdatedAtDesc(Pageable pageable);
+    Page<Newsfeed> findAllByIsDeletedFalseOrderByUpdatedAtDesc(Pageable pageable);
 
+    Optional<Newsfeed> findByIdAndIsDeletedFalse(Long id);
+
+    List<Newsfeed> findAllByProfileIdAndIsDeletedFalse(Long profileId);
 }
