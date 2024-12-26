@@ -1,5 +1,6 @@
 package com.spring.instafeed.user.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.spring.instafeed.user.entity.User;
 
 import java.time.LocalDateTime;
@@ -8,10 +9,11 @@ public record ReadUserResponseDto(
         Long id,
         String name,
         String email,
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime createdAt,
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime updatedAt
 ) {
-
     /**
      * 생성자
      *

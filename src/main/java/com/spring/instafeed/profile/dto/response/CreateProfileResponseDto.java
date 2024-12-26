@@ -1,5 +1,6 @@
 package com.spring.instafeed.profile.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.spring.instafeed.profile.entity.Profile;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ public record CreateProfileResponseDto(
         String nickname,
         String imagePath,
         String content,
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime createdAt
 ) {
     /**

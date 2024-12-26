@@ -48,7 +48,7 @@ public class ProfileController {
      *
      * @return List<QueryProfileResponseDto> 모든 프로필 정보를 담은 리스트
      */
-    @GetMapping
+    @GetMapping("/list")
     public ResponseEntity<List<ReadProfileResponseDto>> readAllProfiles() {
         List<ReadProfileResponseDto> allProfiles = new ArrayList<>();
 

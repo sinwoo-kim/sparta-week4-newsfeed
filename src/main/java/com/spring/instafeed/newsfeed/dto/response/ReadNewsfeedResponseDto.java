@@ -9,7 +9,9 @@ public record ReadNewsfeedResponseDto(
         String content
 ) {
 
-    public static ReadNewsfeedResponseDto toDto(Newsfeed newsfeed) {
+    public static ReadNewsfeedResponseDto toDto(
+            Newsfeed newsfeed
+    ) {
         return new ReadNewsfeedResponseDto(
                 newsfeed.getId(),
                 newsfeed.getProfile().getNickname(),
