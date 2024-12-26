@@ -75,6 +75,6 @@ public class AuthService {
      */
     private AccessTokenResponseDto createToken(User user) {
         String token = tokenProvider.createToken(user);
-        return new AccessTokenResponseDto(token, "Bearer", user.getId(), "create token");
+        return new AccessTokenResponseDto(token, "Bearer", 3600, "read-write");
     }
 }
