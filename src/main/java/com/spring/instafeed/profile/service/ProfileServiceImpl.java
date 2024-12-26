@@ -16,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -139,7 +140,23 @@ public class ProfileServiceImpl implements ProfileService {
                                 "Id does not exist"
                         )
                 );
-        foundProfile.update(content);
+        foundProfile.update(
+                nickname,
+                content,
+                imagePath
+        );
+
+        // 프로필 닉네임 변경 시 게시물의 닉네임도 변경하는 구간 시작
+        List<Newsfeed> newsfeeds = new ArrayList<>();
+
+        newsfeeds = newsfeedRepository
+                .findAllByProfileIdAndIsDeletedFalse(foundProfile.getId())
+                .stream()
+                .peek(newsfeed ->
+                        newsfeed.updateNickname(nickname)
+                )
+                .toList();
+        // 프로필 닉네임 변경 시 게시물의 닉네임도 변경하는 구간 종료
 
         return UpdateProfileResponseDto.toDto(foundProfile);
     }
@@ -190,3 +207,15 @@ public class ProfileServiceImpl implements ProfileService {
                 );
     }
 }
+
+/*
+[게시물의 닉네임 수정에 peek 메서드 적용 전 모습]
+newsfeeds = newsfeedRepository
+        .findAllByProfileIdAndIsDeletedFalse(foundProfile.getId())
+        .stream()
+        .map(newsfeed -> {
+            newsfeed.updateNickname(nickname);
+            return newsfeed;
+         })
+         .toList();
+ */

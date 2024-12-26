@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 public record DeleteProfileResponseDto(
         Long id,
         String nickname,
-        String content,
         String imagePath,
+        String content,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
         Boolean isDeleted,
@@ -25,8 +25,8 @@ public record DeleteProfileResponseDto(
         return new DeleteProfileResponseDto(
                 profile.getId(),
                 profile.getNickname(),
-                profile.getContent(),
                 profile.getImagePath(),
+                profile.getContent(),
                 profile.getCreatedAt(),
                 profile.getUpdatedAt(),
                 profile.getIsDeleted(),

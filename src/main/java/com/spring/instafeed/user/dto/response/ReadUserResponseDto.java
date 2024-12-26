@@ -2,10 +2,14 @@ package com.spring.instafeed.user.dto.response;
 
 import com.spring.instafeed.user.entity.User;
 
+import java.time.LocalDateTime;
+
 public record ReadUserResponseDto(
         Long id,
         String name,
-        String email
+        String email,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
 ) {
 
     /**
@@ -29,7 +33,9 @@ public record ReadUserResponseDto(
         return new ReadUserResponseDto(
                 user.getId(),
                 user.getName(),
-                user.getEmail()
+                user.getEmail(),
+                user.getCreatedAt(),
+                user.getUpdatedAt()
         );
     }
 }
