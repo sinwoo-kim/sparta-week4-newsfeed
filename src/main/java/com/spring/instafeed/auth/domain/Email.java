@@ -28,6 +28,7 @@ public class Email {
         if (!validateEmail(email)) {
             throw new IllegalArgumentException("Email is not valid");
         }
+
         return new Email(email);
     }
 
