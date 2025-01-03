@@ -83,9 +83,11 @@ public class NewsfeedServiceImpl implements NewsfeedService {
                 .map(ReadNewsfeedResponseDto::toDto)
                 .toList();
 
+
         // Wrapper DTO로 반환
         return new ContentsWrapperResponseDto(newsfeedList);
     }
+
         /*
         [람다 반영 전 코드]
         newsfeedList = allNewsfeeds
@@ -178,4 +180,4 @@ public class NewsfeedServiceImpl implements NewsfeedService {
         // 게시물 삭제 처리
         foundNewsfeed.markAsDeleted();
     }
-}
+    }

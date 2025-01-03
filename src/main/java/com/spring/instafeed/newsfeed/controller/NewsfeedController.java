@@ -1,5 +1,6 @@
 package com.spring.instafeed.newsfeed.controller;
 
+import com.spring.instafeed.exception.common.ApiResponse;
 import com.spring.instafeed.newsfeed.dto.request.CreateNewsfeedRequestDto;
 import com.spring.instafeed.newsfeed.dto.request.UpdateNewsfeedRequestDto;
 import com.spring.instafeed.newsfeed.dto.response.*;
@@ -29,7 +30,7 @@ public class NewsfeedController {
      * @return NewsfeedResponseDto
      */
     @PostMapping
-    public ResponseEntity<CreateNewsfeedResponseDto> createNewsfeed(
+    public ResponseEntity<ApiResponse<CreateNewsfeedResponseDto>> createNewsfeed(
             @RequestBody CreateNewsfeedRequestDto requestDto
     ) {
         CreateNewsfeedResponseDto responseDto = newsfeedService
@@ -38,7 +39,8 @@ public class NewsfeedController {
                         requestDto.content(),
                         requestDto.imagePath()
                 );
-        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+        ApiResponse apiResponse = ApiResponse.success(HttpStatus.CREATED, "created", responseDto);
+        return new ResponseEntity<ApiResponse<CreateNewsfeedResponseDto>>(apiResponse, HttpStatus.CREATED);
     }
 
     /**
@@ -49,12 +51,8 @@ public class NewsfeedController {
      * @param size : 조회할 페이지 크기 (기본값: 10)
      * @return ResponseEntity<Page < NewsfeedResponseDto>> 페이징 처리된 게시물 목록
      */
-<<<<<<< HEAD
-    @GetMapping
 
-=======
     @GetMapping("/list")
->>>>>>> upstream/dev
     public ResponseEntity<ContentsWrapperResponseDto> readAllNewsfeeds(
             @RequestParam(value = "page", defaultValue = "1") int page, // 기본값: 1페이지
             @RequestParam(value = "size", defaultValue = "10") int size // 기본값: 10개 항목
@@ -117,7 +115,7 @@ public class NewsfeedController {
      * @return 상태 코드 메시지(200 OK)만 반환
      */
     @DeleteMapping
-    public ResponseEntity<Void> deleteNewsfeed(
+    public ResponseEntity<String> deleteNewsfeed(
             HttpServletRequest request
     ) {
         Long id = (Long) request.getAttribute("userId");

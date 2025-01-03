@@ -1,5 +1,6 @@
 package com.spring.instafeed.exception;
 
+import com.spring.instafeed.exception.common.ApiResponse;
 import com.spring.instafeed.exception.data.DataAlreadyDeletedException;
 import com.spring.instafeed.exception.data.DataAlreadyExistsException;
 import com.spring.instafeed.exception.data.DataNotFoundException;
@@ -49,9 +50,14 @@ public class DataExceptionHandler {
      *     - "message": 에러 메세지 (String)
      */
     @ExceptionHandler(DataNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleDataNotFoundException(DataNotFoundException ex) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(ex.createExceptionResponseBody(ex));
+    public ResponseEntity<ApiResponse<?>> handleDataNotFoundException(DataNotFoundException ex) {
+        ApiResponse<Object> errorResponse = ApiResponse.error(HttpStatus.NOT_FOUND, ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
+//    @ExceptionHandler(DataNotFoundException.class)
+//    public ResponseEntity<Map<String, Object>> handleDataNotFoundException(DataNotFoundException ex) {
+//        return ResponseEntity
+//                .status(HttpStatus.OK)
+//                .body(ex.createExceptionResponseBody(ex));
+//    }
 }

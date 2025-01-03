@@ -26,11 +26,7 @@ public class Newsfeed extends BaseEntity {
     private String content;
 
     @Comment("게시물 이미지 경로")
-    @Column(
-            name = "image_path",
-            nullable = false,
-            length = 255
-    )
+    @Column(name = "image_path", nullable = false, length = 255)
     private String imagePath;
 
     @Comment("게시물을 작성한 사용자의 닉네임")

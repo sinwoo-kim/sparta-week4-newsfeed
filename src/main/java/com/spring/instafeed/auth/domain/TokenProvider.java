@@ -28,21 +28,28 @@ public class TokenProvider {
      * 토큰 생성
      */
     public String createToken(User user) {
+        // 현재 시간 생성
         Date now = new Date();
+
+        // 토큰 만료 시간 설정 ( 현재 시간 + 유효 기간)
         Date validity = new Date(now.getTime() + TOKEN_VALID_TIME);
+
+        // 사용자 정보를 가져옴 (id와 email)
         String id = user.getId().toString();
         String email = user.getEmail();
 
+        // JWT 클레임(Claims) 생성
         HashMap<String, String> claimMap = new HashMap<>();
-        claimMap.put("userId", id);
-        claimMap.put("email", email);
+        claimMap.put("userId", id); // 사용자 ID 추가
+        claimMap.put("email", email); // 사용자 이메일 추가
 
+        // JWT 생성 및 반환
         return Jwts.builder()
-                .claims(claimMap)
-                .issuedAt(now)
-                .expiration(validity)
-                .signWith(key)
-                .compact();
+                .claims(claimMap) // 클레임 설정
+                .issuedAt(now) // 토큰 발행 시간 설정
+                .expiration(validity) // 토큰 만료 시간 설정
+                .signWith(key) // 서명 키를 설정하여 무결성 보장
+                .compact(); // JWT를 문자열로 압축 및 반환
     }
 
     /**
